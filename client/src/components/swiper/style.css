@@ -1,0 +1,16 @@
+/* styles.css */
+.swiper-pagination-bullet {
+    background-color: rgb(114, 111, 111);
+    opacity: 0.5;
+    width: 15px;
+    height: 15px;
+    margin: 0 5px; /* Adjust as needed */
+    border-radius: 50%;
+    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+  
+  .swiper-pagination-bullet-active {
+    background-color: black;
+    opacity: 1;
+  }
+  
