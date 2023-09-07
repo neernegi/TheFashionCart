@@ -14,6 +14,8 @@ import SellerProduct from "./pages/product/SellerProduct";
 import RequestQC from "./pages/qcStatus/RequestQC";
 import CreateBanner from "./pages/admin/banner/CreateBanner";
 import ShowAllCategory from "./pages/category/ShowAllCategory";
+import CategoryProducts from "./pages/category/CategoryProducts";
+import SubcategoryProduct from "./pages/category/SubcategoryProduct";
 
 const App: React.FC = () => {
   return (
@@ -27,6 +29,8 @@ const App: React.FC = () => {
         <Route path="/create-banner" element={<CreateBanner />} />
         <Route path="/show-all-category" element={<ShowAllCategory />} />
         <Route path="/add-listing" element={<CreateProductForm />} />
+        <Route path="/fetch-all-get-category-products" element={<CategoryProducts />} />
+        <Route path="/fetch-all-get-subcategory-products" element={<SubcategoryProduct />} />
         <Route path="/seller-products" element={<SellerProduct />} />
         <Route path="/requestQC" element={<RequestQC />} />
         <Route path="/user-register" element={<UserRegister />} />

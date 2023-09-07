@@ -22,6 +22,7 @@ export interface CategoryState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | undefined;
   selectedCategory: null;
+  selectedSubcategory: null;
 }
 
 const initialState: CategoryState = {
@@ -29,6 +30,7 @@ const initialState: CategoryState = {
   status: "idle",
   error: undefined,
   selectedCategory: null,
+  selectedSubcategory: null,
 };
 
 // Define the createCategory async thunk
@@ -76,6 +78,9 @@ const categorySlice = createSlice({
     setSelectedCategory: (state, action) => {
       state.selectedCategory = action.payload;
     },
+    setSelectedSubcategory: (state, action) => {
+      state.selectedSubcategory = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -114,6 +119,6 @@ const categorySlice = createSlice({
 });
 
 // Export the category selector and reducer
-export const { setSelectedCategory } = categorySlice.actions;
+export const { setSelectedCategory,setSelectedSubcategory } = categorySlice.actions;
 export const categorySelector = (state: RootState) => state.category;
 export default categorySlice.reducer;

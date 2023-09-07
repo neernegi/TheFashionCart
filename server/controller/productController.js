@@ -176,6 +176,26 @@ export const getCategoryFilterProducts = catchAsyncError(async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+export const getSubcatetegoryFilterProducts = catchAsyncError(async (req, res) => {
+  const resultPerPage = 10;
+  const subcategory = req.params.subcategoryId; // Change `categoryId` to match your route parameter name
+
+  if (!subcategory) {
+    return res.status(400).json({ error: "SubCategory parameter is required." });
+  }
+
+  try {
+    // Use the `find` method to query products based on the category
+    const filteredProducts = await Product.find({
+      subcategory,
+    }).limit(resultPerPage);
+
+    res.status(200).json({ success: true, products: filteredProducts });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
 
 // Get Single Product Detail
 export const getSingleProductDetail = catchAsyncError(

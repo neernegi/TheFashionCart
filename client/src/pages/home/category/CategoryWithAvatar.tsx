@@ -36,7 +36,8 @@ const CategoryWithAvatar: React.FC = () => {
               borderRadius={"50%"}
               bgcolor={"gray"}
               p={"1.5rem"}
-              onClick={() => handleCategoryClick(item.label)} // Pass the category label as a string
+              // onClick={() => handleCategoryClick(item.label)} // Pass the category label as a string
+              onClick={() => handleCategoryClick(item._id)}
             >
               <img
                 style={{ width: "10vh", height: "10vh" }}

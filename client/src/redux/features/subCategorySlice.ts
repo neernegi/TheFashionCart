@@ -3,13 +3,11 @@ import axios from "axios";
 import { RootState } from "../store";
 
 export type SubCategory = {
-  _id: null | undefined;
-  value:string
+  _id: string;
+  value: string;
   label: string;
-  name:string
+  name: string;
 };
-
-
 
 export interface SubCategoryState {
   subCategories: SubCategory[];
@@ -54,14 +52,13 @@ export const fetchSubCategories = createAsyncThunk(
       const response = await axios.get(
         `http://localhost:8080/api/v1/category/get-subcategories/${categoryName}`
       );
-      console.log(response)
+      console.log(response);
       return response.data;
     } catch (error: any) {
       throw error.response.data.error;
     }
   }
 );
-
 
 const subCategorySlice = createSlice({
   name: "subCategory",
@@ -76,12 +73,14 @@ const subCategorySlice = createSlice({
         createSubCategory.fulfilled,
         (state, action: PayloadAction<SubCategory[]>) => {
           state.status = "succeeded";
-          state.subCategories = action.payload.map((subCategory: SubCategory) => ({
-            value: subCategory.value,
-            label: subCategory.label,
-            name:subCategory.name,
-            _id:subCategory._id
-          }));
+          state.subCategories = action.payload.map(
+            (subCategory: SubCategory) => ({
+              value: subCategory.value,
+              label: subCategory.label,
+              name: subCategory.name,
+              _id: subCategory._id,
+            })
+          );
         }
       )
       .addCase(createSubCategory.rejected, (state, action) => {
@@ -90,6 +89,7 @@ const subCategorySlice = createSlice({
       });
   },
 });
+
 
 export const subCategorySelector = (state: RootState) => state.subCategory;
 export default subCategorySlice.reducer;

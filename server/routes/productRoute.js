@@ -12,6 +12,7 @@ import {
   getProgressProducts,
   getSellerProducts,
   getSingleProductDetail,
+  getSubcatetegoryFilterProducts,
   updateProducts,
 } from "../controller/productController.js";
 import {
@@ -29,6 +30,7 @@ const router = express.Router();
 */
 router.get("/allProducts", getAllProducts);
 router.get("/category-filter-products/:categoryId", getCategoryFilterProducts);
+router.get("/subcategory-filter-products/:subcategoryId", getSubcatetegoryFilterProducts);
 router.get("/product-detail/:id", getSingleProductDetail);
 
 /*

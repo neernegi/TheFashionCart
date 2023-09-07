@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React from "react";
 import FetchCategory from "./category/FetchCategory";
 
@@ -6,7 +6,7 @@ import ShowBanner from "./banner/ShowBanner";
 import CategoryWithAvatar from "./category/CategoryWithAvatar";
 import SelectCategoryProduct from "./category/SelectCategoryProduct";
 import { ProductSwiper } from "../../components/swiper/ProductSwiper";
-import SellerStore from "./sellerStore/SellerStore";
+
 
 const Home: React.FC = () => {
   return (

@@ -3,7 +3,7 @@ import axios from "axios";
 import { RootState } from "../store";
 
 export interface Product {
-  _id: string | null;
+  _id: string;
   name: string;
   description: string;
   price: number;
@@ -68,6 +68,23 @@ export const fetchCategoryFilterProducts = createAsyncThunk<Product[], string>(
     }
   }
 );
+
+export const fetchSubcategoryFilterProducts = createAsyncThunk<Product[], string>(
+  "products/fetchsubcategoryFilterProducts", // Update the action name
+  async (subcategoryId: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/product/subcategory-filter-products/${subcategoryId}`
+      );
+      console.log(response.data.products);
+      return response.data.products;
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      throw error;
+    }
+  }
+);
+
 // Create an async thunk action to create a new product
 export const createProduct = createAsyncThunk<Product, Product>(
   "product/create-product",
