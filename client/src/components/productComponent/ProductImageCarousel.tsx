@@ -21,18 +21,7 @@ const ProductImageCarousel: React.FC<ProductImageCarouselProps> = ({
 
   return (
     <Box >
-      <Carousel sx={{width:"50rem"}}>
-        {images &&
-          images.map((image, i) => (
-            <img
-            style={{width:"100%",height:"40rem"}}
-              className="CarouselImage"
-              key={image._id}
-              src={image.url}
-              alt={`${i} Slide`}
-            />
-          ))}
-      </Carousel>
+     
     </Box>
   );
 };

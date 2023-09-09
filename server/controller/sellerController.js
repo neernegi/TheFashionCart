@@ -115,6 +115,31 @@ export const getSellerDetails = catchAsyncError(async (req, res, next) => {
     seller,
   });
 });
+export const SellerDetail = catchAsyncError(async (req, res, next) => {
+  const sellerId = req.params.id;
+
+  // Handle the case where sellerId is missing or invalid
+  if (!sellerId) {
+    return res.status(400).json({
+      success: false,
+      error: 'Seller ID is missing or invalid',
+    });
+  }
+
+  const seller = await Seller.findById(sellerId);
+
+  if (!seller) {
+    return res.status(404).json({
+      success: false,
+      error: 'Seller not found',
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    seller,
+  });
+});
 
 // update password
 

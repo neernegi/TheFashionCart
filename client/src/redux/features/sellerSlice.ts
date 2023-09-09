@@ -2,16 +2,42 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
 
+// export interface Seller {
+//   token: string;
+//   _id: string;
+//   name: string;
+//   email: string;
+//   role: string;
+//   avatar: {
+//     public_id: string;
+//     url: string;
+//   };
+// }
+
+
 export interface Seller {
-  token: string;
-  _id: string;
   name: string;
   email: string;
-  role: string;
+  password: string;
+  confirmPassword: string;
   avatar: {
     public_id: string;
     url: string;
   };
+  shopName: string;
+  description: string;
+  pickupAddress: {
+    address: string;
+    street: string;
+    nearBy: string;
+  };
+  city: string;
+  pincode: number;
+  state: string;
+  country: string;
+  token: string;
+  _id: string;
+  role: string;
 }
 
 
@@ -27,23 +53,6 @@ const initialState: SellerState = {
   error: null,
 };
 
-export interface RegisterSellerPayload {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  shopName: string;
-  description: string;
-  pickupAddress: {
-    address: string;
-    street: string;
-    nearBy: string;
-  };
-  city: string;
-  pincode: number;
-  state: string;
-  country: string;
-}
 
 type LoginSellerPayload = {
   email: String;
@@ -78,6 +87,16 @@ export const loginSeller = createAsyncThunk<Seller, LoginSellerPayload>(
     return response.data;
   }
 );
+
+export const fetchSellerDetail = createAsyncThunk<Seller,string>(
+  "/seller-detail",
+  async (sellerId:string) => {
+    const response = await axios.get(`http://localhost:8080/api/v1/seller/get-seller-details/${sellerId}`);
+    console.log(response.data)
+    return response.data.seller;
+  }
+);
+
 
 export const updateSellerPassword = createAsyncThunk<
   Seller,
@@ -125,6 +144,17 @@ const sellerSlice = createSlice({
         state.seller = action.payload;
       })
       .addCase(loginSeller.rejected, (state, action) => {
+        state.loading = "failed";
+        state.error = action.error.message || null;
+      })
+      .addCase(fetchSellerDetail.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchSellerDetail.fulfilled, (state, action) => {
+        state.loading = "succeeded";
+        state.seller = action.payload;
+      })
+      .addCase(fetchSellerDetail.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.error.message || null;
       })
