@@ -16,6 +16,8 @@ import CreateBanner from "./pages/admin/banner/CreateBanner";
 import ShowAllCategory from "./pages/category/ShowAllCategory";
 import CategoryProducts from "./pages/category/CategoryProducts";
 import SubcategoryProduct from "./pages/category/SubcategoryProduct";
+import ProductDetails from "./pages/product/ProductDetails";
+
 
 const App: React.FC = () => {
   return (
@@ -30,6 +32,7 @@ const App: React.FC = () => {
         <Route path="/show-all-category" element={<ShowAllCategory />} />
         <Route path="/add-listing" element={<CreateProductForm />} />
         <Route path="/fetch-all-get-category-products" element={<CategoryProducts />} />
+        <Route path="/single-product-detail/:id" element={<ProductDetails />} />
         <Route path="/fetch-all-get-subcategory-products" element={<SubcategoryProduct />} />
         <Route path="/seller-products" element={<SellerProduct />} />
         <Route path="/requestQC" element={<RequestQC />} />

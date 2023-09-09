@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Product } from "../../redux/features/productSlice";
 import { styled } from "@mui/material";
+import { Link } from "react-router-dom";
 
 // Define the styled components
 const ProductContainer = styled(Box)({
@@ -29,11 +30,14 @@ export const ProductCardComponent = ({ products }: { products: Product[] }) => {
               {/* Display the first image from the images array */}
               {product.images.length > 0 && (
                 <Box key={product.images[0]?.public_id}>
+                  <Link to={`/single-product-detail/${product._id}`}>
                   <img 
                     style={{ width: "100%", height: "30%",objectFit:"contain" }}
                     src={product.images[0].url}
                     alt={product?.name}
                   />
+                  </Link>
+                  
                 </Box>
               )}
               <CardContent>

@@ -31,12 +31,14 @@ export interface Product {
 }
 
 interface ProductState {
+  product: Product | undefined;
   products: Product[];
   loading: "idle" | "pending" | "succeeded" | "failed";
   error: string | undefined;
 }
 
 const initialState: ProductState = {
+  product: undefined,
   products: [],
   loading: "idle",
   error: undefined,
@@ -53,6 +55,22 @@ export const fetchProducts = createAsyncThunk<Product[]>(
     return response.data.products;
   }
 );
+export const getSingleProductDetails = createAsyncThunk<Product, string>(
+  "products/get-single-product-detail",
+  async (productId: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/product/product-detail/${productId}`
+      );
+      console.log(response.data);
+      return response.data.product; // Return a single product
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+      throw error;
+    }
+  }
+);
+
 export const fetchCategoryFilterProducts = createAsyncThunk<Product[], string>(
   "products/fetchCategoryFilterProducts", // Update the action name
   async (categoryId: string) => {
@@ -128,6 +146,17 @@ const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(getSingleProductDetails.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(getSingleProductDetails.fulfilled, (state, action) => {
+        state.loading = "succeeded";
+        state.product=action.payload;
+      })
+      .addCase(getSingleProductDetails.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.error.message;
       })
