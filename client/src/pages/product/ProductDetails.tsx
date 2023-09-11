@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // Import useParams from react-router-dom
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getSingleProductDetails } from "../../redux/features/productSlice"; // Import the Product type
 // import ProductImageCarousel from "../../components/productComponent/ProductImageCarousel";
@@ -8,6 +8,7 @@ import { fetchSellerDetail } from "../../redux/features/sellerSlice";
 import Carousel from "react-material-ui-carousel";
 
 const ProductDetails: React.FC = () => {
+  const [quantity, setQuantity] = useState<number>(1);
   const { id } = useParams(); // Get the 'id' parameter from the URL
   const dispatch = useAppDispatch();
   const product = useAppSelector(
@@ -34,9 +35,24 @@ const ProductDetails: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  const increaseQuantity = () => {
+    // Assuming quantity and product are state variables
+    const newQuantity = quantity + 1;
+
+    if (newQuantity <= product.Stock) {
+      setQuantity(newQuantity);
+    }
+  };
+  const decreaseQuantity = () => {
+    const qty = quantity - 1;
+    if (qty > 0) {
+      setQuantity(qty);
+    }
+  };
+
   return (
-    <Box justifyContent={"center"} display={"flex"}>
-      <Box>
+    <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
+      <Box border={"2px gray solid"} p={"2rem"}>
         <Carousel sx={{ width: "50rem" }}>
           {product.images &&
             product.images.map((image, i) => (
@@ -51,24 +67,64 @@ const ProductDetails: React.FC = () => {
         </Carousel>
       </Box>
       <Box>
-        <Typography color={"black"} variant="h4">
-          {product.name}
-        </Typography>
-        <Typography color={"black"} variant="h4">
-          {product.price}
-        </Typography>
-        <Typography color={"black"} variant="body1">
-          {product.description}
-        </Typography>
-        <Typography color={"black"} variant="body1">
-          Brand <span>{product.brand}</span>
-        </Typography>
-        <Typography color={"black"} variant="body1">
-          {product.description}
-        </Typography>
-        <Typography color={"black"} variant="h4">
-          {seller?.shopName}
-        </Typography>
+        <Box>
+          <Typography color={"black"} variant="h4">
+            {product.name}
+          </Typography>
+          <Typography color={"black"} variant="h4">
+            {product.price}
+          </Typography>
+          <Typography color={"black"} variant="body1">
+            {product.description}
+          </Typography>
+          <Typography color={"black"} variant="body1">
+            Brand <span>{product.brand}</span>
+          </Typography>
+          <Typography color={"black"} variant="body1">
+            {product.description}
+          </Typography>
+          <Typography color={"black"} variant="h4">
+            {seller?.shopName}
+          </Typography>
+          <Box display={"flex"} ml={"2rem"} mt={"2rem"} gap={3}>
+            <Button
+              onClick={decreaseQuantity}
+              style={{ fontSize: "3rem" }}
+              variant="outlined"
+            >
+              -
+            </Button>
+            <input
+              style={{
+                backgroundColor: "gray",
+                outline: "none",
+                border: "none",
+                fontSize: "3rem",
+                width: "2.2rem",
+              }}
+              type="text"
+              value={quantity}
+            />
+            <Button
+              onClick={increaseQuantity}
+              style={{ fontSize: "3rem" }}
+              variant="outlined"
+            >
+              +
+            </Button>
+          </Box>
+          <Box>
+            <Button
+              style={{ margin: "1rem", fontSize: "2rem" }}
+              variant="contained"
+            >
+              Add to Cart
+            </Button>
+            <Button style={{ fontSize: "2rem" }} variant="contained">
+              Buy Now
+            </Button>
+          </Box>
+        </Box>
       </Box>
     </Box>
   );

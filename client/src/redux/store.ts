@@ -5,6 +5,7 @@ import userSlice from "./features/userSlice";
 import sellerSlice from "./features/sellerSlice";
 import productSlice from "./features/productSlice";
 import bannerSlice from "./features/bannerSlice";
+import cartSlice from "./features/cartSlice";
 export const store = configureStore({
   reducer: {
     user: userSlice,
@@ -12,7 +13,8 @@ export const store = configureStore({
     category: categorySlice,
     subCategory: subCategorySlice,
     product:productSlice,
-    banner:bannerSlice
+    banner:bannerSlice,
+    cart:cartSlice
   },
 });
 export type AppDispatch = typeof store.dispatch;

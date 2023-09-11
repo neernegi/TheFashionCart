@@ -17,6 +17,7 @@ import ShowAllCategory from "./pages/category/ShowAllCategory";
 import CategoryProducts from "./pages/category/CategoryProducts";
 import SubcategoryProduct from "./pages/category/SubcategoryProduct";
 import ProductDetails from "./pages/product/ProductDetails";
+import Cart from "./pages/feature/Cart";
 
 
 const App: React.FC = () => {
@@ -30,6 +31,7 @@ const App: React.FC = () => {
         <Route path="/create-subategory" element={<CreateSubCategory />} />
         <Route path="/create-banner" element={<CreateBanner />} />
         <Route path="/show-all-category" element={<ShowAllCategory />} />
+        <Route path="/product-cart" element={<Cart />} />
         <Route path="/add-listing" element={<CreateProductForm />} />
         <Route path="/fetch-all-get-category-products" element={<CategoryProducts />} />
         <Route path="/single-product-detail/:id" element={<ProductDetails />} />

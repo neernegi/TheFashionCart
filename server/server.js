@@ -20,6 +20,7 @@ import chat from "./routes/chatRoute.js";
 import message from "./routes/messageRoute.js";
 import category from "./routes/categoryRoute.js";
 import banner from "./routes/bannerRoute.js";
+import cart from "./routes/cartRouter.js";
 
 // configure env
 dotenv.config();
@@ -53,6 +54,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
 app.use("/api/v1/product", productRoutes);
+app.use("/api/v1/cart",cart);
 app.use("/api/v1/user", user);
 app.use("/api/v1/order", order);
 app.use("/api/v1/seller", seller);

@@ -47,7 +47,7 @@ const Header: React.FC = () => {
     left: 0,
     top: 0,
   });
-  
+
   const handleLoginLinkHover = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
   ) => {
@@ -103,7 +103,7 @@ const Header: React.FC = () => {
                     <Search />
                   </Box>
 
-                  <LinkNav to={"/cart"}>
+                  <LinkNav to={"/product-cart"}>
                     <ShoppingBagIcon style={{ fontSize: "3rem" }} />
                   </LinkNav>
 
