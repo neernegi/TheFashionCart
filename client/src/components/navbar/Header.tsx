@@ -8,6 +8,9 @@ import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
 import AdminNavbar from "./AdminNavbar";
 import { useAuth } from "../../pages/context/useAuth";
 import SellerNavbar from "./SellerNavbar";
+import { selectItems } from "../../redux/features/cartSlice";
+import { useAppSelector } from "../../redux/hooks";
+
 
 const StyledHeader = styled(AppBar)({
   height: "7rem",
@@ -38,6 +41,7 @@ const LinkNav = styled(Link)({
 });
 
 const Header: React.FC = () => {
+  const items = useAppSelector(selectItems);
   const { auth, setAuth } = useAuth();
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [linkOptionsPosition, setLinkOptionsPosition] = useState<{
@@ -106,6 +110,11 @@ const Header: React.FC = () => {
                   <LinkNav to={"/product-cart"}>
                     <ShoppingBagIcon style={{ fontSize: "3rem" }} />
                   </LinkNav>
+                  {items.length > 0 && (
+                      <span className="inline-flex items-center rounded-md bg-red-50 mb-7 -ml-3 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                        {items.length}
+                      </span>
+                    )}
 
                   <LinkNav to={"/seller-register"}>Become a Seller</LinkNav>
                   {auth?.user?.role === "user" ? (

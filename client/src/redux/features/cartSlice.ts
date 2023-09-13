@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
+import { Product } from "./productSlice";
 
 interface Item {
+  product: Product;
   // Define the structure of your item here
   id: number;
   name: string;

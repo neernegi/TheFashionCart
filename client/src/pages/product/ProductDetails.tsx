@@ -6,8 +6,12 @@ import { getSingleProductDetails } from "../../redux/features/productSlice"; // 
 // import ProductImageCarousel from "../../components/productComponent/ProductImageCarousel";
 import { fetchSellerDetail } from "../../redux/features/sellerSlice";
 import Carousel from "react-material-ui-carousel";
+import { addToCartAsync, selectItems } from "../../redux/features/cartSlice";
+
 
 const ProductDetails: React.FC = () => {
+  const [selectedColor, setSelectedColor] = useState();
+  const [selectedSize, setSelectedSize] = useState();
   const [quantity, setQuantity] = useState<number>(1);
   const { id } = useParams(); // Get the 'id' parameter from the URL
   const dispatch = useAppDispatch();
@@ -15,7 +19,30 @@ const ProductDetails: React.FC = () => {
     (state) => state.product.product // Assuming 'state.product.product' is the single product
   );
   const seller = useAppSelector((state) => state.seller.seller);
+  const items = useAppSelector(selectItems);
   console.log(seller);
+
+
+  const handleCart = (e) => {
+    e.preventDefault();
+    if (items.findIndex((item) => item.product._id === product?._id) < 0) {
+      console.log({ items, product });
+      const newItem = {
+        product: product?._id,
+        quantity: 1,
+      };
+      if (selectedColor) {
+        newItem.product = selectedColor;
+      }
+      if (selectedSize) {
+        newItem.product.Stock = selectedSize;
+      }
+      dispatch(addToCartAsync({, alert}));
+    } else {
+      alert.error('Item Already added');
+    }
+  };
+
 
   useEffect(() => {
     if (product?.seller) {
@@ -117,6 +144,7 @@ const ProductDetails: React.FC = () => {
             <Button
               style={{ margin: "1rem", fontSize: "2rem" }}
               variant="contained"
+              onClick={handleCart}
             >
               Add to Cart
             </Button>

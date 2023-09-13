@@ -1,17 +1,12 @@
 import express from "express";
-import {
-  addToCart,
-  fetchCartByUser,
-  deleteFromCart,
-  updateCart,
-} from "../controller/cartController.js";
+import { createCart, deleteCartProducts, fetchCartProducts } from "../controller/cartController.js";
+import { isAuthenticatedUser } from "../middleware/auth.js";
 
 const router = express.Router();
 //  /products is already added in base path
-router
-  .post("/", addToCart)
-  .get("/", fetchCartByUser)
-  .delete("/:id", deleteFromCart)
-  .patch("/:id", updateCart);
+
+router.post("/create-cart", isAuthenticatedUser, createCart);
+router.get("/fetch-cart", isAuthenticatedUser, fetchCartProducts);
+router.delete("/delete-cart/:id", isAuthenticatedUser, deleteCartProducts);
 
 export default router;

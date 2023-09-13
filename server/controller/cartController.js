@@ -1,48 +1,64 @@
-import Cart from "../models/cartModel.js";
+import Cart from "../models/cartModel.js"; // Import the Cart model
+import Product from "../models/productModel.js";
 
-export const fetchCartByUser = async (req, res) => {
-  const { id } = req.user;
+// Create a function to add a product to the user's cart
+export const createCart = async (req, res) => {
   try {
-    const cartItems = await Cart.find({ user: id }).populate("product");
+    // Get the user ID from the request (you'll need to set this in your authentication middleware)
+    const userId = req.user.id; // Assuming you have user information stored in the request
 
-    res.status(200).json(cartItems);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-};
+    // Get the product ID from the request body
+    const { productId, quantity } = req.body;
 
-export const addToCart = async (req, res) => {
-  const { id } = req.user;
-  const cart = new Cart({ ...req.body, user: id });
-  try {
-    const doc = await cart.save();
-    const result = await doc.populate("product");
-    res.status(201).json(result);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-};
+    // Check if the product exists
+    const product = await Product.findById(productId);
 
-export const deleteFromCart = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const doc = await Cart.findByIdAndDelete(id);
-    res.status(200).json(doc);
-  } catch (err) {
-    res.status(400).json(err);
-  }
-};
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
-export const updateCart = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const cart = await Cart.findByIdAndUpdate(id, req.body, {
-      new: true,
+    // Create a new cart item
+    const cartItem = new Cart({
+      quantity,
+      product: productId,
+      user: userId,
     });
-    const result = await cart.populate("product");
 
-    res.status(200).json(result);
-  } catch (err) {
-    res.status(400).json(err);
+    // Save the cart item to the database
+    await cartItem.save();
+
+    // Return the newly created cart item
+    return res.status(201).json(cartItem);
+  } catch (error) {
+    console.error("Error creating cart item:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const fetchCartProducts = async (req, res) => {
+  try {
+    // Use await to wait for the query to complete
+    const cartProducts = await Cart.find();
+
+    return res.status(200).json(cartProducts);
+  } catch (error) {
+    console.error("Error fetching cart products:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const deleteCartProducts = async (req, res) => {
+  try {
+    // Use await to wait for the deletion to complete
+    const deleteProducts = await Cart.findByIdAndDelete(req.params.id);
+
+    if (!deleteProducts) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    return res.status(200).json({ message: "Cart item deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
