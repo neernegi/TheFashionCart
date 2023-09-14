@@ -63,7 +63,7 @@ export const getSingleProductDetails = createAsyncThunk<Product, string>(
         `http://localhost:8080/api/v1/product/product-detail/${productId}`
       );
       console.log(response.data);
-      return response.data.product; // Return a single product
+      return response.data.product;
     } catch (error) {
       console.error("Error fetching product details:", error);
       throw error;

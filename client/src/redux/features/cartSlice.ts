@@ -1,46 +1,66 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
 import axios from "axios";
 import { RootState } from "../store";
-import { Product } from "./productSlice";
 
-interface Item {
-  product: Product;
-  // Define the structure of your item here
-  id: number;
-  name: string;
-  // ...other properties
+export interface CartItem {
+  productId: string;
+  userId: string;
+  quantity: number;
+  _id: string;
 }
 
 export interface CartState {
-  items: Item[];
+  items: CartItem[];
   status: "idle" | "loading" | "succeeded" | "failed";
-  cartLoaded: boolean;
+  error: string | undefined;
 }
 
 const initialState: CartState = {
-  status: "idle",
   items: [],
-  cartLoaded: false,
+  status: "idle",
+  error: undefined,
 };
 
+// Define your authentication token variable (retrieve it from where you store it)
+const authToken = localStorage.getItem("auth"); // Retrieve the token from storage
+
+let token: null = null; // Initialize token as null
+
+if (authToken) {
+  const userData = JSON.parse(authToken);
+  token = userData.token;
+}
+
+console.log(token);
+
+// Create an async thunk for adding to the cart
 export const addToCartAsync = createAsyncThunk(
   "cart/addToCart",
-  async ({ item, alert }: { item: string; alert: any }) => {
+  async ({
+    productId,
+    quantity,
+    userId,
+  }: {
+    productId: string;
+    quantity: number;
+    userId: string |undefined;
+  }) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/v1/cart",
+        `http://localhost:8080/api/v1/cart/create-cart/${userId}`,
         {
-          item: item, // Assuming 'item' is the key for the item data
-        },
-        {
-          headers: { "Content-Type": "application/json" },
+          productId,
+          quantity,
+          userId,
         }
       );
 
-      alert.success("Item Added to Cart");
-
       // The value we return becomes the `fulfilled` action payload
-      return response.data;
+      return response.data.cartItem;
     } catch (error) {
       // Handle errors here, e.g., show an error alert
       console.error("Error adding item to cart:", error);
@@ -48,81 +68,6 @@ export const addToCartAsync = createAsyncThunk(
     }
   }
 );
-
-export const fetchItemsByUserIdAsync = createAsyncThunk(
-  "cart/fetchItemsByUserId",
-  async () => {
-    try {
-      const response = await axios.get("http://localhost:8080/api/v1/cart");
-      // The value we return becomes the `fulfilled` action payload
-      return response.data;
-    } catch (error) {
-      // Handle errors here, e.g., show an error message or log the error
-      console.error("Error fetching items by user ID:", error);
-      throw error; // Rethrow the error to propagate it further if needed
-    }
-  }
-);
-
-export const updateCartAsync = createAsyncThunk(
-  "cart/updateCart",
-  async (update) => {
-    try {
-      const response = await axios.patch(`/cart/${update}`, update, {
-        headers: { "Content-Type": "application/json" },
-      });
-
-      // The value we return becomes the `fulfilled` action payload
-      return response.data;
-    } catch (error) {
-      // Handle errors here, e.g., show an error message or log the error
-      console.error("Error updating cart:", error);
-      throw error; // Rethrow the error to propagate it further if needed
-    }
-  }
-);
-
-export const deleteItemFromCartAsync = createAsyncThunk(
-  "cart/deleteItemFromCart",
-  async (itemId) => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8080/api/v1/cart/${itemId}`
-      );
-
-      // The value we return becomes the `fulfilled` action payload
-      return response.data;
-    } catch (error) {
-      // Handle errors here, e.g., show an error message or log the error
-      console.error("Error deleting item from cart:", error);
-      throw error; // Rethrow the error to propagate it further if needed
-    }
-  }
-);
-
-// Uncomment the resetCart function and resetCartAsync async thunk if needed
-// export function resetCart() {
-//   // get all items of the user's cart - and then delete each
-//   return new Promise(async (resolve) => {
-//     const response = await fetchItemsByUserIdAsync();
-//
-//     const items = response;
-//     for (let item of items) {
-//       await deleteItemFromCart(item.id);
-//     }
-//     resolve({ status: "success" });
-//   });
-// }
-//
-// export const resetCartAsync = createAsyncThunk("cart/resetCart", async () => {
-//   const response = await fetchItemsByUserIdAsync();
-//
-//   const items = response;
-//   for (let item of items) {
-//     await deleteItemFromCart(item.id);
-//   }
-//   return response;
-// });
 
 export const cartSlice = createSlice({
   name: "cart",
@@ -134,53 +79,19 @@ export const cartSlice = createSlice({
         state.status = "loading";
       })
       .addCase(addToCartAsync.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.items.push(action.payload);
+        state.status = "succeeded";
+        const { productId, quantity, userId, _id } = action.payload;
+        state.items.push({ productId, quantity, userId, _id });
       })
-      .addCase(fetchItemsByUserIdAsync.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(fetchItemsByUserIdAsync.fulfilled, (state, action) => {
-        state.status = "idle";
-        state.items = action.payload;
-        state.cartLoaded = true;
-      })
-      .addCase(fetchItemsByUserIdAsync.rejected, (state, action) => {
-        state.status = "idle";
-        state.cartLoaded = true;
-      })
-      .addCase(updateCartAsync.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(updateCartAsync.fulfilled, (state, action) => {
-        state.status = "idle";
-        const index = state.items.findIndex(
-          (item) => item.id === action.payload.id
-        );
-        state.items[index] = action.payload;
-      })
-      .addCase(deleteItemFromCartAsync.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(deleteItemFromCartAsync.fulfilled, (state, action) => {
-        state.status = "idle";
-        const index = state.items.findIndex(
-          (item) => item.id === action.payload.id
-        );
-        state.items.splice(index, 1);
+
+      .addCase(addToCartAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
-    //   .addCase(resetCartAsync.pending, (state) => {
-    //     state.status = "loading";
-    //   })
-    //   .addCase(resetCartAsync.fulfilled, (state, action) => {
-    //     state.status = "idle";
-    //     state.items = [];
-    //   });
   },
 });
 
-export const selectItems = (state: RootState) => state.cart.items;
-export const selectCartStatus = (state: RootState) => state.cart.status;
-export const selectCartLoaded = (state: RootState) => state.cart.cartLoaded;
+export const cartSelector = (state: RootState) => state.cart;
 
+export const selectItems = createSelector([cartSelector], (cart) => cart.items);
 export default cartSlice.reducer;

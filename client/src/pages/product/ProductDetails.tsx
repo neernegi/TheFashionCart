@@ -1,52 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom"; // Import useParams from react-router-dom
-import { Box, Button, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { Box, Button, Typography, TextField, Input, Snackbar } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { getSingleProductDetails } from "../../redux/features/productSlice"; // Import the Product type
-// import ProductImageCarousel from "../../components/productComponent/ProductImageCarousel";
+import { getSingleProductDetails } from "../../redux/features/productSlice";
 import { fetchSellerDetail } from "../../redux/features/sellerSlice";
 import Carousel from "react-material-ui-carousel";
-import { addToCartAsync, selectItems } from "../../redux/features/cartSlice";
-
+import { addToCartAsync } from "../../redux/features/cartSlice";
+import { useAuth } from "../context/useAuth";
 
 const ProductDetails: React.FC = () => {
-  const [selectedColor, setSelectedColor] = useState();
-  const [selectedSize, setSelectedSize] = useState();
+  const {auth,setAuth} = useAuth()
   const [quantity, setQuantity] = useState<number>(1);
-  const { id } = useParams(); // Get the 'id' parameter from the URL
+  const { id } = useParams();
   const dispatch = useAppDispatch();
-  const product = useAppSelector(
-    (state) => state.product.product // Assuming 'state.product.product' is the single product
-  );
+  const product = useAppSelector((state) => state.product.product);
   const seller = useAppSelector((state) => state.seller.seller);
-  const items = useAppSelector(selectItems);
-  console.log(seller);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
 
-  const handleCart = (e) => {
+  const handleCart = async (e: any) => {
     e.preventDefault();
-    if (items.findIndex((item) => item.product._id === product?._id) < 0) {
-      console.log({ items, product });
-      const newItem = {
-        product: product?._id,
-        quantity: 1,
-      };
-      if (selectedColor) {
-        newItem.product = selectedColor;
+
+    if (!product) {
+      return;
+    }
+
+    const userId = auth?.user?._id
+
+    const { _id: productId, Stock } = product;
+
+    if (productId && quantity > 0 && quantity <= Stock) {
+      try {
+        await dispatch(addToCartAsync({ productId, quantity,userId }));
+        setErrorMessage(null);
+        setSnackbarOpen(true);
+      } catch (error) {
+        console.error("Error adding item to cart:", error);
+        setErrorMessage("Failed to add item to cart. Please try again.");
       }
-      if (selectedSize) {
-        newItem.product.Stock = selectedSize;
-      }
-      dispatch(addToCartAsync({, alert}));
     } else {
-      alert.error('Item Already added');
+      setErrorMessage("Invalid quantity. Please enter a valid quantity.");
     }
   };
 
-
   useEffect(() => {
     if (product?.seller) {
-      // Assuming 'product.seller' contains the seller's ID
       dispatch(fetchSellerDetail(product?.seller));
     }
   }, [dispatch, product?.seller]);
@@ -57,19 +56,13 @@ const ProductDetails: React.FC = () => {
     }
   }, [dispatch, id]);
 
-  if (!product) {
-    // You might want to add a loading indicator here while fetching data
-    return <div>Loading...</div>;
-  }
-
   const increaseQuantity = () => {
-    // Assuming quantity and product are state variables
     const newQuantity = quantity + 1;
-
-    if (newQuantity <= product.Stock) {
+    if (newQuantity <= (product?.Stock || 0)) {
       setQuantity(newQuantity);
     }
   };
+
   const decreaseQuantity = () => {
     const qty = quantity - 1;
     if (qty > 0) {
@@ -77,11 +70,15 @@ const ProductDetails: React.FC = () => {
     }
   };
 
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
+
   return (
     <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
       <Box border={"2px gray solid"} p={"2rem"}>
         <Carousel sx={{ width: "50rem" }}>
-          {product.images &&
+          {product?.images &&
             product.images.map((image, i) => (
               <img
                 style={{ width: "100%", height: "40rem" }}
@@ -96,19 +93,19 @@ const ProductDetails: React.FC = () => {
       <Box>
         <Box>
           <Typography color={"black"} variant="h4">
-            {product.name}
+            {product?.name}
           </Typography>
           <Typography color={"black"} variant="h4">
-            {product.price}
+            {product?.price}
           </Typography>
           <Typography color={"black"} variant="body1">
-            {product.description}
+            {product?.description}
           </Typography>
           <Typography color={"black"} variant="body1">
-            Brand <span>{product.brand}</span>
+            Brand <span>{product?.brand}</span>
           </Typography>
           <Typography color={"black"} variant="body1">
-            {product.description}
+            {product?.description}
           </Typography>
           <Typography color={"black"} variant="h4">
             {seller?.shopName}
@@ -121,7 +118,8 @@ const ProductDetails: React.FC = () => {
             >
               -
             </Button>
-            <input
+
+            <Input
               style={{
                 backgroundColor: "gray",
                 outline: "none",
@@ -152,6 +150,17 @@ const ProductDetails: React.FC = () => {
               Buy Now
             </Button>
           </Box>
+          {errorMessage && (
+            <Typography color="error" variant="body1">
+              {errorMessage}
+            </Typography>
+          )}
+          <Snackbar
+            open={snackbarOpen}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+            message="Item added to cart"
+          />
         </Box>
       </Box>
     </Box>
