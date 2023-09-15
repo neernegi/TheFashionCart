@@ -5,7 +5,7 @@ import Product from "../models/productModel.js";
 export const createCart = async (req, res) => {
   try {
     // Get the user ID from the request (you'll need to set this in your authentication middleware)
-    const userId = req.params.id; // Assuming you have user information stored in the request
+    const userId = req.params.userId; // Assuming you have user information stored in the request
 
     // Get the product ID from the request body
     const { productId, quantity } = req.body;
@@ -14,33 +14,37 @@ export const createCart = async (req, res) => {
     const product = await Product.findById(productId);
 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ message: "Product not found" });
     }
 
     // Create a new cart item
-    const cartItem = new Cart({
+    const cartItems = new Cart({
       quantity,
-      product: productId,
-      user: userId,
+      productId,
+      userId,
     });
 
     // Save the cart item to the database
-    await cartItem.save();
+    await cartItems.save();
 
     // Return the newly created cart item
-    return res.status(201).json(cartItem);
+    return res.status(201).json(cartItems);
   } catch (error) {
-    console.error('Error creating cart item:', error);
-    return res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error creating cart item:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const fetchCartProducts = async (req, res) => {
   try {
     // Use await to wait for the query to complete
-    const cartProducts = await Cart.find();
+    const cartItems = await Cart.find({ userId: req.params.userId });
+    if (!cartItems) {
+      // Handle the case where the cart is not found (404 Not Found)
+      return res.status(404).json({ message: "Cart not found" });
+    }
 
-    return res.status(200).json(cartProducts);
+    return res.status(200).json(cartItems);
   } catch (error) {
     console.error("Error fetching cart products:", error);
     return res.status(500).json({ message: "Internal Server Error" });

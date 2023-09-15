@@ -11,7 +11,6 @@ import SellerNavbar from "./SellerNavbar";
 import { selectItems } from "../../redux/features/cartSlice";
 import { useAppSelector } from "../../redux/hooks";
 
-
 const StyledHeader = styled(AppBar)({
   height: "7rem",
   width: "100%",
@@ -107,14 +106,14 @@ const Header: React.FC = () => {
                     <Search />
                   </Box>
 
-                  <LinkNav to={"/product-cart"}>
+                  <LinkNav to={"/cart-products"}>
                     <ShoppingBagIcon style={{ fontSize: "3rem" }} />
                   </LinkNav>
                   {items.length > 0 && (
-                      <span className="inline-flex items-center rounded-md bg-red-50 mb-7 -ml-3 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                        {items.length}
-                      </span>
-                    )}
+                    <span className="inline-flex items-center rounded-md bg-red-50 mb-7 -ml-3 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
+                      {items.length}
+                    </span>
+                  )}
 
                   <LinkNav to={"/seller-register"}>Become a Seller</LinkNav>
                   {auth?.user?.role === "user" ? (

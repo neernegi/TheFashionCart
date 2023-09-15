@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Button, Typography, TextField, Input, Snackbar } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Input,
+  Snackbar,
+} from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getSingleProductDetails } from "../../redux/features/productSlice";
 import { fetchSellerDetail } from "../../redux/features/sellerSlice";
@@ -9,7 +16,7 @@ import { addToCartAsync } from "../../redux/features/cartSlice";
 import { useAuth } from "../context/useAuth";
 
 const ProductDetails: React.FC = () => {
-  const {auth,setAuth} = useAuth()
+  const { auth, setAuth } = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
   const { id } = useParams();
   const dispatch = useAppDispatch();
@@ -18,7 +25,6 @@ const ProductDetails: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
-
   const handleCart = async (e: any) => {
     e.preventDefault();
 
@@ -26,13 +32,13 @@ const ProductDetails: React.FC = () => {
       return;
     }
 
-    const userId = auth?.user?._id
+    const userId = auth?.user?._id;
 
     const { _id: productId, Stock } = product;
 
     if (productId && quantity > 0 && quantity <= Stock) {
       try {
-        await dispatch(addToCartAsync({ productId, quantity,userId }));
+        await dispatch(addToCartAsync({ quantity, productId, userId }));
         setErrorMessage(null);
         setSnackbarOpen(true);
       } catch (error) {

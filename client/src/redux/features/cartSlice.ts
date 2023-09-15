@@ -1,4 +1,5 @@
 import {
+  PayloadAction,
   createAsyncThunk,
   createSelector,
   createSlice,
@@ -14,57 +15,74 @@ export interface CartItem {
 }
 
 export interface CartState {
-  items: CartItem[];
+  cartItems: CartItem[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | undefined;
 }
 
 const initialState: CartState = {
-  items: [],
+  cartItems: [],
   status: "idle",
   error: undefined,
 };
-
-// Define your authentication token variable (retrieve it from where you store it)
-const authToken = localStorage.getItem("auth"); // Retrieve the token from storage
-
-let token: null = null; // Initialize token as null
-
-if (authToken) {
-  const userData = JSON.parse(authToken);
-  token = userData.token;
-}
-
-console.log(token);
 
 // Create an async thunk for adding to the cart
 export const addToCartAsync = createAsyncThunk(
   "cart/addToCart",
   async ({
-    productId,
     quantity,
+    productId,
     userId,
   }: {
-    productId: string;
+    productId: string | undefined;
     quantity: number;
-    userId: string |undefined;
+    userId: string | undefined;
   }) => {
     try {
       const response = await axios.post(
         `http://localhost:8080/api/v1/cart/create-cart/${userId}`,
         {
-          productId,
           quantity,
+          productId,
           userId,
         }
       );
 
       // The value we return becomes the `fulfilled` action payload
-      return response.data.cartItem;
+      return response.data.cartItems;
     } catch (error) {
       // Handle errors here, e.g., show an error alert
       console.error("Error adding item to cart:", error);
       throw error; // Rethrow the error to propagate it
+    }
+  }
+);
+
+export const fetchCartProducts = createAsyncThunk<CartItem[], string>(
+  "cart/fetchCartProducts",
+  async (userId: string) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/cart/fetch-cart/${userId}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+export const removeCartProducts = createAsyncThunk(
+  "cart/removeCartProducts",
+  async (cartId: string) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:8080/api/v1/cart/delete-cart/${cartId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -78,13 +96,26 @@ export const cartSlice = createSlice({
       .addCase(addToCartAsync.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(addToCartAsync.fulfilled, (state, action) => {
+      .addCase(
+        addToCartAsync.fulfilled,
+        (state, action: PayloadAction<CartItem>) => {
+          state.status = "succeeded";
+          state.cartItems.push(action.payload); // Push the single category object
+        }
+      )
+      .addCase(addToCartAsync.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchCartProducts.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchCartProducts.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const { productId, quantity, userId, _id } = action.payload;
-        state.items.push({ productId, quantity, userId, _id });
+        state.cartItems = action.payload;
       })
 
-      .addCase(addToCartAsync.rejected, (state, action) => {
+      .addCase(fetchCartProducts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
@@ -93,5 +124,8 @@ export const cartSlice = createSlice({
 
 export const cartSelector = (state: RootState) => state.cart;
 
-export const selectItems = createSelector([cartSelector], (cart) => cart.items);
+export const selectItems = createSelector(
+  [cartSelector],
+  (cart) => cart.cartItems
+);
 export default cartSlice.reducer;
