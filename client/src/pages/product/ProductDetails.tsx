@@ -12,7 +12,10 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getSingleProductDetails } from "../../redux/features/productSlice";
 import { fetchSellerDetail } from "../../redux/features/sellerSlice";
 import Carousel from "react-material-ui-carousel";
-import { addToCartAsync } from "../../redux/features/cartSlice";
+import {
+  addToCartAsync,
+  fetchCartProducts,
+} from "../../redux/features/cartSlice";
 import { useAuth } from "../context/useAuth";
 
 const ProductDetails: React.FC = () => {
@@ -22,9 +25,11 @@ const ProductDetails: React.FC = () => {
   const dispatch = useAppDispatch();
   const product = useAppSelector((state) => state.product.product);
   const seller = useAppSelector((state) => state.seller.seller);
+  const cartProduct = useAppSelector((state) => state.cart.cartItems);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
+  const userId = auth?.user?._id;
   const handleCart = async (e: any) => {
     e.preventDefault();
 
@@ -32,11 +37,18 @@ const ProductDetails: React.FC = () => {
       return;
     }
 
-    const userId = auth?.user?._id;
-
     const { _id: productId, Stock } = product;
 
     if (productId && quantity > 0 && quantity <= Stock) {
+      // Check if the product is already in the cart
+      const isProductInCart = checkIfProductInCart(productId);
+
+      if (isProductInCart) {
+        // Display an alert message or handle it as needed
+        alert("Product is already in the cart");
+        return;
+      }
+
       try {
         await dispatch(addToCartAsync({ quantity, productId, userId }));
         setErrorMessage(null);
@@ -48,6 +60,15 @@ const ProductDetails: React.FC = () => {
     } else {
       setErrorMessage("Invalid quantity. Please enter a valid quantity.");
     }
+  };
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchCartProducts(userId));
+    }
+  }, []);
+
+  const checkIfProductInCart = (productId: string) => {
+    return cartProduct.some((item) => item.productId === productId);
   };
 
   useEffect(() => {

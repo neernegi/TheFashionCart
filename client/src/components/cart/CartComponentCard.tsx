@@ -23,9 +23,14 @@ const CartComponentCard: React.FC<CartComponentCardProps> = ({
             />
           </Box>
         )}
-        <Typography variant="h5" color={"black"}>
-          {cartProduct?.name}
-        </Typography>
+        <Box>
+          <Typography mb={"2rem"} variant="h5" color={"black"}>
+            {cartProduct?.name}
+          </Typography>
+          <Typography variant="h5" color={"black"}>
+            {cartProduct?.price}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );

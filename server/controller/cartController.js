@@ -2,12 +2,13 @@ import Cart from "../models/cartModel.js"; // Import the Cart model
 import Product from "../models/productModel.js";
 
 // Create a function to add a product to the user's cart
+
 export const createCart = async (req, res) => {
   try {
     // Get the user ID from the request (you'll need to set this in your authentication middleware)
     const userId = req.params.userId; // Assuming you have user information stored in the request
 
-    // Get the product ID from the request body
+    // Get the product ID and quantity from the request body
     const { productId, quantity } = req.body;
 
     // Check if the product exists
@@ -17,18 +18,28 @@ export const createCart = async (req, res) => {
       return res.status(404).json({ message: "Product not found" });
     }
 
+    // Check if the product is already in the user's cart
+    const existingCartItem = await Cart.findOne({
+      productId,
+      userId,
+    });
+
+    if (existingCartItem) {
+      return res.status(400).json({ message: "Product already in the cart" });
+    }
+
     // Create a new cart item
-    const cartItems = new Cart({
+    const cartItem = new Cart({
       quantity,
       productId,
       userId,
     });
 
     // Save the cart item to the database
-    await cartItems.save();
+    await cartItem.save();
 
     // Return the newly created cart item
-    return res.status(201).json(cartItems);
+    return res.status(201).json(cartItem);
   } catch (error) {
     console.error("Error creating cart item:", error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -48,6 +59,31 @@ export const fetchCartProducts = async (req, res) => {
   } catch (error) {
     console.error("Error fetching cart products:", error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// update cart
+export const updateCartQuantity = async (req, res) => {
+  // Assuming you have access to req and res
+  try {
+    const cartId = req.params.cartId;
+    const newQuantity = req.body.quantity; // Assuming you're sending the new quantity in the request body
+
+    // Find the cart by its ID and update the quantity
+    const updatedCart = await Cart.findByIdAndUpdate(
+      cartId,
+      { quantity: newQuantity },
+      { new: true } // This option returns the updated document
+    );
+
+    if (!updatedCart) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    res.json(updatedCart); // Send back the updated cart as a response
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 

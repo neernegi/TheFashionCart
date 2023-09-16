@@ -73,6 +73,20 @@ export const fetchCartProducts = createAsyncThunk<CartItem[], string>(
   }
 );
 
+export const updateCartItemQuantity = createAsyncThunk(
+  "cart/updateCartItemQuantity",
+  async (cartId: string) => {
+    try {
+      const response = await axios.put(
+        `http://localhost:8080/api/v1/cart/update-cart-quantity/${cartId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 export const removeCartProducts = createAsyncThunk(
   "cart/removeCartProducts",
   async (cartId: string) => {
@@ -107,6 +121,20 @@ export const cartSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(updateCartItemQuantity.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(
+        updateCartItemQuantity.fulfilled,
+        (state, action: PayloadAction<CartItem>) => {
+          state.status = "succeeded";
+          state.cartItems.push(action.payload);
+        }
+      )
+      .addCase(updateCartItemQuantity.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(fetchCartProducts.pending, (state) => {
         state.status = "loading";
       })
@@ -116,6 +144,18 @@ export const cartSlice = createSlice({
       })
 
       .addCase(fetchCartProducts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(removeCartProducts.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeCartProducts.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.cartItems = action.payload;
+      })
+
+      .addCase(removeCartProducts.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
