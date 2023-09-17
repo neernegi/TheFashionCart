@@ -20,6 +20,9 @@ interface CartItem {
 }
 
 const CartProducts: React.FC = () => {
+  const [discount, setDiscount] = useState<number>(400);
+  const [delivery, setDelivery] = useState<number>(200);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
   const { auth } = useAuth();
   const dispatch = useAppDispatch();
   const products = useAppSelector((state) => state.product.products);
@@ -118,45 +121,68 @@ const CartProducts: React.FC = () => {
     }
   };
 
-  // const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [totalProductsPrice, setTotalProductsPrice] = useState<number>(0);
 
-  // useEffect(() => {
-  //   // Calculate the total price based on the quantity and product price
-  //   const newTotalPrice = cartItems.reduce((total, item) => {
-  //     const cartProduct = products.find(
-  //       (product) => product?._id === item?.productId
-  //     );
+  useEffect(() => {
+    // Calculate the total price based on the quantity and product price
+    if (Array.isArray(cartItems) && cartItems.length > 0) {
+      const newTotalPrice = cartItems.reduce((total, item) => {
+        const cartProduct = products.find(
+          (product) => product?._id === item?.productId
+        );
 
-  //     if (cartProduct) {
-  //       const currentQuantity = quantity[item?.productId] || item?.quantity;
-  //       const productPrice = cartProduct.price;
-  //       total += currentQuantity * productPrice;
-  //     }
+        if (cartProduct) {
+          const currentQuantity = quantity[item?.productId] || item?.quantity;
+          const productPrice = cartProduct.price;
+          total += currentQuantity * productPrice;
+        }
 
-  //     return total;
-  //   }, 0);
+        return total;
+      }, 0);
 
-  //   setTotalPrice(newTotalPrice);
-  // }, [cartItems, products, quantity]);
+      setTotalProductsPrice(newTotalPrice || 0);
+    } else {
+      setTotalProductsPrice(0); // Set total price to 0 when cart is empty or not an array
+    }
+  }, [cartItems, products, quantity]);
 
   useEffect(() => {
     // Calculate the individual prices based on the quantity and product price
-    const newIndividualPrices: { [productId: string]: number } = {};
+    if (Array.isArray(cartItems)) {
+      const newIndividualPrices: { [productId: string]: number } = {};
 
-    cartItems.forEach((item) => {
-      const cartProduct = products.find(
-        (product) => product?._id === item?.productId
+      cartItems.forEach((item) => {
+        const cartProduct = products.find(
+          (product) => product?._id === item?.productId
+        );
+
+        if (cartProduct) {
+          const currentQuantity = quantity[item?.productId] || item?.quantity;
+          const productPrice = cartProduct.price;
+          newIndividualPrices[item.productId] = currentQuantity * productPrice;
+        }
+      });
+
+      setIndividualPrices(newIndividualPrices);
+    }
+  }, [cartItems, products, quantity]);
+
+  useEffect(() => {
+    // Call totalPriceHandler whenever cartItems, individualPrices, delivery, or discount changes
+    const totalPriceHandler = () => {
+      // Calculate the total price based on individual product prices
+      const productPrices = Object.values(individualPrices);
+      const productTotalPrice = productPrices.reduce(
+        (total, price) => total + price,
+        0
       );
 
-      if (cartProduct) {
-        const currentQuantity = quantity[item?.productId] || item?.quantity;
-        const productPrice = cartProduct.price;
-        newIndividualPrices[item.productId] = currentQuantity * productPrice;
-      }
-    });
-
-    setIndividualPrices(newIndividualPrices);
-  }, [cartItems, products, quantity]);
+      // Calculate the total price including delivery charges and discounts
+      const price = productTotalPrice + delivery - discount;
+      setTotalPrice(price);
+    };
+    totalPriceHandler();
+  }, [cartItems, individualPrices, delivery, discount]);
 
   return (
     <Box width={"100%"} margin={"5rem 5rem"}>
@@ -242,23 +268,36 @@ const CartProducts: React.FC = () => {
                     Remove
                   </Button>
                 </Box>
-                <Box>
-                  <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-                    Price Details
-                  </Typography>
-                  <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-                    Price ({``} {' '} items)
-                  </Typography>
-                  <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-                    Price Details
-                  </Typography>
-                  
-                </Box>
               </Box>
             );
           })
         ))
       )}
+      {cartItems.length > 0 ? (
+        <Box>
+          <Typography variant="h2" fontSize={"2xl"} color={"black"}>
+            Price Details
+          </Typography>
+          <Box display={"flex"} gap={"2rem"}>
+            <Typography variant="h3" fontSize={"2xl"} color={"black"}>
+              Price ({cartItems?.length} items)
+            </Typography>
+            <Typography variant="h3" fontSize={"2xl"} color={"black"}>
+              Total Price: ${totalProductsPrice.toFixed(2)}
+            </Typography>
+          </Box>
+
+          <Typography variant="h3" fontSize={"2xl"} color={"black"}>
+            Discount: {discount}
+          </Typography>
+          <Typography variant="h3" fontSize={"2xl"} color={"black"}>
+            Delivery Charges:{""} {delivery}
+          </Typography>
+          <Typography variant="h3" fontSize={"2xl"} color={"black"}>
+            Total Amount: ${totalPrice.toFixed(2)}
+          </Typography>
+        </Box>
+      ) : null}
     </Box>
   );
 };

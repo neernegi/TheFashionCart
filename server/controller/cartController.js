@@ -69,6 +69,7 @@ export const updateCartQuantity = async (req, res) => {
     const cartId = req.params.cartId;
     const newQuantity = req.body.quantity; // Assuming you're sending the new quantity in the request body
 
+   
     // Find the cart by its ID and update the quantity
     const updatedCart = await Cart.findByIdAndUpdate(
       cartId,
@@ -79,6 +80,8 @@ export const updateCartQuantity = async (req, res) => {
     if (!updatedCart) {
       return res.status(404).json({ message: "Cart not found" });
     }
+
+   
 
     res.json(updatedCart); // Send back the updated cart as a response
   } catch (error) {

@@ -30,6 +30,7 @@ const ProductDetails: React.FC = () => {
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
 
   const userId = auth?.user?._id;
+
   const handleCart = async (e: any) => {
     e.preventDefault();
 
@@ -44,7 +45,6 @@ const ProductDetails: React.FC = () => {
       const isProductInCart = checkIfProductInCart(productId);
 
       if (isProductInCart) {
-        // Display an alert message or handle it as needed
         alert("Product is already in the cart");
         return;
       }
@@ -61,6 +61,9 @@ const ProductDetails: React.FC = () => {
       setErrorMessage("Invalid quantity. Please enter a valid quantity.");
     }
   };
+
+
+
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartProducts(userId));
@@ -68,8 +71,9 @@ const ProductDetails: React.FC = () => {
   }, []);
 
   const checkIfProductInCart = (productId: string) => {
-    return cartProduct.some((item) => item.productId === productId);
+    return Array.isArray(cartProduct) && cartProduct.find((item) => item.productId === productId);
   };
+  
 
   useEffect(() => {
     if (product?.seller) {
