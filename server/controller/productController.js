@@ -176,26 +176,30 @@ export const getCategoryFilterProducts = catchAsyncError(async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
-export const getSubcatetegoryFilterProducts = catchAsyncError(async (req, res) => {
-  const resultPerPage = 10;
-  const subcategory = req.params.subcategoryId; // Change `categoryId` to match your route parameter name
+export const getSubcatetegoryFilterProducts = catchAsyncError(
+  async (req, res) => {
+    const resultPerPage = 10;
+    const subcategory = req.params.subcategoryId; // Change `categoryId` to match your route parameter name
 
-  if (!subcategory) {
-    return res.status(400).json({ error: "SubCategory parameter is required." });
+    if (!subcategory) {
+      return res
+        .status(400)
+        .json({ error: "SubCategory parameter is required." });
+    }
+
+    try {
+      // Use the `find` method to query products based on the category
+      const filteredProducts = await Product.find({
+        subcategory,
+      }).limit(resultPerPage);
+
+      res.status(200).json({ success: true, products: filteredProducts });
+    } catch (error) {
+      console.error(error); // Log the error for debugging
+      return res.status(500).json({ error: "Internal server error" });
+    }
   }
-
-  try {
-    // Use the `find` method to query products based on the category
-    const filteredProducts = await Product.find({
-      subcategory,
-    }).limit(resultPerPage);
-
-    res.status(200).json({ success: true, products: filteredProducts });
-  } catch (error) {
-    console.error(error); // Log the error for debugging
-    return res.status(500).json({ error: "Internal server error" });
-  }
-});
+);
 
 // Get Single Product Detail
 export const getSingleProductDetail = catchAsyncError(
@@ -256,44 +260,56 @@ export const deleteProduct = catchAsyncError(async (req, res, next) => {
 });
 
 // Create New Review or Update the review
-
 export const createProductReview = catchAsyncError(async (req, res, next) => {
   const { rating, comment, productId } = req.body;
 
-  const review = {
-    user: req.user._id,
-    name: req.user.name,
-    rating: Number(rating),
-    comment,
-  };
-  const product = await Product.findById(productId);
+  try {
+    const product = await Product.findById(productId);
 
-  const isReviewed = product.reviews.find(
-    (rev) => rev.user.toString() === req.user_id
-  );
-  if (isReviewed) {
+    if (!product) {
+      return res.status(404).json({ error: "Product not found" });
+    }
+
+    const isReviewed = product.reviews.find(
+      (rev) => rev.user && rev.user.toString() === req.user._id.toString()
+    );
+
+    if (isReviewed) {
+      // Update the existing review
+      product.reviews.forEach((rev) => {
+        if (rev.user && rev.user.toString() === req.user._id.toString()) {
+          rev.rating = rating;
+          rev.comment = comment;
+        }
+      });
+    } else {
+      // Add a new review
+      const review = {
+        user: req.user._id,
+        name: req.user.name,
+        rating: Number(rating),
+        comment,
+      };
+      product.reviews.push(review);
+    }
+
+    let avg = 0;
+
     product.reviews.forEach((rev) => {
-      if (rev.user.toString() === req.user._id.toString())
-        (rev.rating = rating), (rev.comment = comment);
+      avg += rev.rating;
     });
-  } else {
-    product.reviews.push(review);
-    product.numOfReviews = product.reviews.length;
+
+    product.ratings = avg / product.reviews.length;
+
+    await product.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
   }
-
-  let avg = 0;
-
-  product.reviews.forEach((rev) => {
-    avg += rev.rating;
-  });
-
-  product.ratings = avg / product.reviews.length;
-
-  await product.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    success: true,
-  });
 });
 
 // get all review

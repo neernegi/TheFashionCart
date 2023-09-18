@@ -17,6 +17,7 @@ import {
   fetchCartProducts,
 } from "../../redux/features/cartSlice";
 import { useAuth } from "../context/useAuth";
+import ReviewCardComponent from "../../components/review/ReviewCardComponent";
 
 const ProductDetails: React.FC = () => {
   const { auth, setAuth } = useAuth();
@@ -28,6 +29,7 @@ const ProductDetails: React.FC = () => {
   const cartProduct = useAppSelector((state) => state.cart.cartItems);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
+  const [rating, setRating] = useState(0);
 
   const userId = auth?.user?._id;
 
@@ -62,8 +64,6 @@ const ProductDetails: React.FC = () => {
     }
   };
 
-
-
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartProducts(userId));
@@ -71,9 +71,11 @@ const ProductDetails: React.FC = () => {
   }, []);
 
   const checkIfProductInCart = (productId: string) => {
-    return Array.isArray(cartProduct) && cartProduct.find((item) => item.productId === productId);
+    return (
+      Array.isArray(cartProduct) &&
+      cartProduct.find((item) => item.productId === productId)
+    );
   };
-  
 
   useEffect(() => {
     if (product?.seller) {
@@ -106,95 +108,118 @@ const ProductDetails: React.FC = () => {
   };
 
   return (
-    <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
-      <Box border={"2px gray solid"} p={"2rem"}>
-        <Carousel sx={{ width: "50rem" }}>
-          {product?.images &&
-            product.images.map((image, i) => (
-              <img
-                style={{ width: "100%", height: "40rem" }}
-                className="CarouselImage"
-                key={image._id}
-                src={image.url}
-                alt={`${i} Slide`}
-              />
-            ))}
-        </Carousel>
-      </Box>
-      <Box>
+    <>
+      <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
+        <Box border={"2px gray solid"} p={"2rem"}>
+          <Carousel sx={{ width: "50rem" }}>
+            {product?.images &&
+              product.images.map((image, i) => (
+                <img
+                  style={{ width: "100%", height: "40rem" }}
+                  className="CarouselImage"
+                  key={image._id}
+                  src={image.url}
+                  alt={`${i} Slide`}
+                />
+              ))}
+          </Carousel>
+        </Box>
         <Box>
-          <Typography color={"black"} variant="h4">
-            {product?.name}
-          </Typography>
-          <Typography color={"black"} variant="h4">
-            {product?.price}
-          </Typography>
-          <Typography color={"black"} variant="body1">
-            {product?.description}
-          </Typography>
-          <Typography color={"black"} variant="body1">
-            Brand <span>{product?.brand}</span>
-          </Typography>
-          <Typography color={"black"} variant="body1">
-            {product?.description}
-          </Typography>
-          <Typography color={"black"} variant="h4">
-            {seller?.shopName}
-          </Typography>
-          <Box display={"flex"} ml={"2rem"} mt={"2rem"} gap={3}>
-            <Button
-              onClick={decreaseQuantity}
-              style={{ fontSize: "3rem" }}
-              variant="outlined"
-            >
-              -
-            </Button>
-
-            <Input
-              style={{
-                backgroundColor: "gray",
-                outline: "none",
-                border: "none",
-                fontSize: "3rem",
-                width: "2.2rem",
-              }}
-              type="text"
-              value={quantity}
-            />
-            <Button
-              onClick={increaseQuantity}
-              style={{ fontSize: "3rem" }}
-              variant="outlined"
-            >
-              +
-            </Button>
-          </Box>
           <Box>
-            <Button
-              style={{ margin: "1rem", fontSize: "2rem" }}
-              variant="contained"
-              onClick={handleCart}
-            >
-              Add to Cart
-            </Button>
-            <Button style={{ fontSize: "2rem" }} variant="contained">
-              Buy Now
-            </Button>
-          </Box>
-          {errorMessage && (
-            <Typography color="error" variant="body1">
-              {errorMessage}
+            <Typography color={"black"} variant="h4">
+              {product?.name}
             </Typography>
-          )}
-          <Snackbar
-            open={snackbarOpen}
-            autoHideDuration={3000}
-            onClose={handleCloseSnackbar}
-            message="Item added to cart"
-          />
+            <Typography color={"black"} variant="h4">
+              {product?.price}
+            </Typography>
+            <Typography color={"black"} variant="body1">
+              {product?.description}
+            </Typography>
+            <Typography color={"black"} variant="body1">
+              Brand <span>{product?.brand}</span>
+            </Typography>
+            <Typography color={"black"} variant="body1">
+              {product?.description}
+            </Typography>
+            <Typography color={"black"} variant="h4">
+              {seller?.shopName}
+            </Typography>
+            <Box display={"flex"} ml={"2rem"} mt={"2rem"} gap={3}>
+              <Button
+                onClick={decreaseQuantity}
+                style={{ fontSize: "3rem" }}
+                variant="outlined"
+              >
+                -
+              </Button>
+
+              <Input
+                style={{
+                  backgroundColor: "gray",
+                  outline: "none",
+                  border: "none",
+                  fontSize: "3rem",
+                  width: "2.2rem",
+                }}
+                type="text"
+                value={quantity}
+              />
+              <Button
+                onClick={increaseQuantity}
+                style={{ fontSize: "3rem" }}
+                variant="outlined"
+              >
+                +
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                style={{ margin: "1rem", fontSize: "2rem" }}
+                variant="contained"
+                onClick={handleCart}
+              >
+                Add to Cart
+              </Button>
+              <Button style={{ fontSize: "2rem" }} variant="contained">
+                Buy Now
+              </Button>
+            </Box>
+            {errorMessage && (
+              <Typography color="error" variant="body1">
+                {errorMessage}
+              </Typography>
+            )}
+            <Snackbar
+              open={snackbarOpen}
+              autoHideDuration={3000}
+              onClose={handleCloseSnackbar}
+              message="Item added to cart"
+            />
+          </Box>
         </Box>
       </Box>
-    </Box>
+      {product?.reviews && product.reviews[0] ? (
+        <Box>
+          {product.reviews &&
+            product.reviews.map((review) => (
+              <Box
+                ml={"4rem"}
+                mt={"10rem"}
+                display={"flex"}
+                alignSelf={"center"}
+                alignItems={"center"}
+                justifyContent={"center"}
+              >
+                <ReviewCardComponent review = {review}  />
+              </Box>
+            ))}
+        </Box>
+      ) : (
+        <Typography fontSize={"2rem"} color={"black"}>
+          No reviews yet
+        </Typography>
+      )}
+    </>
   );
 };
 
