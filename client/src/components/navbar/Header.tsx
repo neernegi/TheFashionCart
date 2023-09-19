@@ -1,7 +1,7 @@
 import { AppBar, Box, Toolbar, styled } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import Search from "../Search";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
 import ChatIcon from "@mui/icons-material/Chat";
 import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
@@ -42,6 +42,9 @@ const LinkNav = styled(Link)({
 const Header: React.FC = () => {
   const items = useAppSelector(selectItems);
   const { auth, setAuth } = useAuth();
+  const navigate = useNavigate();
+ 
+
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [linkOptionsPosition, setLinkOptionsPosition] = useState<{
     left: number;
@@ -84,6 +87,8 @@ const Header: React.FC = () => {
     localStorage.removeItem("auth");
     alert("logout successfully");
   };
+
+ 
 
   return (
     <StyledHeader color="inherit" position="sticky">

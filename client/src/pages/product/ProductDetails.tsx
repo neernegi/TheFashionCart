@@ -64,6 +64,11 @@ const ProductDetails: React.FC = () => {
     }
   };
 
+  // useEffect(() => {
+  //   localStorage.setItem("cartQuantities", JSON.stringify(quantity));
+  // }, [quantity]);
+
+  
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartProducts(userId));
@@ -203,6 +208,7 @@ const ProductDetails: React.FC = () => {
           {product.reviews &&
             product.reviews.map((review) => (
               <Box
+              key={review._id}
                 ml={"4rem"}
                 mt={"10rem"}
                 display={"flex"}

@@ -109,18 +109,25 @@ const CartProducts: React.FC = () => {
       console.error("Error updating cart quantity:", error);
     }
   };
-
   const handleRemove = (cartId: string) => {
     if (cartId) {
+      // Remove the cart item from Redux state
       dispatch(removeCartProducts(cartId)).then(() => {
         // After removing, re-fetch the cart products
         if (userId) {
           dispatch(fetchCartProducts(userId));
         }
+  
+        // Update local storage by removing the item with the given cartId
+        const updatedCartItems = cartItems.filter((item) => item._id !== cartId);
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+  
+        // Remove the "cartQuantities" entry from local storage
+        localStorage.removeItem("cartQuantities");
       });
     }
   };
-
+  
   const [totalProductsPrice, setTotalProductsPrice] = useState<number>(0);
 
   useEffect(() => {

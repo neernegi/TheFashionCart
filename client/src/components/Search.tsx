@@ -1,6 +1,8 @@
+import React, { useState } from "react";
 import { Box, IconButton, InputBase } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import styled from "@emotion/styled";
+import { useNavigate } from "react-router-dom";
 
 const SearchContainer = styled(Box)({
   width: "26rem",
@@ -17,14 +19,29 @@ const SearchInput = styled(InputBase)({
 });
 
 const Search = () => {
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
+
+  const onSearchHandler = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (keyword.trim()) {
+      navigate(`/serach-products/${keyword}`);
+    }
+  };
   return (
     <Box>
-      <SearchContainer>
-        <IconButton>
-          <SearchIcon />
-        </IconButton>
-        <SearchInput placeholder="Search" />
-      </SearchContainer>
+      <form onSubmit={onSearchHandler}>
+        <SearchContainer>
+          <IconButton>
+            <SearchIcon />
+          </IconButton>
+          <SearchInput
+            type="text"
+            placeholder="Search"
+            onChange={(e) => setKeyword(e.target.value)}
+          />
+        </SearchContainer>
+      </form>
     </Box>
   );
 };

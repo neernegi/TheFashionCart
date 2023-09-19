@@ -24,6 +24,7 @@ export interface Product {
     name: string;
     rating: number;
     comment: string;
+    _id:string
   }[];
   seller: string;
   qcStatus: string;
@@ -50,6 +51,16 @@ export const fetchProducts = createAsyncThunk<Product[]>(
   async () => {
     const response = await axios.get(
       "http://localhost:8080/api/v1/product/allProducts"
+    );
+    console.log(response.data);
+    return response.data.products;
+  }
+);
+export const fetchSearchProducts = createAsyncThunk<Product[],string>(
+  "products/fetch-search-Products",
+  async (keyword:string) => {
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/product/allProducts?keyword=${keyword}`
     );
     console.log(response.data);
     return response.data.products;
@@ -146,6 +157,17 @@ const productSlice = createSlice({
         state.products = action.payload;
       })
       .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchSearchProducts.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(fetchSearchProducts.fulfilled, (state, action) => {
+        state.loading = "succeeded";
+        state.products = action.payload;
+      })
+      .addCase(fetchSearchProducts.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.error.message;
       })
