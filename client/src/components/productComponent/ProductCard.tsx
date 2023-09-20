@@ -3,7 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Product } from "../../redux/features/productSlice";
-import { styled } from "@mui/material";
+import { Rating, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 
 // Define the styled components
@@ -16,28 +16,31 @@ const ProductContainer = styled(Box)({
 
 const ProductCard = styled(Card)({
   flexBasis: "calc(25% - 16px)", // Adjust width to fit 4 products per row
-   // Set a minimum width to prevent very narrow cards
-  maxWidth:"100rem"
+  // Set a minimum width to prevent very narrow cards
+  maxWidth: "100rem",
 });
 
 export const ProductCardComponent = ({ products }: { products: Product[] }) => {
   return (
     <Box>
       {products.length > 0 ? (
-        <ProductContainer >
+        <ProductContainer>
           {products.map((product: Product) => (
-            <ProductCard key={product._id} >
+            <ProductCard key={product._id}>
               {/* Display the first image from the images array */}
               {product.images.length > 0 && (
                 <Box key={product.images[0]?.public_id}>
                   <Link to={`/single-product-detail/${product._id}`}>
-                  <img 
-                    style={{ width: "100%", height: "30%",objectFit:"contain" }}
-                    src={product.images[0].url}
-                    alt={product?.name}
-                  />
+                    <img
+                      style={{
+                        width: "100%",
+                        height: "30%",
+                        objectFit: "contain",
+                      }}
+                      src={product.images[0].url}
+                      alt={product?.name}
+                    />
                   </Link>
-                  
                 </Box>
               )}
               <CardContent>
@@ -60,6 +63,13 @@ export const ProductCardComponent = ({ products }: { products: Product[] }) => {
                 <Typography variant="body2" color="text.secondary">
                   {product?.description}
                 </Typography>
+                <Rating
+                  name="simple-controlled"
+                  value={product?.ratings}
+                  readOnly
+                  precision={0.5}
+                  size="large"
+                />
               </CardContent>
             </ProductCard>
           ))}
