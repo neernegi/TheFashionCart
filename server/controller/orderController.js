@@ -2,35 +2,43 @@ import catchAsyncError from "../middleware/catchAsyncError.js";
 import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
+import User from "../models/userModel.js";
 
-// create new order
+// // create new order
 export const createNewOrder = catchAsyncError(async (req, res, next) => {
-  const {
-    shippingInfo,
-    orderItems,
-    paymentInfo,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
-  } = req.body;
+  const userId = req.params.id;
 
-  const order = await Order.create({
-    shippingInfo,
-    orderItems,
-    paymentInfo,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
-    paidAt: Date.now(),
-    user: req.user._id,
-  });
+  try {
+    const {
+      shippingInfo,
+      orderItems,
+      paymentInfo,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+    } = req.body;
 
-  res.status(201).json({
-    success: true,
-    order,
-  });
+    const order = await Order.create({
+      shippingInfo,
+      orderItems,
+      paymentInfo,
+      itemsPrice,
+      taxPrice,
+      shippingPrice,
+      totalPrice,
+      paidAt: Date.now(),
+      user: userId,
+    });
+
+    res.status(201).json({
+      success: true,
+      order,
+    });
+  } catch (error) {
+    // Handle any errors and pass them to the error handling middleware
+    next(error);
+  }
 });
 
 // get single order
@@ -60,7 +68,6 @@ export const myOrders = catchAsyncError(async (req, res, next) => {
   });
 });
 
-
 // get all orders - seller
 export const getSellerOrders = catchAsyncError(async (req, res) => {
   // Find all products associated with the seller
@@ -71,7 +78,7 @@ export const getSellerOrders = catchAsyncError(async (req, res) => {
 
   // Find all orders where the seller's products have been ordered
   const sellerOrders = await Order.find({
-    'orderItems.product': { $in: sellerProductIds },
+    "orderItems.product": { $in: sellerProductIds },
   });
 
   res.status(200).json({

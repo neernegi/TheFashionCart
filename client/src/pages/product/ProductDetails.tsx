@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   Box,
   Button,
@@ -30,6 +30,7 @@ const ProductDetails: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
   const [rating, setRating] = useState(0);
+  const navigate = useNavigate();
 
   const userId = auth?.user?._id;
 
@@ -68,7 +69,6 @@ const ProductDetails: React.FC = () => {
   //   localStorage.setItem("cartQuantities", JSON.stringify(quantity));
   // }, [quantity]);
 
-  
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartProducts(userId));
@@ -185,9 +185,15 @@ const ProductDetails: React.FC = () => {
               >
                 Add to Cart
               </Button>
-              <Button style={{ fontSize: "2rem" }} variant="contained">
-                Buy Now
-              </Button>
+              <Link to={"/order-shipping"}>
+                <Button
+                  onChange={() => navigate("/order-shipping")}
+                  style={{ fontSize: "2rem" }}
+                  variant="contained"
+                >
+                  Buy Now
+                </Button>
+              </Link>
             </Box>
             {errorMessage && (
               <Typography color="error" variant="body1">
@@ -208,7 +214,7 @@ const ProductDetails: React.FC = () => {
           {product.reviews &&
             product.reviews.map((review) => (
               <Box
-              key={review._id}
+                key={review._id}
                 ml={"4rem"}
                 mt={"10rem"}
                 display={"flex"}
@@ -216,7 +222,7 @@ const ProductDetails: React.FC = () => {
                 alignItems={"center"}
                 justifyContent={"center"}
               >
-                <ReviewCardComponent review = {review}  />
+                <ReviewCardComponent review={review} />
               </Box>
             ))}
         </Box>

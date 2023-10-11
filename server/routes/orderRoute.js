@@ -4,6 +4,8 @@ import {
   isAuthenticatedUser,
 } from "../middleware/auth.js";
 import {
+ 
+  
   createNewOrder,
   deleteOrder,
   getSellerOrders,
@@ -13,7 +15,8 @@ import {
 } from "../controller/orderController.js";
 const router = express.Router();
 
-router.post("/user-create/new-order", isAuthenticatedUser, createNewOrder);
+// router.post("/user-create/new-shipping/:userId", isAuthenticatedUser,createShippingInfo);
+router.post("/user-create/new-order/:userId", isAuthenticatedUser,createNewOrder);
 
 router.get("/user-order-detail/:id", isAuthenticatedUser, getSingleOrder);
 

@@ -8,6 +8,7 @@ import {
 import { useAuth } from "../context/useAuth";
 import { Box, Button, Typography, Input } from "@mui/material";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface CartProductProps {
   cartProduct: Product;
@@ -117,17 +118,19 @@ const CartProducts: React.FC = () => {
         if (userId) {
           dispatch(fetchCartProducts(userId));
         }
-  
+
         // Update local storage by removing the item with the given cartId
-        const updatedCartItems = cartItems.filter((item) => item._id !== cartId);
+        const updatedCartItems = cartItems.filter(
+          (item) => item._id !== cartId
+        );
         localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-  
+
         // Remove the "cartQuantities" entry from local storage
         localStorage.removeItem("cartQuantities");
       });
     }
   };
-  
+
   const [totalProductsPrice, setTotalProductsPrice] = useState<number>(0);
 
   useEffect(() => {
@@ -305,6 +308,12 @@ const CartProducts: React.FC = () => {
           </Typography>
         </Box>
       ) : null}
+
+      <Link to={"/order-shipping"}>
+        <Button variant="contained" style={{ marginTop: "3rem" }}>
+          Place Order
+        </Button>
+      </Link>
     </Box>
   );
 };

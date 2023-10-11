@@ -19,6 +19,8 @@ import SubcategoryProduct from "./pages/category/SubcategoryProduct";
 import ProductDetails from "./pages/product/ProductDetails";
 import CartProducts from "./pages/feature/CartProducts";
 import SearchProduct from "./pages/product/SearchProduct";
+import Shipping from "./pages/shipping/Shipping";
+import ConfirmOrder from "./pages/shipping/ConfirmOrder";
 
 
 
@@ -32,6 +34,8 @@ const App: React.FC = () => {
         <Route path="/create-Category" element={<CreateCategory />} />
         <Route path="/create-subategory" element={<CreateSubCategory />} />
         <Route path="/create-banner" element={<CreateBanner />} />
+        <Route path="/order-shipping" element={<Shipping />} />
+        <Route path="/order-shipping/:id" element={<ConfirmOrder />} />
         <Route path="/show-all-category" element={<ShowAllCategory />} />
         <Route path="/cart-products" element={<CartProducts />} />
         <Route path="/serach-products/:keyword" element={<SearchProduct />} />

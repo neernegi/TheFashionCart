@@ -21,6 +21,7 @@ import message from "./routes/messageRoute.js";
 import category from "./routes/categoryRoute.js";
 import banner from "./routes/bannerRoute.js";
 import cart from "./routes/cartRouter.js";
+import shipping from "./routes/shippingRoute.js";
 
 // configure env
 dotenv.config();
@@ -63,6 +64,7 @@ app.use("/api/v1/chat", chat);
 app.use("/api/v1/message", message);
 app.use("/api/v1/category", category);
 app.use("/api/v1/banner", banner);
+app.use("/api/v1/shipping", shipping);
 
 // middleware for error
 app.use(errorMiddleware);

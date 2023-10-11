@@ -1,100 +1,61 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { ShippingInfoProps } from "./ShippingSlice";
+import { RootState } from "../store";
 
-interface ShippingInfo {
-  address: string;
-  city: string;
-  state: string;
-  country: string;
-  pinCode: number;
-  phoneNo: number;
+// interface OrderItem {
+//   name: string;
+//   price: number;
+//   quantity: string;
+//   product: string; // Assuming product is represented by its ID (string)
+// }
+
+// interface PaymentInfo {
+//   id: string;
+//   status: string;
+// }
+
+export interface OrderInfoProps {
+  shippingInfo: ShippingInfoProps;
+  orderItems: {
+    name: string;
+    price: string;
+    quantity: number;
+    image: string;
+    productId: string;
+    itemsPrice: number;
+    taxPrice: number;
+    shippingPrice: number;
+    totalPrice: number;
+    orderStatus: string;
+  };
 }
 
-interface OrderItem {
-  name: string;
-  price: number;
-  quantity: string;
-  product: string; // Assuming product is represented by its ID (string)
-}
-
-interface PaymentInfo {
-  id: string;
-  status: string;
-}
-interface Order {
-  _id: string;
-  shippingInfo: ShippingInfo;
-  orderItems: OrderItem[];
-  user: string; // Assuming user is represented by its ID (string)
-  paymentInfo: PaymentInfo;
-  paidAt: Date;
-  itemsPrice: number;
-  taxPrice: number;
-  shippingPrice: number;
-  totalPrice: number;
-  orderStatus: string;
-  deliveredAt?: Date;
-  createdAt: Date;
-}
-
-interface CreateOrderPayload {
-  shippingInfo: ShippingInfo;
-  orderItems: OrderItem[];
-  paymentInfo: PaymentInfo;
-  itemsPrice: number;
-  taxPrice: number;
-  shippingPrice: number;
-  totalPrice: number;
-}
-
-interface OrderState {
-  order: Order | null;
-  loading: "idle" | "pending" | "succeeded" | "failed";
+export interface OrderInfoState {
+  order: OrderInfoProps | null;
+  status: "idle" | "loading" | "succeeded" | "failed";
   error: string | undefined;
 }
 
-const initialState: OrderState = {
+const initialState: OrderInfoState = {
   order: null,
-  loading: "idle",
+  status: "idle",
   error: undefined,
 };
-
-export const createOrder = createAsyncThunk<Order, CreateOrderPayload>(
-  "/create-order",
-  async () => {
-    const response = await axios.get("/api/v1/order/allProducts");
-    return response.data;
+export const createOrder = createAsyncThunk<OrderInfoProps, string>(
+  "order/createOrder", // Update the action name
+  async (userId) => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8080/api/v1/order/user-create/new-order/${userId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 );
-export const getSingleOrder = createAsyncThunk<Order, CreateOrderPayload>(
-  "/create-order",
-  async () => {
-    const response = await axios.get("/api/v1/order/allProducts");
-    return response.data;
-  }
-);
-export const getSellerOrder = createAsyncThunk<Order, CreateOrderPayload>(
-  "/create-order",
-  async () => {
-    const response = await axios.get("/api/v1/order/allProducts");
-    return response.data;
-  }
-);
-export const updateOrder = createAsyncThunk<Order, CreateOrderPayload>(
-  "/create-order",
-  async () => {
-    const response = await axios.get("/api/v1/order/allProducts");
-    return response.data;
-  }
-);
-export const deleteOrder = createAsyncThunk<Order, CreateOrderPayload>(
-  "/create-order",
-  async () => {
-    const response = await axios.get("/api/v1/order/allProducts");
-    return response.data;
-  }
-);
-
 const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -102,61 +63,19 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
-        state.loading = "pending";
+        state.status = "loading"; // Update to "status"
       })
       .addCase(createOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
+        state.status = "succeeded";
         state.order = action.payload;
       })
       .addCase(createOrder.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(getSingleOrder.pending, (state) => {
-        state.loading = "pending";
-      })
-      .addCase(getSingleOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
-        state.order = action.payload;
-      })
-      .addCase(getSingleOrder.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(getSellerOrder.pending, (state) => {
-        state.loading = "pending";
-      })
-      .addCase(getSellerOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
-        state.order = action.payload;
-      })
-      .addCase(getSellerOrder.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(updateOrder.pending, (state) => {
-        state.loading = "pending";
-      })
-      .addCase(updateOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
-        state.order = action.payload;
-      })
-      .addCase(updateOrder.rejected, (state, action) => {
-        state.loading = "failed";
-        state.error = action.error.message;
-      })
-      .addCase(deleteOrder.pending, (state) => {
-        state.loading = "pending";
-      })
-      .addCase(deleteOrder.fulfilled, (state, action) => {
-        state.loading = "succeeded";
-        state.order = action.payload;
-      })
-      .addCase(deleteOrder.rejected, (state, action) => {
-        state.loading = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       });
   },
 });
+
+export const orderSelector = (state: RootState) => state.order;
 
 export default orderSlice.reducer;
