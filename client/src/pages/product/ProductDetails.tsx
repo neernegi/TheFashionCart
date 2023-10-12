@@ -64,11 +64,12 @@ const ProductDetails: React.FC = () => {
       setErrorMessage("Invalid quantity. Please enter a valid quantity.");
     }
   };
+  useEffect(() => {
+    localStorage.setItem("cartQuantities", JSON.stringify(quantity));
+  }, [quantity]);
 
-  // useEffect(() => {
-  //   localStorage.setItem("cartQuantities", JSON.stringify(quantity));
-  // }, [quantity]);
 
+ 
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartProducts(userId));

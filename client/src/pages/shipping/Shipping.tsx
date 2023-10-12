@@ -43,13 +43,17 @@ const Shipping = () => {
     pinCode: undefined,
     phoneNo: "",
   };
-  const [shipping, setShipping] = useState<ShippingInfoProps>(initialShippingState);
+  const [shipping, setShipping] =
+    useState<ShippingInfoProps>(initialShippingState);
 
   // Load saved shipping data from local storage or initialize as an empty array
   const savedShippingData = localStorage.getItem("savedShipping");
   const [savedShipping, setSavedShipping] = useState<ShippingInfoProps[]>(
     savedShippingData ? JSON.parse(savedShippingData) : []
   );
+  const [selectedAddressIndex, setSelectedAddressIndex] = useState<
+    number | null
+  >(null);
 
   useEffect(() => {
     // Load saved shipping info from local storage
@@ -58,6 +62,9 @@ const Shipping = () => {
       setSavedShipping(JSON.parse(savedShippingData));
     }
   }, []);
+  const [selectedAddress, setSelectedAddress] = useState<ShippingInfoProps | null>(
+    null
+  );
 
   const [numShippingInfo, setNumShippingInfo] = useState(1);
 
@@ -77,37 +84,66 @@ const Shipping = () => {
       setSavedShipping(updatedSavedShipping);
 
       // Save the updated shipping info to local storage
-      localStorage.setItem("savedShipping", JSON.stringify(updatedSavedShipping));
+      localStorage.setItem(
+        "savedShipping",
+        JSON.stringify(updatedSavedShipping)
+      );
 
       setShipping(initialShippingState);
+      setSelectedAddressIndex(updatedSavedShipping.length - 1);
     } else {
       setNumShippingInfo(4);
     }
     setShowShippingForm(false);
   };
 
+  useEffect(() => {
+    // Load the selected address from local storage when the component mounts
+    const savedSelectedAddress = localStorage.getItem("selectedAddress");
+    if (savedSelectedAddress !== null) {
+      setShipping(JSON.parse(savedSelectedAddress));
+    }
+  }, []);
+
+  const handleRadioChange = (index: number) => {
+    const selectedAddress = savedShipping[index];
+    setShipping(selectedAddress);
+
+    // Save the selected address in local storage
+    localStorage.setItem("selectedAddress", JSON.stringify(selectedAddress));
+  }
+
   const renderShippingInfoForms = () => {
-    return savedShipping.map((entry, index) => (
-      <div key={index}>
-        <Box marginLeft={"20rem"} marginTop={"5rem"}>
-          <Typography fontSize={"2rem"} color={"black"}>
-            {entry.address}
-          </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
-            {entry.city}
-          </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
-            {entry.country}
-          </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
-            {entry.pinCode}
-          </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
-            {entry.phoneNo}
-          </Typography>
-        </Box>
-      </div>
-    ));
+    return (
+      <RadioGroup value={savedShipping.indexOf(shipping).toString()} onChange={(e) => handleRadioChange(Number(e.target.value))}>
+        {savedShipping.map((entry, index) => (
+          <FormControlLabel
+            key={index}
+            value={index.toString()} // Use the index as the value
+            control={<Radio />}
+            label={
+              <Box marginLeft={"20rem"} marginTop={"5rem"}>
+                <Typography fontSize={"2rem"} color={"black"}>
+                  {entry.address}
+                </Typography>
+                <Typography fontSize={"2rem"} color={"black"}>
+                  {entry.city}
+                </Typography>
+                <Typography fontSize={"2rem"} color={"black"}>
+                  {entry.country}
+                </Typography>
+                <Typography fontSize={"2rem"} color={"black"}>
+                  {entry.pinCode}
+                </Typography>
+                <Typography fontSize={"2rem"} color={"black"}>
+                  {entry.phoneNo}
+                </Typography>
+              </Box>
+            }
+          />
+        ))}
+      </RadioGroup>
+    );
   };
   return (
     <Fragment>

@@ -123,7 +123,7 @@ const CartProducts: React.FC = () => {
         const updatedCartItems = cartItems.filter(
           (item) => item._id !== cartId
         );
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+        localStorage.setItem("cartQuantities", JSON.stringify(updatedCartItems));
 
         // Remove the "cartQuantities" entry from local storage
         localStorage.removeItem("cartQuantities");
@@ -309,7 +309,7 @@ const CartProducts: React.FC = () => {
         </Box>
       ) : null}
 
-      <Link to={"/order-shipping"}>
+      <Link to={"/shipping-confirm-order"}>
         <Button variant="contained" style={{ marginTop: "3rem" }}>
           Place Order
         </Button>

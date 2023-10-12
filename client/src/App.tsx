@@ -19,10 +19,9 @@ import SubcategoryProduct from "./pages/category/SubcategoryProduct";
 import ProductDetails from "./pages/product/ProductDetails";
 import CartProducts from "./pages/feature/CartProducts";
 import SearchProduct from "./pages/product/SearchProduct";
-import Shipping from "./pages/shipping/Shipping";
+// import Shipping from "./pages/shipping/Shipping";
 import ConfirmOrder from "./pages/shipping/ConfirmOrder";
-
-
+import OrderStepper from "./pages/shipping/ShippingStepper";
 
 const App: React.FC = () => {
   return (
@@ -34,15 +33,22 @@ const App: React.FC = () => {
         <Route path="/create-Category" element={<CreateCategory />} />
         <Route path="/create-subategory" element={<CreateSubCategory />} />
         <Route path="/create-banner" element={<CreateBanner />} />
-        <Route path="/order-shipping" element={<Shipping />} />
+        {/* <Route path="/order-shipping" element={<Shipping />} /> */}
+        <Route path="/shipping-confirm-order" element={<OrderStepper />} />
         <Route path="/order-shipping/:id" element={<ConfirmOrder />} />
         <Route path="/show-all-category" element={<ShowAllCategory />} />
         <Route path="/cart-products" element={<CartProducts />} />
         <Route path="/serach-products/:keyword" element={<SearchProduct />} />
         <Route path="/add-listing" element={<CreateProductForm />} />
-        <Route path="/fetch-all-get-category-products" element={<CategoryProducts />} />
+        <Route
+          path="/fetch-all-get-category-products"
+          element={<CategoryProducts />}
+        />
         <Route path="/single-product-detail/:id" element={<ProductDetails />} />
-        <Route path="/fetch-all-get-subcategory-products" element={<SubcategoryProduct />} />
+        <Route
+          path="/fetch-all-get-subcategory-products"
+          element={<SubcategoryProduct />}
+        />
         <Route path="/seller-products" element={<SellerProduct />} />
         <Route path="/requestQC" element={<RequestQC />} />
         <Route path="/user-register" element={<UserRegister />} />
