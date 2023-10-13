@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchCartProducts } from "../../redux/features/cartSlice";
 import { Product, fetchProducts } from "../../redux/features/productSlice";
 import { useAuth } from "../context/useAuth";
+import PriceDetails from "../../components/PriceDetail";
 
 const ConfirmOrder = () => {
   const [loading, setLoading] = useState(true);
@@ -13,6 +14,13 @@ const ConfirmOrder = () => {
   const cartItems = useAppSelector((state) => state.cart.cartItems);
   const { auth } = useAuth();
   const userId = auth?.user?._id;
+
+  // orderInfo from session storage
+  const orderInfo = sessionStorage.getItem("orderInfo");
+  const orderInfoData = orderInfo ? JSON.parse(orderInfo) : null;
+  console.log(orderInfoData);
+
+  // console.log(orderInfo.delivery);
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -104,7 +112,11 @@ const ConfirmOrder = () => {
                           {cartProduct?.price}
                         </Typography>
 
-                        <Typography variant="body1" fontSize={"1.5rem"} color={"black"}>
+                        <Typography
+                          variant="body1"
+                          fontSize={"1.5rem"}
+                          color={"black"}
+                        >
                           Quantity: {item?.quantity}
                         </Typography>
                       </Box>
@@ -112,6 +124,15 @@ const ConfirmOrder = () => {
                   </Box>
                 );
               })}
+              <Box>
+                <PriceDetails
+                  cartItems={cartItems}
+                  totalProductsPrice={orderInfoData.totalProductsPrice}
+                  discount={orderInfoData.discount}
+                  delivery={orderInfoData.delivery}
+                  totalPrice={orderInfoData.totalPrice}
+                />
+              </Box>
             </div>
           )}
         </Box>

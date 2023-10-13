@@ -22,6 +22,7 @@ import category from "./routes/categoryRoute.js";
 import banner from "./routes/bannerRoute.js";
 import cart from "./routes/cartRouter.js";
 import shipping from "./routes/shippingRoute.js";
+import payment from "./routes/paymentRoute.js";
 
 // configure env
 dotenv.config();
@@ -55,7 +56,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // routes
 app.use("/api/v1/product", productRoutes);
-app.use("/api/v1/cart",cart);
+app.use("/api/v1/cart", cart);
 app.use("/api/v1/user", user);
 app.use("/api/v1/order", order);
 app.use("/api/v1/seller", seller);
@@ -65,6 +66,7 @@ app.use("/api/v1/message", message);
 app.use("/api/v1/category", category);
 app.use("/api/v1/banner", banner);
 app.use("/api/v1/shipping", shipping);
+app.use("/api/v1/shipping", payment);
 
 // middleware for error
 app.use(errorMiddleware);

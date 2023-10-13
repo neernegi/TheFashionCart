@@ -8,7 +8,8 @@ import {
 import { useAuth } from "../context/useAuth";
 import { Box, Button, Typography, Input } from "@mui/material";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import PriceDetails from "../../components/PriceDetail";
 
 interface CartProductProps {
   cartProduct: Product;
@@ -26,6 +27,7 @@ const CartProducts: React.FC = () => {
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const { auth } = useAuth();
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const products = useAppSelector((state) => state.product.products);
   const cartItems = useAppSelector((state) => state.cart.cartItems);
 
@@ -123,7 +125,10 @@ const CartProducts: React.FC = () => {
         const updatedCartItems = cartItems.filter(
           (item) => item._id !== cartId
         );
-        localStorage.setItem("cartQuantities", JSON.stringify(updatedCartItems));
+        localStorage.setItem(
+          "cartQuantities",
+          JSON.stringify(updatedCartItems)
+        );
 
         // Remove the "cartQuantities" entry from local storage
         localStorage.removeItem("cartQuantities");
@@ -194,6 +199,17 @@ const CartProducts: React.FC = () => {
     totalPriceHandler();
   }, [cartItems, individualPrices, delivery, discount]);
 
+  const placeOrderHandler = () => {
+    const data = {
+      delivery,
+      discount,
+      totalProductsPrice,
+      totalPrice,
+    };
+    sessionStorage.setItem("orderInfo", JSON.stringify(data));
+    navigate("/shipping-confirm-order");
+  };
+
   return (
     <Box width={"100%"} margin={"5rem 5rem"}>
       <Typography variant="h2" fontSize={"2xl"} color={"black"}>
@@ -221,99 +237,88 @@ const CartProducts: React.FC = () => {
             const currentQuantity = quantity[item?.productId] || item?.quantity;
 
             return (
-              <Box display={"flex"} key={item?._id}>
-                <Box>
-                  <Box display={"flex"} gap={"4rem"} m={"3rem"}>
-                    <Box mb={"4rem"}>
-                      <img
-                        style={{ width: "10rem" }}
-                        src={cartProduct?.images[0]?.url}
-                        alt={cartProduct?.name}
+              <React.Fragment key={item._id}>
+                <Box display={"flex"} key={item?._id}>
+                  <Box>
+                    <Box display={"flex"} gap={"4rem"} m={"3rem"}>
+                      <Box mb={"4rem"}>
+                        <img
+                          style={{ width: "10rem" }}
+                          src={cartProduct?.images[0]?.url}
+                          alt={cartProduct?.name}
+                        />
+                      </Box>
+
+                      <Typography variant="h5" color={"black"}>
+                        {cartProduct?.name}
+                      </Typography>
+                      <Typography variant="h5" color={"black"}>
+                        Total Price:
+                        {individualPrices[item.productId]?.toFixed(2) || 0}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box display={"flex"} ml={"2rem"} mt={"2rem"} gap={3}>
+                      <Button
+                        onClick={() => handleDecrement(item)}
+                        style={{ fontSize: "3rem" }}
+                        variant="outlined"
+                      >
+                        -
+                      </Button>
+
+                      <Input
+                        style={{
+                          backgroundColor: "gray",
+                          outline: "none",
+                          border: "none",
+                          fontSize: "2.4rem",
+                          width: "3rem",
+                        }}
+                        type="text"
+                        value={currentQuantity}
                       />
+                      <Button
+                        onClick={() => handleIncrement(item)}
+                        style={{ fontSize: "3rem" }}
+                        variant="outlined"
+                      >
+                        +
+                      </Button>
                     </Box>
 
-                    <Typography variant="h5" color={"black"}>
-                      {cartProduct?.name}
-                    </Typography>
-                    <Typography variant="h5" color={"black"}>
-                      Total Price:
-                      {individualPrices[item.productId]?.toFixed(2) || 0}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box>
-                  <Box display={"flex"} ml={"2rem"} mt={"2rem"} gap={3}>
                     <Button
-                      onClick={() => handleDecrement(item)}
-                      style={{ fontSize: "3rem" }}
-                      variant="outlined"
+                      variant="contained"
+                      onClick={() => handleRemove(item._id)}
                     >
-                      -
-                    </Button>
-
-                    <Input
-                      style={{
-                        backgroundColor: "gray",
-                        outline: "none",
-                        border: "none",
-                        fontSize: "2.4rem",
-                        width: "3rem",
-                      }}
-                      type="text"
-                      value={currentQuantity}
-                    />
-                    <Button
-                      onClick={() => handleIncrement(item)}
-                      style={{ fontSize: "3rem" }}
-                      variant="outlined"
-                    >
-                      +
+                      Remove
                     </Button>
                   </Box>
-
-                  <Button
-                    variant="contained"
-                    onClick={() => handleRemove(item._id)}
-                  >
-                    Remove
-                  </Button>
+                  {cartItems.length > 0 ? (
+                    <Box>
+                      <PriceDetails
+                        cartItems={cartItems}
+                        totalProductsPrice={totalProductsPrice}
+                        discount={discount}
+                        delivery={delivery}
+                        totalPrice={totalPrice}
+                      />
+                    </Box>
+                  ) : null}
                 </Box>
-              </Box>
+                <Button
+                  onClick={placeOrderHandler}
+                  variant="contained"
+                  style={{ marginTop: "3rem" }}
+                >
+                  Place Order
+                </Button>
+              </React.Fragment>
             );
           })
         ))
       )}
-      {cartItems.length > 0 ? (
-        <Box>
-          <Typography variant="h2" fontSize={"2xl"} color={"black"}>
-            Price Details
-          </Typography>
-          <Box display={"flex"} gap={"2rem"}>
-            <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-              Price ({cartItems?.length} items)
-            </Typography>
-            <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-              Total Price: ${totalProductsPrice.toFixed(2)}
-            </Typography>
-          </Box>
-
-          <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-            Discount: {discount}
-          </Typography>
-          <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-            Delivery Charges:{""} {delivery}
-          </Typography>
-          <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-            Total Amount: ${totalPrice.toFixed(2)}
-          </Typography>
-        </Box>
-      ) : null}
-
-      <Link to={"/shipping-confirm-order"}>
-        <Button variant="contained" style={{ marginTop: "3rem" }}>
-          Place Order
-        </Button>
-      </Link>
     </Box>
   );
 };
