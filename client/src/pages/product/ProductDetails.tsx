@@ -64,10 +64,18 @@ const ProductDetails: React.FC = () => {
       setErrorMessage("Invalid quantity. Please enter a valid quantity.");
     }
   };
+  
   useEffect(() => {
-    localStorage.setItem("cartQuantities", JSON.stringify(quantity));
-  }, [quantity]);
-
+    const cartQuantitiesInfo = localStorage.getItem("cartQuantities");
+    const cartQuantities = cartQuantitiesInfo ? JSON.parse(cartQuantitiesInfo) : {};
+  
+    if (product) {
+      const { _id: productId } = product;
+      cartQuantities[productId] = quantity;
+      localStorage.setItem("cartQuantities", JSON.stringify(cartQuantities));
+    }
+  }, [quantity, product]);
+  
 
  
   useEffect(() => {

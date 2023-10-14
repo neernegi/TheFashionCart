@@ -14,22 +14,57 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import VpnKeyIcon from "@mui/icons-material/VpnKey";
 import "./payment.css";
 import { useNavigate } from "react-router-dom";
+import {
+  createOrder,
+  PaymentInfo,
+  Order,
+} from "../../redux/features/orderSlice";
+import { useAuth } from "../context/useAuth";
 
 const Payment = () => {
   const orderInfoData = sessionStorage.getItem("orderInfo");
   const orderInfo = orderInfoData ? JSON.parse(orderInfoData) : null;
+  // const cartInfoData = localStorage.getItem("cartQuantities");
+  // const cartItems = cartInfoData ? JSON.parse(cartInfoData) : null;
   const shippingInfoData = sessionStorage.getItem("selectedShippingInfo");
   const shippingInfo = shippingInfoData ? JSON.parse(shippingInfoData) : null;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const stripe = useStripe();
+  const { auth } = useAuth();
   const elements = useElements();
   const payBtn = useRef<HTMLButtonElement | null>(null);
-  const cartItem = useAppSelector((state) => state.cart.cartItems);
+  // const cartItem = useAppSelector((state) => state.cart.cartItems);
+  // const cartItems = cartItem.map((item) => ({
+  //   quantity: item.quantity,
+  //   productId: item.productId, // Assuming `product` is the productId
+  // }));
+  // console.log(cartItem);
   const user = useAppSelector((state) => state.user.user);
+  const userId = auth?.user?._id;
 
   const paymentData = {
     amount: Math.round(orderInfo.totalPrice * 100),
+  };
+
+  const cartInfoData = localStorage.getItem("cartQuantities");
+const cartItems = cartInfoData ? JSON.parse(cartInfoData) : null;
+
+// Transform the cartItems object into an array of orderItems
+const orderItems = Object.keys(cartItems).map(productId => ({
+  productId,
+  quantity: cartItems[productId],
+}));
+console.log(orderItems)
+
+
+  const order = {
+    shippingInfo,
+    orderItems,
+    itemsPrice: orderInfo.totalProductsPrice,
+    shippingPrice: orderInfo.delivery,
+    totalPrice: orderInfo.totalPrice,
+    paymentInfo: {} as PaymentInfo,
   };
 
   const submitHandler = async (e: React.FormEvent) => {
@@ -70,9 +105,17 @@ const Payment = () => {
       });
       if (result.error) {
         payBtn.current?.removeAttribute("disabled");
+
         alert(result.error.message);
       } else {
         if (result.paymentIntent.status === "succeeded") {
+          order.paymentInfo = {
+            id: result.paymentIntent.id,
+            status: result.paymentIntent.status,
+          };
+
+          dispatch(createOrder({ order, userId }));
+
           navigate("/success");
         } else {
           alert("There's some issue while processing payment ");

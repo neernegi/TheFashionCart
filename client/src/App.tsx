@@ -22,8 +22,8 @@ import SearchProduct from "./pages/product/SearchProduct";
 // import Shipping from "./pages/shipping/Shipping";
 import ConfirmOrder from "./pages/shipping/ConfirmOrder";
 import OrderStepper from "./pages/shipping/ShippingStepper";
-
-
+import OrderSuccess from "./pages/shipping/OrderSuccess";
+import FetchAllOrders from "./pages/order/FetchAllOrders";
 
 const App: React.FC = () => {
   return (
@@ -56,6 +56,8 @@ const App: React.FC = () => {
         <Route path="/user-register" element={<UserRegister />} />
         <Route path="/login-seller" element={<LoginSeller />} />
         <Route path="/seller-register" element={<SellerRegister />} />
+        <Route path="/success" element={<OrderSuccess />} />
+        <Route path="/my-orders" element={<FetchAllOrders />} />
       </Routes>
     </>
   );

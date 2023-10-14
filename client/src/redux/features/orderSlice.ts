@@ -1,61 +1,80 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { ShippingInfoProps } from "./ShippingSlice";
 import { RootState } from "../store";
 
-// interface OrderItem {
-//   name: string;
-//   price: number;
-//   quantity: string;
-//   product: string; // Assuming product is represented by its ID (string)
-// }
+export interface ShippingInfoProps {
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pinCode: number | undefined;
+  phoneNo: string;
+}
 
-// interface PaymentInfo {
-//   id: string;
-//   status: string;
-// }
+export interface OrderItem {
+  quantity: number;
+  productId: string; // Assuming product is represented by its ID (string)
+}
 
-export interface OrderInfoProps {
+export interface PaymentInfo {
+  id?: string;
+  status?: string;
+}
+
+export interface Order {
+  _id?: string | undefined;
   shippingInfo: ShippingInfoProps;
-  orderItems: {
-    name: string;
-    price: string;
-    quantity: number;
-    image: string;
-    productId: string;
-    itemsPrice: number;
-    taxPrice: number;
-    shippingPrice: number;
-    totalPrice: number;
-    orderStatus: string;
-  };
+  orderItems: OrderItem[];
+  paymentInfo: PaymentInfo;
+  itemsPrice: number;
+  shippingPrice: number;
+  totalPrice: number;
 }
 
 export interface OrderInfoState {
-  order: OrderInfoProps | null;
+  order: Order | null;
+  orders: Order[]; // To store a list of orders
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | undefined;
 }
 
 const initialState: OrderInfoState = {
   order: null,
+  orders: [],
   status: "idle",
   error: undefined,
 };
-export const createOrder = createAsyncThunk<OrderInfoProps, string>(
-  "order/createOrder", // Update the action name
-  async (userId) => {
+
+export const createOrder = createAsyncThunk(
+  "order/createOrder",
+  async ({ order, userId }: { order: Order; userId: String | undefined }) => {
     try {
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/order/user-create/new-order/${userId}`
+      await axios.post(
+        `http://localhost:8080/api/v1/order/user-create/new-order/${userId}`,
+        order
       );
-      return response.data;
     } catch (error) {
       console.error(error);
       throw error;
     }
   }
 );
+
+export const fetchAllOrders = createAsyncThunk<Order[], string>(
+  "order/fetchAllOrders",
+  async (userId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/order/user-orders/${userId}`
+      );
+      return response.data.orders;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);
+
 const orderSlice = createSlice({
   name: "order",
   initialState,
@@ -63,13 +82,23 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
-        state.status = "loading"; // Update to "status"
+        state.status = "loading";
       })
-      .addCase(createOrder.fulfilled, (state, action) => {
+      .addCase(createOrder.fulfilled, (state) => {
         state.status = "succeeded";
-        state.order = action.payload;
       })
       .addCase(createOrder.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchAllOrders.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllOrders.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.orders = action.payload;
+      })
+      .addCase(fetchAllOrders.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

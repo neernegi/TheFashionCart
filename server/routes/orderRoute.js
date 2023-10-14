@@ -16,11 +16,11 @@ import {
 const router = express.Router();
 
 // router.post("/user-create/new-shipping/:userId", isAuthenticatedUser,createShippingInfo);
-router.post("/user-create/new-order/:userId", isAuthenticatedUser,createNewOrder);
+router.post("/user-create/new-order/:userId",createNewOrder);
 
-router.get("/user-order-detail/:id", isAuthenticatedUser, getSingleOrder);
+router.get("/user-order-detail/:userId", getSingleOrder);
 
-router.get("/user-orders", isAuthenticatedUser, myOrders);
+router.get("/user-orders/:userId", myOrders);
 
 router.get("/seller-orders", isAuthenticatedSeller,getSellerOrders);
 

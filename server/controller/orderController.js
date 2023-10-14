@@ -5,45 +5,48 @@ import ErrorHandler from "../utils/errorHandler.js";
 import User from "../models/userModel.js";
 
 // // create new order
-export const createNewOrder = catchAsyncError(async (req, res, next) => {
-  const userId = req.params.id;
+// Import necessary dependencies, including the Order model
 
+// Define the createNewOrder route handler
+export const createNewOrder = catchAsyncError(async (req, res, next) => {
   try {
+    const userId = req.params.userId;
+
+    // Extract data from the request body
     const {
       shippingInfo,
       orderItems,
       paymentInfo,
       itemsPrice,
-      taxPrice,
       shippingPrice,
       totalPrice,
     } = req.body;
 
+    // Create a new order using Mongoose
     const order = await Order.create({
+      user: userId,
       shippingInfo,
       orderItems,
       paymentInfo,
       itemsPrice,
-      taxPrice,
       shippingPrice,
       totalPrice,
       paidAt: Date.now(),
-      user: userId,
     });
 
+    // Respond with a 201 (Created) status code and the created order
     res.status(201).json({
       success: true,
       order,
     });
   } catch (error) {
-    // Handle any errors and pass them to the error handling middleware
-    next(error);
+   console.log(error)
   }
 });
 
 // get single order
 export const getSingleOrder = catchAsyncError(async (req, res, next) => {
-  const order = await Order.findById(req.params.id).populate(
+  const order = await Order.findById(req.params.userId).populate(
     "user",
     "name email"
   );
@@ -60,7 +63,7 @@ export const getSingleOrder = catchAsyncError(async (req, res, next) => {
 
 // get logged in user orders
 export const myOrders = catchAsyncError(async (req, res, next) => {
-  const orders = await Order.find({ user: req.user._id });
+  const orders = await Order.find({ user: req.params.userId });
 
   res.status(200).json({
     success: true,
