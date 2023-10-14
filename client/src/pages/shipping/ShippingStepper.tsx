@@ -1,4 +1,5 @@
 import * as React from "react";
+import {useState,useEffect} from "react"
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -8,17 +9,34 @@ import Typography from "@mui/material/Typography";
 import Shipping from "./Shipping";
 import ConfirmOrder from "./ConfirmOrder";
 import Payment from "./Payment";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import axios from "axios";
+
 
 const steps = ["Shipping Info", "Confirm Order", "Payment"];
 
 const getStepContent = (step: number) => {
+  const [stripeApiKey, setStripeKey] = useState("");
+
+  async function getStripeApiKey() {
+    const { data } = await axios.get(
+      "http://localhost:8080/api/v1/payment/stripeapikey"
+    );
+
+    setStripeKey(data.stripeApiKey);
+  }
+
+  useEffect(() => {
+    getStripeApiKey();
+  }, []);
   switch (step) {
     case 0:
       return <Shipping />;
     case 1:
       return <ConfirmOrder />;
     case 2:
-      return <Payment />;
+      return <Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>;
     default:
       return "Unknown step";
   }

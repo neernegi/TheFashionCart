@@ -66,7 +66,7 @@ app.use("/api/v1/message", message);
 app.use("/api/v1/category", category);
 app.use("/api/v1/banner", banner);
 app.use("/api/v1/shipping", shipping);
-app.use("/api/v1/shipping", payment);
+app.use("/api/v1/payment", payment);
 
 // middleware for error
 app.use(errorMiddleware);

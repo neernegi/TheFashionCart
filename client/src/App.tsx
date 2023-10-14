@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/home/Home";
 import UserLogin from "./pages/authentication/user/UserLogin";
@@ -22,6 +22,8 @@ import SearchProduct from "./pages/product/SearchProduct";
 // import Shipping from "./pages/shipping/Shipping";
 import ConfirmOrder from "./pages/shipping/ConfirmOrder";
 import OrderStepper from "./pages/shipping/ShippingStepper";
+
+
 
 const App: React.FC = () => {
   return (

@@ -99,7 +99,7 @@ const Shipping = () => {
 
   useEffect(() => {
     // Load the selected address from local storage when the component mounts
-    const savedSelectedAddress = localStorage.getItem("selectedAddress");
+    const savedSelectedAddress = sessionStorage.getItem("selectedAddress");
     if (savedSelectedAddress !== null) {
       setShipping(JSON.parse(savedSelectedAddress));
     }
@@ -110,7 +110,7 @@ const Shipping = () => {
     setShipping(selectedAddress);
 
     // Save the selected address in local storage
-    localStorage.setItem("selectedAddress", JSON.stringify(selectedAddress));
+    sessionStorage.setItem("selectedShippingInfo", JSON.stringify(selectedAddress));
   }
 
   const renderShippingInfoForms = () => {

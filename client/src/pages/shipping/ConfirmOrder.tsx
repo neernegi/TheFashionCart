@@ -35,7 +35,7 @@ const ConfirmOrder = () => {
   }, [dispatch, userId]);
 
   // Load the selected address from local storage
-  const savedSelectedAddress = localStorage.getItem("selectedAddress");
+  const savedSelectedAddress = sessionStorage.getItem("selectedShippingInfo");
   const addressData = savedSelectedAddress
     ? JSON.parse(savedSelectedAddress)
     : null;
