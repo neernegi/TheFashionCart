@@ -43,6 +43,11 @@ const orderSchema = new mongoose.Schema({
         ref: "Product",
         required: true,
       },
+      orderStatus: {
+        type: String,
+        required: true,
+        default: "Processing",
+      },
     },
   ],
 
@@ -74,11 +79,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
-  orderStatus: {
-    type: String,
-    required: true,
-    default: "Processing",
-  },
+  
   deliveredAt: Date,
   createdAt: {
     type: Date,

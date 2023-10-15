@@ -37,6 +37,10 @@ const CartProducts: React.FC = () => {
   const [individualPrices, setIndividualPrices] = useState<{
     [productId: string]: number;
   }>({});
+  const [individualPricesAfterDiscount, setIndividualPricesAfterDiscount] =
+    useState<{
+      [productId: string]: number;
+    }>({});
 
   useEffect(() => {
     dispatch(fetchProducts());
@@ -57,9 +61,7 @@ const CartProducts: React.FC = () => {
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("cartQuantities", JSON.stringify(quantity));
-  }, [quantity]);
+ 
 
   const updateQuantity = (productId: string, newQuantity: number) => {
     setQuantity((prevQuantity) => ({
@@ -73,33 +75,59 @@ const CartProducts: React.FC = () => {
     const cartProduct = products.find(
       (product) => product._id === item.productId
     );
-
+  
     if (cartProduct) {
       const qty = currentQuantity + 1;
-      if (qty <= (cartProduct.Stock || 0)) {
-        updateQuantity(item.productId, qty);
-        updateCartQuantity(item._id, qty);
+      updateQuantity(item.productId, qty);
+      updateCartQuantity(item._id, qty);
+  
+      // Update the cart items in local storage
+      const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      const updatedItemIndex = cartItems.findIndex((ci:CartItem) => ci.productId === item.productId);
+  
+      if (updatedItemIndex !== -1) {
+        // Update the existing item in the cart items array
+        cartItems[updatedItemIndex].quantity = qty;
+      } else {
+        // Add the new item to the cart items array
+        const newItem = { productId: item.productId, quantity: qty };
+        cartItems.push(newItem);
       }
+  
+      // Update the cart items in local storage
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
   };
-
+  
   const handleDecrement = (item: CartItem) => {
     const currentQuantity = quantity[item.productId] || item.quantity;
     if (currentQuantity <= 1) {
       return;
     }
-
+  
     const cartProduct = products.find(
       (product) => product._id === item.productId
     );
-
+  
     if (cartProduct) {
       const qty = currentQuantity - 1;
       updateQuantity(item.productId, qty);
       updateCartQuantity(item._id, qty);
+  
+      // Update the cart items in local storage
+      const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+      const updatedItemIndex = cartItems.findIndex((ci:CartItem) => ci.productId === item.productId);
+  
+      if (updatedItemIndex !== -1) {
+        // Update the existing item in the cart items array
+        cartItems[updatedItemIndex].quantity = qty;
+      }
+  
+      // Update the cart items in local storage
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
   };
-
+  
   const updateCartQuantity = async (cartId: string, newQuantity: number) => {
     try {
       const response = await axios.put(
@@ -183,6 +211,28 @@ const CartProducts: React.FC = () => {
   }, [cartItems, products, quantity]);
 
   useEffect(() => {
+    if (Array.isArray(cartItems)) {
+      const newIndividualPriceAfterDiscount: { [productId: string]: number } =
+        {};
+
+      cartItems.forEach((item) => {
+        const cartProduct = products.find(
+          (product) => product?._id === item?.productId
+        );
+
+        if (cartProduct) {
+          const currentQuantity = quantity[item?.productId] || item?.quantity;
+          const productPrice = cartProduct.price - discount;
+          newIndividualPriceAfterDiscount[item.productId] =
+            currentQuantity * productPrice;
+        }
+      });
+
+      setIndividualPricesAfterDiscount(newIndividualPriceAfterDiscount);
+    }
+  }, [cartItems, products, discount, quantity]);
+
+  useEffect(() => {
     // Call totalPriceHandler whenever cartItems, individualPrices, delivery, or discount changes
     const totalPriceHandler = () => {
       // Calculate the total price based on individual product prices
@@ -200,15 +250,39 @@ const CartProducts: React.FC = () => {
   }, [cartItems, individualPrices, delivery, discount]);
 
   const placeOrderHandler = () => {
-    const data = {
-      delivery,
-      discount,
-      totalProductsPrice,
-      totalPrice,
-    };
-    sessionStorage.setItem("orderInfo", JSON.stringify(data));
-    navigate("/shipping-confirm-order");
+    if (cartItems.length > 0) {
+      const orderDetails = cartItems.map((item) => {
+        const cartProduct = products.find((product) => product._id === item.productId) as Product;
+        const currentQuantity = quantity[item.productId] || item.quantity;
+        const productPriceAfterDiscount = individualPricesAfterDiscount[item.productId] || 0;
+        const productPrice = individualPrices[item.productId] || 0;
+  
+        return {
+          productId: item.productId,
+          name: cartProduct?.name,
+          image: cartProduct?.images[0]?.url,
+          priceAfterDiscount: productPriceAfterDiscount,
+          price: productPrice,
+          quantity: currentQuantity,
+        };
+      });
+  
+      const data = {
+        delivery,
+        discount,
+        totalProductsPrice,
+        totalPrice,
+        orderDetails,
+      };
+  
+      sessionStorage.setItem("orderInfo", JSON.stringify(data));
+      navigate("/shipping-confirm-order");
+    } else {
+      // Handle the case when the cart is empty
+      // You might want to show a message or take a specific action here
+    }
   };
+  
 
   return (
     <Box width={"100%"} margin={"5rem 5rem"}>
@@ -232,13 +306,15 @@ const CartProducts: React.FC = () => {
             }
 
             const cartProduct = products.find(
-              (product) => product?._id === item?.productId
+              (product) => product._id === item.productId
             ) as Product;
-            const currentQuantity = quantity[item?.productId] || item?.quantity;
+            const currentQuantity = quantity[item.productId] || item.quantity;
+            
+          
 
             return (
               <React.Fragment key={item._id}>
-                <Box display={"flex"} key={item?._id}>
+                <Box display={"flex"} key={item._id}>
                   <Box>
                     <Box display={"flex"} gap={"4rem"} m={"3rem"}>
                       <Box mb={"4rem"}>
@@ -252,9 +328,19 @@ const CartProducts: React.FC = () => {
                       <Typography variant="h5" color={"black"}>
                         {cartProduct?.name}
                       </Typography>
-                      <Typography variant="h5" color={"black"}>
-                        Total Price:
-                        {individualPrices[item.productId]?.toFixed(2) || 0}
+                      <Typography variant="h5" color="black">
+                        <span style={{ textDecoration: "line-through" }}>
+                          {individualPrices[item.productId]?.toFixed(2) || 0}
+                        </span>
+                      </Typography>
+                      <Typography
+                        variant="h4"
+                        fontWeight={700}
+                        color={"black"}
+                      >
+                        {individualPricesAfterDiscount[item.productId]?.toFixed(
+                          2
+                        ) || 0}
                       </Typography>
                     </Box>
                   </Box>
@@ -295,30 +381,30 @@ const CartProducts: React.FC = () => {
                       Remove
                     </Button>
                   </Box>
-                  {cartItems.length > 0 ? (
-                    <Box>
-                      <PriceDetails
-                        cartItems={cartItems}
-                        totalProductsPrice={totalProductsPrice}
-                        discount={discount}
-                        delivery={delivery}
-                        totalPrice={totalPrice}
-                      />
-                    </Box>
-                  ) : null}
                 </Box>
-                <Button
-                  onClick={placeOrderHandler}
-                  variant="contained"
-                  style={{ marginTop: "3rem" }}
-                >
-                  Place Order
-                </Button>
               </React.Fragment>
             );
           })
         ))
       )}
+      {cartItems.length > 0 ? (
+        <Box>
+          <PriceDetails
+            cartItems={cartItems}
+            totalProductsPrice={totalProductsPrice}
+            discount={discount}
+            delivery={delivery}
+            totalPrice={totalPrice}
+          />
+        </Box>
+      ) : null}
+      <Button
+        onClick={placeOrderHandler}
+        variant="contained"
+        style={{ marginTop: "3rem" }}
+      >
+        Place Order
+      </Button>
     </Box>
   );
 };

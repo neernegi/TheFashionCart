@@ -54,6 +54,14 @@ const ProductDetails: React.FC = () => {
 
       try {
         await dispatch(addToCartAsync({ quantity, productId, userId }));
+        const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
+
+        // Add the new item to the cart items array
+        const newItem = { productId, quantity };
+        cartItems.push(newItem);
+
+        // Update the cart items in local storage
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
         setErrorMessage(null);
         setSnackbarOpen(true);
       } catch (error) {
@@ -64,20 +72,7 @@ const ProductDetails: React.FC = () => {
       setErrorMessage("Invalid quantity. Please enter a valid quantity.");
     }
   };
-  
-  useEffect(() => {
-    const cartQuantitiesInfo = localStorage.getItem("cartQuantities");
-    const cartQuantities = cartQuantitiesInfo ? JSON.parse(cartQuantitiesInfo) : {};
-  
-    if (product) {
-      const { _id: productId } = product;
-      cartQuantities[productId] = quantity;
-      localStorage.setItem("cartQuantities", JSON.stringify(cartQuantities));
-    }
-  }, [quantity, product]);
-  
 
- 
   useEffect(() => {
     if (userId) {
       dispatch(fetchCartProducts(userId));

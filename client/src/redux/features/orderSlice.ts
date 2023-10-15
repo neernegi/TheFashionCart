@@ -14,6 +14,7 @@ export interface ShippingInfoProps {
 export interface OrderItem {
   quantity: number;
   productId: string; // Assuming product is represented by its ID (string)
+  orderStatus?:string
 }
 
 export interface PaymentInfo {
@@ -29,6 +30,7 @@ export interface Order {
   itemsPrice: number;
   shippingPrice: number;
   totalPrice: number;
+ 
 }
 
 export interface OrderInfoState {
