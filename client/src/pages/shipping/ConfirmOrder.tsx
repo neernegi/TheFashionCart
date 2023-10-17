@@ -6,11 +6,12 @@ import { fetchCartProducts } from "../../redux/features/cartSlice";
 import { Product, fetchProducts } from "../../redux/features/productSlice";
 import { useAuth } from "../context/useAuth";
 import PriceDetails from "../../components/PriceDetail";
+import { OrderItem } from "../../redux/features/orderSlice";
 
 const ConfirmOrder = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useAppDispatch();
-  const products = useAppSelector((state) => state.product.products);
+
   const cartItems = useAppSelector((state) => state.cart.cartItems);
   const { auth } = useAuth();
   const userId = auth?.user?._id;
@@ -71,7 +72,7 @@ const ConfirmOrder = () => {
   };
 
   return (
-    <Fragment>
+    <>
       <Box>{selectedShippingInfo()}</Box>
       <Box>
         <Box width={"100%"} margin={"5rem 5rem"}>
@@ -84,60 +85,51 @@ const ConfirmOrder = () => {
             </Typography>
           ) : (
             <div>
-              {cartItems.map((item) => {
-                if (!item) {
-                  return null; // Handle the case when item is undefined
-                }
-
-                const cartProduct = products.find(
-                  (product) => product?._id === item?.productId
-                ) as Product;
-
-                return (
-                  <Box display={"flex"} key={item?._id}>
-                    <Box>
-                      <Box display={"flex"} gap={"4rem"} m={"3rem"}>
-                        <Box mb={"4rem"}>
-                          <img
-                            style={{ width: "10rem" }}
-                            src={cartProduct?.images[0]?.url}
-                            alt={cartProduct?.name}
-                          />
-                        </Box>
-
-                        <Typography variant="h5" color={"black"}>
-                          {cartProduct?.name}
-                        </Typography>
-                        <Typography variant="h5" color={"black"}>
-                          {cartProduct?.price}
-                        </Typography>
-
-                        <Typography
-                          variant="body1"
-                          fontSize={"1.5rem"}
-                          color={"black"}
-                        >
-                          Quantity: {item?.quantity}
-                        </Typography>
-                      </Box>
-                    </Box>
+              {orderInfoData.orderDetails.map((item: OrderItem) => (
+                <Box key={item.productId} display={"flex"} gap={"3rem"}>
+                  <Box mb={"4rem"}>
+                    <img
+                      style={{ width: "10rem" }}
+                      src={item?.image}
+                      alt={item?.name}
+                    />
                   </Box>
-                );
-              })}
+                  <Typography variant="h5" color="black">
+                    {item?.name}
+                  </Typography>
+                  <Typography
+                    style={{ textDecoration: "line-through" }}
+                    variant="h5"
+                    color="black"
+                  >
+                    {item?.price}
+                  </Typography>
+                  <Typography variant="h4" color="black">
+                    {item?.priceAfterDiscount}
+                  </Typography>
+                  <Typography
+                    variant="body1"
+                    fontSize={"1.5rem"}
+                    color={"black"}
+                  >
+                    Quantity: {item?.quantity}
+                  </Typography>
+                </Box>
+              ))}
               <Box>
                 <PriceDetails
                   cartItems={cartItems}
-                  totalProductsPrice={orderInfoData.totalProductsPrice}
-                  discount={orderInfoData.discount}
-                  delivery={orderInfoData.delivery}
-                  totalPrice={orderInfoData.totalPrice}
+                  totalProductsPrice={orderInfoData?.totalProductsPrice}
+                  discount={orderInfoData?.discount}
+                  delivery={orderInfoData?.delivery}
+                  totalPrice={orderInfoData?.totalPrice}
                 />
               </Box>
             </div>
           )}
         </Box>
       </Box>
-    </Fragment>
+    </>
   );
 };
 

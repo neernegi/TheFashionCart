@@ -22,6 +22,14 @@ import ReviewCardComponent from "../../components/review/ReviewCardComponent";
 const ProductDetails: React.FC = () => {
   const { auth, setAuth } = useAuth();
   const [quantity, setQuantity] = useState<number>(1);
+  const [delivery, setDelivery] = useState<number>(200);
+  const [individualPrices, setIndividualPrices] = useState<{
+    [productId: string]: number;
+  }>({});
+  const [individualPricesAfterDiscount, setIndividualPricesAfterDiscount] =
+    useState<{
+      [productId: string]: number;
+    }>({});
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const product = useAppSelector((state) => state.product.product);
@@ -116,6 +124,45 @@ const ProductDetails: React.FC = () => {
     setSnackbarOpen(false);
   };
 
+  // const placeOrderHandler = () => {
+  //   if (cartItems.length > 0) {
+  //     const orderDetails = cartItems.map((item) => {
+  //       const cartProduct = products.find(
+  //         (product) => product._id === item.productId
+  //       ) as Product;
+  //       const currentQuantity = quantity[item.productId] || item.quantity;
+  //       const cartId = item?._id;
+  //       const productPriceAfterDiscount =
+  //         individualPricesAfterDiscount[item.productId] || 0;
+  //       const productPrice = individualPrices[item.productId] || 0;
+
+  //       return {
+  //         productId: item.productId,
+  //         name: cartProduct?.name,
+  //         image: cartProduct?.images[0]?.url,
+  //         priceAfterDiscount: productPriceAfterDiscount,
+  //         price: productPrice,
+  //         quantity: currentQuantity,
+  //         cartId: cartId,
+  //       };
+  //     });
+
+  //     const data = {
+  //       delivery,
+  //       discount,
+  //       totalProductsPrice,
+  //       totalPrice,
+  //       orderDetails,
+  //     };
+
+  //     sessionStorage.setItem("orderInfo", JSON.stringify(data));
+  //     navigate("/shipping-confirm-order");
+  //   } else {
+  //     // Handle the case when the cart is empty
+  //     // You might want to show a message or take a specific action here
+  //   }
+  // };
+
   return (
     <>
       <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
@@ -189,15 +236,6 @@ const ProductDetails: React.FC = () => {
               >
                 Add to Cart
               </Button>
-              <Link to={"/order-shipping"}>
-                <Button
-                  onChange={() => navigate("/order-shipping")}
-                  style={{ fontSize: "2rem" }}
-                  variant="contained"
-                >
-                  Buy Now
-                </Button>
-              </Link>
             </Box>
             {errorMessage && (
               <Typography color="error" variant="body1">

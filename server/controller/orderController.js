@@ -3,6 +3,7 @@ import Order from "../models/orderModel.js";
 import Product from "../models/productModel.js";
 import ErrorHandler from "../utils/errorHandler.js";
 import User from "../models/userModel.js";
+import Cart from "../models/cartModel.js";
 
 // // create new order
 // Import necessary dependencies, including the Order model
@@ -22,6 +23,9 @@ export const createNewOrder = catchAsyncError(async (req, res, next) => {
       totalPrice,
     } = req.body;
 
+    // Collect all the cartIds from orderItems
+    const cartIds = orderItems.map((item) => item.cartId);
+
     // Create a new order using Mongoose
     const order = await Order.create({
       user: userId,
@@ -34,16 +38,26 @@ export const createNewOrder = catchAsyncError(async (req, res, next) => {
       paidAt: Date.now(),
     });
 
+    // Clear the carts associated with the collected cartIds
+    for (const cartId of cartIds) {
+      await Cart.deleteMany({ _id: cartId });
+    }
+
     // Respond with a 201 (Created) status code and the created order
     res.status(201).json({
       success: true,
       order,
     });
   } catch (error) {
-   console.log(error)
+    console.log(error);
+
+    // Add error handling and response
+    res.status(500).json({
+      success: false,
+      message: "Order placement failed",
+    });
   }
 });
-
 // get single order
 export const getSingleOrder = catchAsyncError(async (req, res, next) => {
   const order = await Order.findById(req.params.userId).populate(

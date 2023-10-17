@@ -28,6 +28,7 @@ const CheckIcon = styled(CheckCircleIcon)({
 
 const Message = styled(Typography)({
   fontSize: "2vmax",
+  color:"black",
   "@media (max-width: 600px)": {
     fontSize: "5vw",
     margin: "2vmax",

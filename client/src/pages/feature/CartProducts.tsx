@@ -10,6 +10,7 @@ import { Box, Button, Typography, Input } from "@mui/material";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import PriceDetails from "../../components/PriceDetail";
+import { Order, OrderItem, fetchAllOrders } from "../../redux/features/orderSlice";
 
 interface CartProductProps {
   cartProduct: Product;
@@ -22,7 +23,7 @@ interface CartItem {
 }
 
 const CartProducts: React.FC = () => {
-  const [discount, setDiscount] = useState<number>(400);
+  const [discount, setDiscount] = useState<number>(100);
   const [delivery, setDelivery] = useState<number>(200);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const { auth } = useAuth();
@@ -30,6 +31,7 @@ const CartProducts: React.FC = () => {
   const navigate = useNavigate();
   const products = useAppSelector((state) => state.product.products);
   const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const order = useAppSelector((state) => state.order.orders);
 
   const userId = auth?.user?._id;
   const [loading, setLoading] = useState(true);
@@ -45,6 +47,11 @@ const CartProducts: React.FC = () => {
   useEffect(() => {
     dispatch(fetchProducts());
   }, [dispatch]);
+  useEffect(() => {
+    if (userId) {
+      dispatch(fetchAllOrders(userId));
+    }
+  }, [dispatch, userId]);
 
   useEffect(() => {
     if (userId) {
@@ -61,8 +68,6 @@ const CartProducts: React.FC = () => {
     }
   }, []);
 
- 
-
   const updateQuantity = (productId: string, newQuantity: number) => {
     setQuantity((prevQuantity) => ({
       ...prevQuantity,
@@ -75,16 +80,18 @@ const CartProducts: React.FC = () => {
     const cartProduct = products.find(
       (product) => product._id === item.productId
     );
-  
+
     if (cartProduct) {
       const qty = currentQuantity + 1;
       updateQuantity(item.productId, qty);
       updateCartQuantity(item._id, qty);
-  
+
       // Update the cart items in local storage
       const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-      const updatedItemIndex = cartItems.findIndex((ci:CartItem) => ci.productId === item.productId);
-  
+      const updatedItemIndex = cartItems.findIndex(
+        (ci: CartItem) => ci.productId === item?.productId
+      );
+
       if (updatedItemIndex !== -1) {
         // Update the existing item in the cart items array
         cartItems[updatedItemIndex].quantity = qty;
@@ -93,41 +100,43 @@ const CartProducts: React.FC = () => {
         const newItem = { productId: item.productId, quantity: qty };
         cartItems.push(newItem);
       }
-  
+
       // Update the cart items in local storage
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
   };
-  
+
   const handleDecrement = (item: CartItem) => {
     const currentQuantity = quantity[item.productId] || item.quantity;
     if (currentQuantity <= 1) {
       return;
     }
-  
+
     const cartProduct = products.find(
       (product) => product._id === item.productId
     );
-  
+
     if (cartProduct) {
       const qty = currentQuantity - 1;
       updateQuantity(item.productId, qty);
       updateCartQuantity(item._id, qty);
-  
+
       // Update the cart items in local storage
       const cartItems = JSON.parse(localStorage.getItem("cartItems") || "[]");
-      const updatedItemIndex = cartItems.findIndex((ci:CartItem) => ci.productId === item.productId);
-  
+      const updatedItemIndex = cartItems.findIndex(
+        (ci: CartItem) => ci.productId === item.productId
+      );
+
       if (updatedItemIndex !== -1) {
         // Update the existing item in the cart items array
         cartItems[updatedItemIndex].quantity = qty;
       }
-  
+
       // Update the cart items in local storage
       localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }
   };
-  
+
   const updateCartQuantity = async (cartId: string, newQuantity: number) => {
     try {
       const response = await axios.put(
@@ -153,13 +162,10 @@ const CartProducts: React.FC = () => {
         const updatedCartItems = cartItems.filter(
           (item) => item._id !== cartId
         );
-        localStorage.setItem(
-          "cartQuantities",
-          JSON.stringify(updatedCartItems)
-        );
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
 
         // Remove the "cartQuantities" entry from local storage
-        localStorage.removeItem("cartQuantities");
+        localStorage.removeItem("cartItems");
       });
     }
   };
@@ -252,11 +258,15 @@ const CartProducts: React.FC = () => {
   const placeOrderHandler = () => {
     if (cartItems.length > 0) {
       const orderDetails = cartItems.map((item) => {
-        const cartProduct = products.find((product) => product._id === item.productId) as Product;
+        const cartProduct = products.find(
+          (product) => product._id === item.productId
+        ) as Product;
         const currentQuantity = quantity[item.productId] || item.quantity;
-        const productPriceAfterDiscount = individualPricesAfterDiscount[item.productId] || 0;
+        const cartId = item?._id;
+        const productPriceAfterDiscount =
+          individualPricesAfterDiscount[item.productId] || 0;
         const productPrice = individualPrices[item.productId] || 0;
-  
+
         return {
           productId: item.productId,
           name: cartProduct?.name,
@@ -264,9 +274,10 @@ const CartProducts: React.FC = () => {
           priceAfterDiscount: productPriceAfterDiscount,
           price: productPrice,
           quantity: currentQuantity,
+          cartId: cartId,
         };
       });
-  
+
       const data = {
         delivery,
         discount,
@@ -274,7 +285,7 @@ const CartProducts: React.FC = () => {
         totalPrice,
         orderDetails,
       };
-  
+
       sessionStorage.setItem("orderInfo", JSON.stringify(data));
       navigate("/shipping-confirm-order");
     } else {
@@ -282,7 +293,8 @@ const CartProducts: React.FC = () => {
       // You might want to show a message or take a specific action here
     }
   };
-  
+
+
 
   return (
     <Box width={"100%"} margin={"5rem 5rem"}>
@@ -309,8 +321,6 @@ const CartProducts: React.FC = () => {
               (product) => product._id === item.productId
             ) as Product;
             const currentQuantity = quantity[item.productId] || item.quantity;
-            
-          
 
             return (
               <React.Fragment key={item._id}>
@@ -333,11 +343,7 @@ const CartProducts: React.FC = () => {
                           {individualPrices[item.productId]?.toFixed(2) || 0}
                         </span>
                       </Typography>
-                      <Typography
-                        variant="h4"
-                        fontWeight={700}
-                        color={"black"}
-                      >
+                      <Typography variant="h4" fontWeight={700} color={"black"}>
                         {individualPricesAfterDiscount[item.productId]?.toFixed(
                           2
                         ) || 0}

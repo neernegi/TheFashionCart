@@ -34,7 +34,7 @@ const PriceDetails: React.FC<PriceDetailsProps> = ({
       </Box>
 
       <Typography variant="h3" fontSize={"2xl"} color={"black"}>
-        Discount: ₹{discount*cartItems.length}
+        Discount: ₹{discount*cartItems?.length}
       </Typography>
       <Typography variant="h3" fontSize={"2xl"} color={"black"}>
         Delivery Charges:{""} ₹{delivery}

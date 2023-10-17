@@ -12,9 +12,15 @@ export interface ShippingInfoProps {
 }
 
 export interface OrderItem {
+  _id?: string;
+  name: string;
+  price: number;
+  priceAfterDiscount: number;
+  image: string;
   quantity: number;
-  productId: string; // Assuming product is represented by its ID (string)
-  orderStatus?:string
+  productId: string;
+  orderStatus?: string;
+  cartId: string;
 }
 
 export interface PaymentInfo {
@@ -27,10 +33,8 @@ export interface Order {
   shippingInfo: ShippingInfoProps;
   orderItems: OrderItem[];
   paymentInfo: PaymentInfo;
-  itemsPrice: number;
   shippingPrice: number;
   totalPrice: number;
- 
 }
 
 export interface OrderInfoState {

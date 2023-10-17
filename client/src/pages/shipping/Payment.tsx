@@ -18,12 +18,11 @@ import {
   createOrder,
   PaymentInfo,
   Order,
+  OrderItem,
 } from "../../redux/features/orderSlice";
 import { useAuth } from "../context/useAuth";
 
 const Payment = () => {
-  const orderInfoData = sessionStorage.getItem("orderInfo");
-  const orderInfo = orderInfoData ? JSON.parse(orderInfoData) : null;
   // const cartInfoData = localStorage.getItem("cartQuantities");
   // const cartItems = cartInfoData ? JSON.parse(cartInfoData) : null;
   const shippingInfoData = sessionStorage.getItem("selectedShippingInfo");
@@ -43,27 +42,34 @@ const Payment = () => {
   const user = useAppSelector((state) => state.user.user);
   const userId = auth?.user?._id;
 
+  const orderInfoData = sessionStorage.getItem("orderInfo");
+  const orderInfo = orderInfoData ? JSON.parse(orderInfoData) : null;
+
+  let orderItems = [];
+
+  if (orderInfo) {
+    orderItems = orderInfo.orderDetails.map((orderDetail: OrderItem) => ({
+      name: orderDetail?.name,
+      price: orderDetail?.price,
+      priceAfterDiscount: orderDetail?.priceAfterDiscount,
+      image: orderDetail?.image,
+      quantity: orderDetail?.quantity,
+      productId: orderDetail?.productId,
+      cartId: orderDetail?.cartId,
+    }));
+
+    console.log(orderItems);
+  }
+
   const paymentData = {
     amount: Math.round(orderInfo.totalPrice * 100),
   };
 
-  const cartInfoData = localStorage.getItem("cartQuantities");
-const cartItems = cartInfoData ? JSON.parse(cartInfoData) : null;
-
-// Transform the cartItems object into an array of orderItems
-const orderItems = Object.keys(cartItems).map(productId => ({
-  productId,
-  quantity: cartItems[productId],
-}));
-console.log(orderItems)
-
-
   const order = {
     shippingInfo,
     orderItems,
-    itemsPrice: orderInfo.totalProductsPrice,
-    shippingPrice: orderInfo.delivery,
-    totalPrice: orderInfo.totalPrice,
+    shippingPrice: orderInfo?.delivery,
+    totalPrice: orderInfo?.totalPrice,
     paymentInfo: {} as PaymentInfo,
   };
 
@@ -117,6 +123,9 @@ console.log(orderItems)
           dispatch(createOrder({ order, userId }));
 
           navigate("/success");
+
+          localStorage.removeItem("cartItems");
+          sessionStorage.removeItem("orderInfo")
         } else {
           alert("There's some issue while processing payment ");
         }

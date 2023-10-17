@@ -1,5 +1,7 @@
 import Cart from "../models/cartModel.js"; // Import the Cart model
 import Product from "../models/productModel.js";
+import Order from "../models/orderModel.js";
+
 
 // Create a function to add a product to the user's cart
 
@@ -105,3 +107,7 @@ export const deleteCartProducts = async (req, res) => {
     return res.status(500).json({ message: "Internal Server Error" });
   }
 };
+
+
+
+

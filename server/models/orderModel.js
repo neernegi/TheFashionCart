@@ -6,6 +6,7 @@ const orderSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+
   shippingInfo: {
     address: {
       type: String,
@@ -34,13 +35,35 @@ const orderSchema = new mongoose.Schema({
   },
   orderItems: [
     {
+      name: {
+        type: String,
+        required: true,
+      },
+      image: {
+        type: String,
+        required: true,
+      },
       quantity: {
+        type: Number,
+        required: true,
+      },
+      price: {
         type: Number,
         required: true,
       },
       productId: {
         type: mongoose.Schema.ObjectId,
         ref: "Product",
+        required: true,
+      },
+      priceAfterDiscount: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
+      cartId: {
+        type: mongoose.Schema.ObjectId,
+        ref: "Cart",
         required: true,
       },
       orderStatus: {
@@ -63,12 +86,6 @@ const orderSchema = new mongoose.Schema({
     type: Date,
   },
 
-  itemsPrice: {
-    type: Number,
-    required: true,
-    default: 0,
-  },
-
   shippingPrice: {
     type: Number,
     required: true,
@@ -79,7 +96,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
     default: 0,
   },
-  
+
   deliveredAt: Date,
   createdAt: {
     type: Date,
