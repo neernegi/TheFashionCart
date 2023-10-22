@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Home from "./pages/home/Home";
 import UserLogin from "./pages/authentication/user/UserLogin";
 import UserRegister from "./pages/authentication/user/UserRegister";
@@ -11,7 +11,7 @@ import LoginSeller from "./pages/authentication/seller/LoginSeller";
 import SellerRegister from "./pages/authentication/seller/SellerRegister";
 import CreateProductForm from "./components/productComponent/ProductForm";
 import SellerProduct from "./pages/product/SellerProduct";
-import RequestQC from "./pages/qcStatus/RequestQC";
+import RequestQC from "./pages/qcStatus/FetchRequestQC";
 import CreateBanner from "./pages/admin/banner/CreateBanner";
 import ShowAllCategory from "./pages/category/ShowAllCategory";
 import CategoryProducts from "./pages/category/CategoryProducts";
@@ -24,8 +24,20 @@ import ConfirmOrder from "./pages/shipping/ConfirmOrder";
 import OrderStepper from "./pages/shipping/ShippingStepper";
 import OrderSuccess from "./pages/shipping/OrderSuccess";
 import FetchAllOrders from "./pages/order/FetchAllOrders";
+import AddSellerInfo from "./pages/authentication/seller/AddSellerDetails";
+// import ProtectedRoute from "./components/route/ProtectedRoute";
+// import { useAppDispatch, useAppSelector } from "./redux/hooks";
+// import { RootState } from "./redux/store";
+import { useAuth } from "./pages/context/useAuth";
+
 
 const App: React.FC = () => {
+  const {auth} = useAuth()
+  const isAuthenticated = auth?.token
+  console.log(isAuthenticated)
+
+
+  
   return (
     <>
       <Header />
@@ -53,9 +65,13 @@ const App: React.FC = () => {
         />
         <Route path="/seller-products" element={<SellerProduct />} />
         <Route path="/requestQC" element={<RequestQC />} />
-        <Route path="/user-register" element={<UserRegister />} />
+        <Route  path="/user-register" element={<UserRegister />} />
         <Route path="/login-seller" element={<LoginSeller />} />
         <Route path="/seller-register" element={<SellerRegister />} />
+        {isAuthenticated && <Route  path="/seller-details" element={<AddSellerInfo />} />}
+       
+        {/* <ProtectedRoute isSeller={true}  path="/seller-add-info" component={AddSellerInfo} /> */}
+        {/* <Route  element={<AddSellerInfo />} /> */}
         <Route path="/success" element={<OrderSuccess />} />
         <Route path="/my-orders" element={<FetchAllOrders />} />
       </Routes>

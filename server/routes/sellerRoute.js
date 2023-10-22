@@ -2,6 +2,7 @@ import express from "express";
 
 import {
   SellerDetail,
+  createSellerDetails,
   forgotSellerPassword,
   getSellerDetails,
   loginSeller,
@@ -12,10 +13,15 @@ import {
 import { logout } from "../utils/logout.js";
 import { isAuthenticatedSeller } from "../middleware/auth.js";
 import multer from "multer";
-const upload = multer();
+const storage = multer.memoryStorage(); // Use memory storage for file uploads
+
+const upload = multer({ storage: storage });
+// const upload = multer();
 const router = express.Router();
 
 router.post("/register", upload.single("avatar"), registerSeller);
+
+router.post("/seller-details",isAuthenticatedSeller, createSellerDetails);
 router.post("/login", loginSeller);
 router.put("/password-update", isAuthenticatedSeller, updateSellerPassword);
 router.post("/password/forgot", forgotSellerPassword);

@@ -15,6 +15,7 @@ import { RootState } from "../store";
 // }
 
 
+
 export interface Seller {
   name: string;
   email: string;
@@ -24,6 +25,7 @@ export interface Seller {
     public_id: string;
     url: string;
   };
+  token: string;
   shopName: string;
   description: string;
   pickupAddress: {
@@ -35,11 +37,9 @@ export interface Seller {
   pincode: number;
   state: string;
   country: string;
-  token: string;
-  _id: string;
   role: string;
+  _id: string;
 }
-
 
 interface SellerState {
   seller: Seller | null;
@@ -52,7 +52,6 @@ const initialState: SellerState = {
   loading: "idle",
   error: null,
 };
-
 
 type LoginSellerPayload = {
   email: String;
@@ -83,20 +82,24 @@ export const registerSeller = createAsyncThunk(
 export const loginSeller = createAsyncThunk<Seller, LoginSellerPayload>(
   "/seller-login",
   async (data) => {
-    const response = await axios.post("http://localhost:8080/api/v1/seller/login", data);
+    const response = await axios.post(
+      "http://localhost:8080/api/v1/seller/login",
+      data
+    );
     return response.data;
   }
 );
 
-export const fetchSellerDetail = createAsyncThunk<Seller,string>(
+export const fetchSellerDetail = createAsyncThunk<Seller, string>(
   "/seller-detail",
-  async (sellerId:string) => {
-    const response = await axios.get(`http://localhost:8080/api/v1/seller/get-seller-details/${sellerId}`);
-    console.log(response.data)
+  async (sellerId: string) => {
+    const response = await axios.get(
+      `http://localhost:8080/api/v1/seller/get-seller-details/${sellerId}`
+    );
+    console.log(response.data);
     return response.data.seller;
   }
 );
-
 
 export const updateSellerPassword = createAsyncThunk<
   Seller,
@@ -136,6 +139,7 @@ const sellerSlice = createSlice({
         state.loading = "failed";
         state.error = action.error.message || null;
       })
+
       .addCase(loginSeller.pending, (state) => {
         state.loading = "pending";
       })

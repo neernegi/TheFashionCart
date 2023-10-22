@@ -18,12 +18,14 @@ export interface User {
 export interface UserState {
   user: User | null;
   loading: "idle" | "pending" | "succeeded" | "failed";
+  isAuthenticated: boolean,
   error: String | null;
 }
 
 const initialState: UserState = {
   user: null,
   loading: "idle",
+  isAuthenticated: false,
   error: null,
 };
 
@@ -93,6 +95,7 @@ const userSlice = createSlice({
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = "failed";
@@ -104,6 +107,7 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.user = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = "failed";

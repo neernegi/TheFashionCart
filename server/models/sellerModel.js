@@ -22,49 +22,51 @@ const sellerSchema = new mongoose.Schema({
     minLength: [8, "Password should be greater than 8 characters"],
     select: false,
   },
+  avatar: {
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
+  },
 
   shopName: {
     type: String,
-    required: [true, "Please enter the shop name"],
   },
   description: {
     type: String,
-    required: [true, "Please enter the description"],
   },
   pickupAddress: {
     address: {
       type: String,
-      required: [true, "Please enter the address"],
     },
     street: {
       type: String,
-      required: [true, "Please enter the road name,area and colony"],
     },
     nearBy: {
       type: String,
-      required: [true, "Please enter the nearby landmark"],
     },
   },
   city: {
     type: String,
-    required: true,
   },
   pincode: {
     type: Number,
-    required: true,
   },
   state: {
     type: String,
-    required: true,
   },
   country: {
     type: String,
-    required: true,
   },
   role: {
     type: String,
     default: "seller",
   },
+
   resetPasswordToken: String,
   resetPasswordExpire: Date,
 });

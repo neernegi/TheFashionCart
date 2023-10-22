@@ -37,6 +37,7 @@ export const AuthProvider: React.FC<Props> = ({ children }): JSX.Element => {
   axios.defaults.headers.common["Authorization"] = auth?.token;
 
 
+
   useEffect(() => {
     const data = localStorage.getItem("auth");
     if (data) {
@@ -49,6 +50,8 @@ export const AuthProvider: React.FC<Props> = ({ children }): JSX.Element => {
     }
      // eslint-disable-next-line
   }, []);
+  console.log(auth)
+  
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

@@ -33,24 +33,24 @@ const columns = [
 const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
   return (
     <Paper>
-      <TableContainer>
-        <Table>
+      <TableContainer style={{marginTop:"2rem"}}>
+        <Table >
           <TableHead>
             <TableRow>
               {columns.map((column) => (
-                <TableCell key={column.id}>{column.label}</TableCell>
+                <TableCell style={{fontSize:"3rem",fontWeight:"bold"}} key={column.id}>{column.label}</TableCell>
               ))}
             </TableRow>
           </TableHead>
           <TableBody>
             {products.map((product, index) => (
-              <TableRow key={index}>
-                <TableCell>{product.name}</TableCell>
-                <TableCell>{product.brand}</TableCell>
-                <TableCell>{product.marketplace}</TableCell>
-                <TableCell>{product.createdAt}</TableCell>
-                <TableCell>{product.qcStatus}</TableCell>
-                <TableCell>{/* Add logic for actions if needed */}</TableCell>
+              <TableRow key={index} >
+                <TableCell style={{fontSize:"2rem"}}>{product.name}</TableCell>
+                <TableCell style={{fontSize:"2rem"}}>{product.brand}</TableCell>
+                <TableCell style={{fontSize:"2rem"}}>{product.marketplace}</TableCell>
+                <TableCell style={{fontSize:"2rem"}}>{product.createdAt}</TableCell>
+                <TableCell style={{color:"green",fontSize:"2rem"}}>{product.qcStatus}</TableCell>
+                <TableCell style={{fontSize:"2rem"}}>{/* Add logic for actions if needed */}</TableCell>
               </TableRow>
             ))}
           </TableBody>

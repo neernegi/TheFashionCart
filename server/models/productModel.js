@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema({
@@ -14,13 +13,14 @@ const productSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true,
-    maxLength: 8,
+
+    // maxLength: 8,
   },
   ratings: {
     type: Number,
     default: 0,
   },
-  images: [
+  avatar: [
     {
       public_id: {
         type: String,
@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema({
       url: {
         type: String,
         required: true,
-      }, 
+      },
     },
   ],
   category: {
@@ -58,15 +58,12 @@ const productSchema = new mongoose.Schema({
     {
       name: {
         type: String,
-        required: true,
       },
       rating: {
         type: Number,
-        required: true,
       },
       comment: {
         type: String,
-        required: true,
       },
     },
   ],
@@ -80,10 +77,10 @@ const productSchema = new mongoose.Schema({
     required: true,
     default: "Progress",
   },
-  marketplace:{
-    type:String,
-    required:true,
-    default:'E-Store'
+  marketplace: {
+    type: String,
+    required: true,
+    default: "E-Store",
   },
   createdAt: {
     type: Date,

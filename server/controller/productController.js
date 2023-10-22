@@ -8,6 +8,7 @@ import cloudinary from "../utils/cloudinary.js";
 export const createProduct = catchAsyncError(async (req, res) => {
   const { name, price, description, brand, Stock, category, subcategory } =
     req.body;
+    console.log("Request Body: ", req.body);
   const seller = req.params.sellerId; // Assuming "sellerId" is the parameter name in the URL
 
   let images = [];
@@ -28,7 +29,7 @@ export const createProduct = catchAsyncError(async (req, res) => {
         cloudinary.v2.uploader
           .upload_stream(
             {
-              folder: "products", // You can customize this folder
+              folder: "product", // You can customize this folder
             },
             (error, result) => {
               if (error) {
@@ -58,7 +59,7 @@ export const createProduct = catchAsyncError(async (req, res) => {
       category,
       subcategory,
       seller,
-      images: uploadedImages, // Associate all uploaded images with the product
+      avatar: uploadedImages, // Associate all uploaded images with the product
     });
 
     res.status(201).json({

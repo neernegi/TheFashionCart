@@ -47,10 +47,10 @@ export const createSubCategory = createAsyncThunk(
 
 export const fetchSubCategories = createAsyncThunk(
   "subcategories/fetchSubcategories",
-  async (categoryName: string) => {
+  async (categoryId: string) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/api/v1/category/get-subcategories/${categoryName}`
+        `http://localhost:8080/api/v1/category/get-subcategories/${categoryId}`
       );
       console.log(response);
       return response.data;
@@ -86,7 +86,24 @@ const subCategorySlice = createSlice({
       .addCase(createSubCategory.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
-      });
+      })
+      .addCase(fetchSubCategories.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSubCategories.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.subCategories = action.payload.map((subCategory: any) => ({
+          value: subCategory.label,
+          label: subCategory.name,
+          name: subCategory.name,
+          _id: subCategory._id,
+      
+        }));
+      })
+      .addCase(fetchSubCategories.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message || undefined;
+      })
   },
 });
 

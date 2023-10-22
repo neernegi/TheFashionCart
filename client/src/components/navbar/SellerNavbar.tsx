@@ -73,6 +73,8 @@ const SellerNavbar: React.FC = () => {
       <NavBox>
         <LinkNav to={"/seller-store"}>E-Seller</LinkNav>
         <LinkNav to={"/seller-store"}>Home</LinkNav>
+        {/* <LinkNav to={"/seller-add-info"}>Add Detail</LinkNav> */}
+
         <LinkNav
           to={"/listing"}
           onMouseEnter={() => handleMouseEnter("listing")}
@@ -80,6 +82,7 @@ const SellerNavbar: React.FC = () => {
         >
           Listing
         </LinkNav>
+
         <LinkNav
           to={"/seller-products"}
           onMouseEnter={() => handleMouseEnter("qcstatus")}

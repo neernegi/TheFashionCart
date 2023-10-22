@@ -21,7 +21,9 @@ import {
   isAuthenticatedSeller,
 } from "../middleware/auth.js";
 import multer from "multer";
-const upload = multer();
+const storage = multer.memoryStorage(); // Use memory storage for file uploads
+
+const upload = multer({ storage: storage });
 
 const router = express.Router();
 
@@ -39,8 +41,8 @@ router.get("/product-detail/:id", getSingleProductDetail);
 router.get("/seller-products/:sellerId", getSellerProducts);
 router.post(
   "/create/:sellerId/new-products",
-  isAuthenticatedSeller,
-  upload.array("products", 4), // You can specify the maximum number of files here
+  
+  upload.array("avatar", 4), 
   createProduct
 );
 router.put("/updateProduct/:id", isAuthenticatedSeller, updateProducts);

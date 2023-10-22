@@ -12,7 +12,7 @@ export interface Product {
     length: number;
     public_id: string;
     url: string;
-    _id:string
+    _id: string;
   }[];
   category: string;
   subcategory: string;
@@ -24,7 +24,7 @@ export interface Product {
     name: string;
     rating: number;
     comment: string;
-    _id:string
+    _id: string;
   }[];
   seller: string;
   qcStatus: string;
@@ -56,9 +56,9 @@ export const fetchProducts = createAsyncThunk<Product[]>(
     return response.data.products;
   }
 );
-export const fetchSearchProducts = createAsyncThunk<Product[],string>(
+export const fetchSearchProducts = createAsyncThunk<Product[], string>(
   "products/fetch-search-Products",
-  async (keyword:string) => {
+  async (keyword: string) => {
     const response = await axios.get(
       `http://localhost:8080/api/v1/product/allProducts?keyword=${keyword}`
     );
@@ -98,7 +98,10 @@ export const fetchCategoryFilterProducts = createAsyncThunk<Product[], string>(
   }
 );
 
-export const fetchSubcategoryFilterProducts = createAsyncThunk<Product[], string>(
+export const fetchSubcategoryFilterProducts = createAsyncThunk<
+  Product[],
+  string
+>(
   "products/fetchsubcategoryFilterProducts", // Update the action name
   async (subcategoryId: string) => {
     try {
@@ -115,7 +118,22 @@ export const fetchSubcategoryFilterProducts = createAsyncThunk<Product[], string
 );
 
 // Create an async thunk action to create a new product
-export const createProduct = createAsyncThunk<Product, Product>(
+export const createProduct = createAsyncThunk(
+  "product/create-product",
+  async ({formData,sellerId}:{formData:FormData,sellerId:string|undefined}) => {
+    const response = await axios.post(
+      `http://localhost:8080/api/v1/product/create/${sellerId}/new-products`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    return response.data.product;
+  }
+);
+export const UpdateProduct = createAsyncThunk<Product, Product>(
   "product/create-product",
   async (newProduct) => {
     const response = await axios.post(
@@ -176,7 +194,7 @@ const productSlice = createSlice({
       })
       .addCase(getSingleProductDetails.fulfilled, (state, action) => {
         state.loading = "succeeded";
-        state.product=action.payload;
+        state.product = action.payload;
       })
       .addCase(getSingleProductDetails.rejected, (state, action) => {
         state.loading = "failed";

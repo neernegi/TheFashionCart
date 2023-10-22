@@ -9,24 +9,12 @@ import cloudinary from "../utils/cloudinary.js";
 
 // Register seller
 export const registerSeller = catchAsyncError(async (req, res, next) => {
-  const {
-    name,
-    email,
-    password,
-    shopName,
-    description,
-    state,
-    country,
-    address,
-    street,
-    nearBy,
-    city,
-    pincode,
-  } = req.body;
+  try {
+    const { name, email, password } = req.body;
 
 
-  const { buffer } = req.file;
-
+    const { buffer } = req.file;
+  
     // Upload avatar image to Cloudinary
     const myCloud = await new Promise((resolve, reject) => {
       cloudinary.v2.uploader
@@ -46,38 +34,31 @@ export const registerSeller = catchAsyncError(async (req, res, next) => {
         )
         .end(buffer);
     });
-
-  // Check if the email already exists in the User model
-  const userEmail = await User.findOne({ email });
-
-  if (!userEmail) {
-    // If the email is not already registered, create a new seller
-    const seller = await Seller.create({
-      name,
-      email,
-      password,
-      shopName,
-      description,
-      state,
-      country,
-      pickupAddress: {
-        address,
-        street,
-        nearBy,
-      },
-      city,
-      pincode,
-      avatar: {
-        public_id: myCloud.public_id,
-        url: myCloud.secure_url,
-      },
-    });
-
-    sendToken(seller, 201, res);
-  } else {
-    // If the email is already registered, return an error
-    return next(new ErrorHandler("Email must be different"));
+  
+    // Check if the email already exists in the User model
+    const userEmail = await User.findOne({ email });
+  
+    if (!userEmail) {
+      // If the email is not already registered, create a new seller
+      const seller = await Seller.create({
+        name,
+        email,
+        password,
+        avatar: {
+          public_id: myCloud.public_id,
+          url: myCloud.secure_url,
+        },
+      });
+  
+      sendToken(seller, 201, res);
+    } else {
+      // If the email is already registered, return an error
+      return next(new ErrorHandler("Email must be different"));
+    }
+  } catch (error) {
+    console.log(error)
   }
+ 
 });
 
 // login seller
@@ -106,6 +87,46 @@ export const loginSeller = catchAsyncError(async (req, res, next) => {
   sendToken(seller, 200, res);
 });
 
+// sellers detail
+export const createSellerDetails = async (req, res, next) => {
+  try {
+    // Assuming you have authentication middleware to get the logged-in seller
+
+    // Check if the seller exists
+
+    const {
+      shopName,
+      description,
+      pickupAddress,
+      city,
+      pincode,
+      state,
+      country,
+    } = req.body;
+
+    const seller = req.user;
+
+    seller.shopName = shopName;
+    seller.description = description;
+    seller.pickupAddress = pickupAddress;
+    seller.city = city;
+    seller.pincode = pincode;
+    seller.state = state;
+    seller.country = country;
+
+    await seller.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Seller details updated successfully",
+      data: seller,
+    });
+  } catch (error) {
+    console.log(error);
+    return next(new ErrorHandler("Error updating seller details", 500));
+  }
+};
+
 // Get seller detail
 export const getSellerDetails = catchAsyncError(async (req, res, next) => {
   const seller = await Seller.findById(req.user.id);
@@ -122,7 +143,7 @@ export const SellerDetail = catchAsyncError(async (req, res, next) => {
   if (!sellerId) {
     return res.status(400).json({
       success: false,
-      error: 'Seller ID is missing or invalid',
+      error: "Seller ID is missing or invalid",
     });
   }
 
@@ -131,7 +152,7 @@ export const SellerDetail = catchAsyncError(async (req, res, next) => {
   if (!seller) {
     return res.status(404).json({
       success: false,
-      error: 'Seller not found',
+      error: "Seller not found",
     });
   }
 
