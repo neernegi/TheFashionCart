@@ -65,6 +65,7 @@ const App: React.FC = () => {
         />
         <Route path="/seller-products" element={<SellerProduct />} />
         <Route path="/requestQC" element={<RequestQC />} />
+        {/* <Route path="/qcstatus" element={<RequestQC />} /> */}
         <Route  path="/user-register" element={<UserRegister />} />
         <Route path="/login-seller" element={<LoginSeller />} />
         <Route path="/seller-register" element={<SellerRegister />} />

@@ -120,7 +120,13 @@ export const fetchSubcategoryFilterProducts = createAsyncThunk<
 // Create an async thunk action to create a new product
 export const createProduct = createAsyncThunk(
   "product/create-product",
-  async ({formData,sellerId}:{formData:FormData,sellerId:string|undefined}) => {
+  async ({
+    formData,
+    sellerId,
+  }: {
+    formData: FormData;
+    sellerId: string | undefined;
+  }) => {
     const response = await axios.post(
       `http://localhost:8080/api/v1/product/create/${sellerId}/new-products`,
       formData,
@@ -133,16 +139,11 @@ export const createProduct = createAsyncThunk(
     return response.data.product;
   }
 );
-export const UpdateProduct = createAsyncThunk<Product, Product>(
-  "product/create-product",
-  async (newProduct) => {
-    const response = await axios.post(
-      "/api/v1/product/create/new-product",
-      newProduct
-    );
-    return response.data;
-  }
-);
+// export const UpdateProductQc = createAsyncThunk(
+//   "product/update-product-qc",
+//   async ({ qc, productId }: { qc: FormData; productId: string }) => {
+   
+// );
 
 // Seller Products
 export const fetchSellerProducts = createAsyncThunk<Product[], string>(
@@ -232,7 +233,18 @@ const productSlice = createSlice({
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.error.message;
-      });
+      })
+      // .addCase(UpdateProductQc.pending, (state) => {
+      //   state.loading = "pending";
+      // })
+      // .addCase(UpdateProductQc.fulfilled, (state, action) => {
+      //   state.loading = "succeeded";
+      //   state.products.push(action.payload); // Add the new product to the state
+      // })
+      // .addCase(UpdateProductQc.rejected, (state, action) => {
+      //   state.loading = "failed";
+      //   state.error = action.error.message;
+      // });
   },
 });
 

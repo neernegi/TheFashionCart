@@ -8,7 +8,7 @@ import cloudinary from "../utils/cloudinary.js";
 export const createProduct = catchAsyncError(async (req, res) => {
   const { name, price, description, brand, Stock, category, subcategory } =
     req.body;
-    console.log("Request Body: ", req.body);
+  console.log("Request Body: ", req.body);
   const seller = req.params.sellerId; // Assuming "sellerId" is the parameter name in the URL
 
   let images = [];
@@ -217,6 +217,39 @@ export const getSingleProductDetail = catchAsyncError(
     });
   }
 );
+
+
+// update qc
+export const updateProductQc = async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const qcStatus = req.body.qcStatus;
+
+    console.log('Received productId:', productId);
+    console.log('Received qcStatus:', qcStatus);
+
+    // Find the product by ID
+    let productStatus;
+
+    if (qcStatus === "Progress" || qcStatus === "Passed" || qcStatus === "Cancel") {
+      productStatus = await Product.findByIdAndUpdate(productId, { qcStatus }, { new: true });
+      if (!productStatus) {
+        return res.status(404).json({ success: false, message: "Product not found" });
+      }
+
+      return res.status(200).json({
+        success: true,
+        product: productStatus,
+      });
+    } else {
+      return res.status(400).json({ success: false, message: "Invalid QC status" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: "Server Error" });
+  }
+};
+
 
 // Update products
 

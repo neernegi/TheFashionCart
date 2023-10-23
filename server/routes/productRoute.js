@@ -13,6 +13,7 @@ import {
   getSellerProducts,
   getSingleProductDetail,
   getSubcatetegoryFilterProducts,
+  updateProductQc,
   updateProducts,
 } from "../controller/productController.js";
 import {
@@ -45,8 +46,10 @@ router.post(
   upload.array("avatar", 4), 
   createProduct
 );
-router.put("/updateProduct/:id", isAuthenticatedSeller, updateProducts);
+// router.put("/updateProduct/:id", updateProducts);
+router.put('/updateProduct/:productId',updateProductQc)
 router.delete("/delete/:id", isAuthenticatedSeller, deleteProduct);
+
 
 router.get("/progress-products", isAuthenticatedSeller, getProgressProducts);
 router.get("/passed-products", isAuthenticatedSeller, getPassedProducts);

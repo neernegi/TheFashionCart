@@ -28,7 +28,7 @@ export const ProductCardComponent = ({ products }: { products: Product[] }) => {
           {products.map((product: Product) => (
             <ProductCard key={product._id}>
               {/* Display the first image from the images array */}
-              {product.images.length > 0 && (
+              {product?.images?.length > 0 && (
                 <Box key={product.images[0]?.public_id}>
                   <Link to={`/single-product-detail/${product._id}`}>
                     <img
