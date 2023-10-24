@@ -69,7 +69,7 @@ const App: React.FC = () => {
         <Route  path="/user-register" element={<UserRegister />} />
         <Route path="/login-seller" element={<LoginSeller />} />
         <Route path="/seller-register" element={<SellerRegister />} />
-        {isAuthenticated && <Route  path="/seller-details" element={<AddSellerInfo />} />}
+        <Route  path="/seller-details" element={<AddSellerInfo />} />
        
         {/* <ProtectedRoute isSeller={true}  path="/seller-add-info" component={AddSellerInfo} /> */}
         {/* <Route  element={<AddSellerInfo />} /> */}

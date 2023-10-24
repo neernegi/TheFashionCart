@@ -21,6 +21,6 @@ router.get("/get/user-details", isAuthenticatedUser, getUserDetails);
 router.put("/password/update", isAuthenticatedUser, updateUserPassword);
 router.put("/user-update/profile", isAuthenticatedUser, updateUserProfile);
 
-router.get("/logout", logout);
+router.post("/logout", logout);
 
 export default router;

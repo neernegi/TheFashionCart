@@ -14,8 +14,6 @@ import { RootState } from "../store";
 //   };
 // }
 
-
-
 export interface Seller {
   name: string;
   email: string;
@@ -79,6 +77,23 @@ export const registerSeller = createAsyncThunk(
   }
 );
 
+export const addSellerDetails = createAsyncThunk(
+  "/seller-add-seller-details",
+  async ({formData,sellerId}:{formData: FormData,sellerId:string}) => {
+    const response = await axios.post(
+      `http://localhost:8080/api/v1/seller/seller-details/${sellerId}`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log(response.data)
+    return response.data.seller;
+  }
+);
+
 export const loginSeller = createAsyncThunk<Seller, LoginSellerPayload>(
   "/seller-login",
   async (data) => {
@@ -136,6 +151,17 @@ const sellerSlice = createSlice({
         state.seller = action.payload;
       })
       .addCase(registerSeller.rejected, (state, action) => {
+        state.loading = "failed";
+        state.error = action.error.message || null;
+      })
+      .addCase(addSellerDetails.pending, (state) => {
+        state.loading = "pending";
+      })
+      .addCase(addSellerDetails.fulfilled, (state, action) => {
+        state.loading = "succeeded";
+        state.seller = action.payload;
+      })
+      .addCase(addSellerDetails.rejected, (state, action) => {
         state.loading = "failed";
         state.error = action.error.message || null;
       })

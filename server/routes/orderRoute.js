@@ -22,7 +22,7 @@ router.get("/user-order-detail/:userId", getSingleOrder);
 
 router.get("/user-orders/:userId", myOrders);
 
-router.get("/seller-orders", isAuthenticatedSeller,getSellerOrders);
+router.get("/seller-orders/:id",getSellerOrders);
 
 router
   .route("/seller-order/:id")

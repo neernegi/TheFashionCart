@@ -15,12 +15,13 @@ import { useAppDispatch } from "../../../redux/hooks";
 
 import axios from "axios";
 import { useAuth } from "../../context/useAuth";
+import { addSellerDetails } from "../../../redux/features/sellerSlice";
 
 export interface AddSellerInfoPayload {
   shopName: string;
   description: string;
   city: string;
-  pincode: number;
+  pincode: number | null;
   state: string;
   country: string;
 }
@@ -34,16 +35,17 @@ const initializeSellerData: AddSellerInfoPayload = {
   shopName: "",
   description: "",
   city: "",
-  pincode: 0,
+  pincode: null,
   state: "",
   country: "",
 };
 
 const AddSellerInfo: React.FC = () => {
-  const {auth} = useAuth();
+  const { auth } = useAuth();
   // console.log(auth)
-  const token = auth?.token
+  const token = auth?.token;
   // console.log(token)
+  const dispatch = useAppDispatch();
 
   const [seller, setSeller] =
     useState<AddSellerInfoPayload>(initializeSellerData);
@@ -53,16 +55,53 @@ const AddSellerInfo: React.FC = () => {
     street: "",
     nearBy: "",
   });
-
-  const handleInputChange = (field: keyof AddSellerInfoPayload, value: any) => {
-    setSeller((prevSeller) => ({
-      ...prevSeller,
-      [field]: value,
+  const handleShopNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSeller((prevUser) => ({ ...prevUser, shopName: event.target.value }));
+  };
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setSeller((prevUser) => ({ ...prevUser, description: event.target.value }));
+  };
+  const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSeller((prevUser) => ({ ...prevUser, city: event.target.value }));
+  };
+  const handlePincodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Parse the input value to a number or keep it as null if it's empty
+    const newPincode = event.target.value !== '' ? parseInt(event.target.value) : null;
+  
+    setSeller((prevUser) => ({ ...prevUser, pincode: newPincode }));
+  };
+  
+  const handleStateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSeller((prevUser) => ({ ...prevUser, state: event.target.value }));
+  };
+  const handleCountryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSeller((prevUser) => ({ ...prevUser, country: event.target.value }));
+  };
+  const handleAddressChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPickupAddress((prevUser) => ({
+      ...prevUser,
+      address: event.target.value,
     }));
   };
-
+  const handleStreetChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setPickupAddress((prevUser) => ({
+      ...prevUser,
+      street: event.target.value,
+    }));
+  };
+  const handleNearByAddressChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPickupAddress((prevUser) => ({
+      ...prevUser,
+      nearBy: event.target.value,
+    }));
+  };
   const submitData = async (e: React.FormEvent) => {
     e.preventDefault();
+    const sellerId = auth?.user?._id;
     const formData = new FormData();
 
     formData.set("shopName", seller.shopName);
@@ -71,32 +110,11 @@ const AddSellerInfo: React.FC = () => {
     formData.set("street", pickupAddress.street);
     formData.set("nearBy", pickupAddress.nearBy);
     formData.set("city", seller.city);
-    formData.set("pincode", seller.pincode.toString());
+    formData.set("pincode", seller.pincode !== null ? seller.pincode.toString() : "");
     formData.set("state", seller.state);
     formData.set("country", seller.country);
-
-    try {
-      // Make the POST request to your API
-      const response = await axios.post(
-        `http://localhost:8080/api/v1/seller/seller-details`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Handle the response as needed
-      console.log("Response:", response.data);
-
-      // Dispatch the addSellerInfo action with the response data if required
-
-      // Redirect or perform other actions as needed
-    } catch (error) {
-      // Handle errors, e.g., display an error message
-      console.error("Error:", error);
+    if (sellerId) {
+      dispatch(addSellerDetails({ formData, sellerId }));
     }
   };
 
@@ -123,8 +141,9 @@ const AddSellerInfo: React.FC = () => {
               <TextField
                 required
                 fullWidth
+                value={seller.shopName}
                 label="Shop Name"
-                onChange={(e) => handleInputChange("shopName", e.target.value)}
+                onChange={handleShopNameChange}
                 id="shopName"
               />
             </Grid>
@@ -132,10 +151,9 @@ const AddSellerInfo: React.FC = () => {
               <TextField
                 required
                 fullWidth
+                value={seller.description}
                 label="Description"
-                onChange={(e) =>
-                  handleInputChange("description", e.target.value)
-                }
+                onChange={handleDescriptionChange}
                 id="description"
                 multiline
                 rows={4}
@@ -147,12 +165,7 @@ const AddSellerInfo: React.FC = () => {
                 fullWidth
                 label="Address"
                 value={pickupAddress.address}
-                onChange={(e) =>
-                  setPickupAddress((prev) => ({
-                    ...prev,
-                    address: e.target.value,
-                  }))
-                }
+                onChange={handleAddressChange}
                 id="address"
                 multiline
                 rows={4}
@@ -164,12 +177,7 @@ const AddSellerInfo: React.FC = () => {
                 fullWidth
                 label="Street"
                 value={pickupAddress.street}
-                onChange={(e) =>
-                  setPickupAddress((prev) => ({
-                    ...prev,
-                    street: e.target.value,
-                  }))
-                }
+                onChange={handleStreetChange}
                 id="street"
                 multiline
                 rows={4}
@@ -182,12 +190,7 @@ const AddSellerInfo: React.FC = () => {
                 fullWidth
                 label="NearBy"
                 value={pickupAddress.nearBy}
-                onChange={(e) =>
-                  setPickupAddress((prev) => ({
-                    ...prev,
-                    nearBy: e.target.value,
-                  }))
-                }
+                onChange={handleNearByAddressChange}
                 id="nearBy"
                 multiline
                 rows={4}
@@ -199,7 +202,8 @@ const AddSellerInfo: React.FC = () => {
                 required
                 fullWidth
                 label="City"
-                onChange={(e) => handleInputChange("city", e.target.value)}
+                value={seller.city}
+                onChange={handleCityChange}
                 id="city"
                 multiline
                 rows={4}
@@ -210,7 +214,8 @@ const AddSellerInfo: React.FC = () => {
                 required
                 fullWidth
                 label="Pincode"
-                onChange={(e) => handleInputChange("pincode", e.target.value)}
+                value={seller.pincode}
+                onChange={handlePincodeChange}
                 id="pincode"
                 multiline
                 rows={4}
@@ -221,7 +226,8 @@ const AddSellerInfo: React.FC = () => {
                 required
                 fullWidth
                 label="State"
-                onChange={(e) => handleInputChange("state", e.target.value)}
+                value={seller.state}
+                onChange={handleStateChange}
                 id="state"
                 multiline
                 rows={4}
@@ -231,8 +237,9 @@ const AddSellerInfo: React.FC = () => {
               <TextField
                 required
                 fullWidth
+                value={seller.country}
                 label="Country"
-                onChange={(e) => handleInputChange("country", e.target.value)}
+                onChange={handleCountryChange}
                 id="country"
                 multiline
                 rows={4}

@@ -88,14 +88,16 @@ export const myOrders = catchAsyncError(async (req, res, next) => {
 // get all orders - seller
 export const getSellerOrders = catchAsyncError(async (req, res) => {
   // Find all products associated with the seller
-  const sellerProducts = await Product.find({ seller: req.user.id });
+  const sellerProducts = await Product.find({ seller: req.params.id });
+  console.log(sellerProducts);
 
   // Extract an array of product IDs owned by the seller
   const sellerProductIds = sellerProducts.map((product) => product._id);
+  console.log(sellerProductIds)
 
   // Find all orders where the seller's products have been ordered
   const sellerOrders = await Order.find({
-    "orderItems.product": { $in: sellerProductIds },
+    "orderItems.productId": { $in: sellerProductIds },
   });
 
   res.status(200).json({
@@ -103,6 +105,28 @@ export const getSellerOrders = catchAsyncError(async (req, res) => {
     sellerOrders,
   });
 });
+
+
+
+// export const getSellerOrders = catchAsyncError(async (req, res) => {
+//   // Find all products associated with the seller
+//   const sellerProducts = await Product.find({ seller: req.user.id });
+
+//   // Extract an array of product IDs owned by the seller
+//   const sellerProductIds = sellerProducts.map((product) => product._id);
+
+//   // Find all orders where the seller's products have been ordered by the user
+//   const sellerOrders = await Order.find({
+//     user: req.user.id,
+//     "orderItems.productId": { $in: sellerProductIds },
+//   });
+
+//   res.status(200).json({
+//     success: true,
+//     sellerOrders,
+//   });
+// });
+
 
 // update orders status - seller
 export const updateOrder = catchAsyncError(async (req, res, next) => {

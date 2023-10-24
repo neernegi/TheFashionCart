@@ -12,9 +12,8 @@ export const registerSeller = catchAsyncError(async (req, res, next) => {
   try {
     const { name, email, password } = req.body;
 
-
     const { buffer } = req.file;
-  
+
     // Upload avatar image to Cloudinary
     const myCloud = await new Promise((resolve, reject) => {
       cloudinary.v2.uploader
@@ -34,10 +33,10 @@ export const registerSeller = catchAsyncError(async (req, res, next) => {
         )
         .end(buffer);
     });
-  
+
     // Check if the email already exists in the User model
     const userEmail = await User.findOne({ email });
-  
+
     if (!userEmail) {
       // If the email is not already registered, create a new seller
       const seller = await Seller.create({
@@ -49,16 +48,15 @@ export const registerSeller = catchAsyncError(async (req, res, next) => {
           url: myCloud.secure_url,
         },
       });
-  
+
       sendToken(seller, 201, res);
     } else {
       // If the email is already registered, return an error
       return next(new ErrorHandler("Email must be different"));
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
- 
 });
 
 // login seller
@@ -88,12 +86,20 @@ export const loginSeller = catchAsyncError(async (req, res, next) => {
 });
 
 // sellers detail
+
 export const createSellerDetails = async (req, res, next) => {
   try {
     // Assuming you have authentication middleware to get the logged-in seller
+    const sellerId = req.params.sellerId;
 
-    // Check if the seller exists
+    // Find the seller in the database
+    const seller = await Seller.findById(sellerId);
 
+    if (!seller) {
+      return next(new ErrorHandler("Seller not found", 404));
+    }
+
+    // Extract details from the request body
     const {
       shopName,
       description,
@@ -104,8 +110,7 @@ export const createSellerDetails = async (req, res, next) => {
       country,
     } = req.body;
 
-    const seller = req.user;
-
+    // Update seller details
     seller.shopName = shopName;
     seller.description = description;
     seller.pickupAddress = pickupAddress;
@@ -114,6 +119,7 @@ export const createSellerDetails = async (req, res, next) => {
     seller.state = state;
     seller.country = country;
 
+    // Save the updated seller details
     await seller.save();
 
     res.status(200).json({

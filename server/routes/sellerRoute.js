@@ -21,13 +21,13 @@ const router = express.Router();
 
 router.post("/register", upload.single("avatar"), registerSeller);
 
-router.post("/seller-details",isAuthenticatedSeller, createSellerDetails);
+router.post("/seller-details/:sellerId", createSellerDetails);
 router.post("/login", loginSeller);
 router.put("/password-update", isAuthenticatedSeller, updateSellerPassword);
 router.post("/password/forgot", forgotSellerPassword);
 router.put("/update-profile", isAuthenticatedSeller, updateSellerProfile);
 router.get("/get/seller-details", isAuthenticatedSeller, getSellerDetails);
 router.get("/get-seller-details/:id", SellerDetail);
-router.get("/logout", logout);
+router.post("/logout", logout);
 
 export default router;
