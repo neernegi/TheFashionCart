@@ -88,25 +88,23 @@ export const myOrders = catchAsyncError(async (req, res, next) => {
 // get all orders - seller
 export const getSellerOrders = catchAsyncError(async (req, res) => {
   // Find all products associated with the seller
-  const sellerProducts = await Product.find({ seller: req.params.id });
+  const sellerProducts = await Product.find({ seller: req.params.sellerId });
   console.log(sellerProducts);
 
   // Extract an array of product IDs owned by the seller
   const sellerProductIds = sellerProducts.map((product) => product._id);
-  console.log(sellerProductIds)
+  console.log(sellerProductIds);
 
   // Find all orders where the seller's products have been ordered
-  const sellerOrders = await Order.find({
+  const orders = await Order.find({
     "orderItems.productId": { $in: sellerProductIds },
   });
 
   res.status(200).json({
     success: true,
-    sellerOrders,
+    orders,
   });
 });
-
-
 
 // export const getSellerOrders = catchAsyncError(async (req, res) => {
 //   // Find all products associated with the seller
@@ -127,45 +125,75 @@ export const getSellerOrders = catchAsyncError(async (req, res) => {
 //   });
 // });
 
-
 // update orders status - seller
-export const updateOrder = catchAsyncError(async (req, res, next) => {
-  const order = await Order.findById(req.params.id);
+export const updateOrderItemStatus = catchAsyncError(async (req, res, next) => {
+  try {
+    const orderId = req.params.orderId;
+    const order = await Order.findById(orderId);
 
-  if (!order) {
-    return next(new ErrorHandler("Order not found with this Id", 404));
+    if (!order) {
+      return next(new Error("Order not found with this Id", 404));
+    }
+
+    const orderItemId = req.params.orderItemId;
+    const status = req.body.status;
+
+    // Find the order item by its ID within the order's orderItems array
+    const orderItemToUpdate = order.orderItems.find(
+      (item) => item._id.toString() === orderItemId
+    );
+
+    if (!orderItemToUpdate) {
+      return next(new Error("Order item not found in this order", 404));
+    }
+
+    if (orderItemToUpdate.orderStatus === "Delivered") {
+      return next(new Error("You have already delivered this order item", 400));
+    }
+
+    // Update the order item's status
+    orderItemToUpdate.orderStatus = status;
+
+    // Check if the overall order status should be updated
+    const allItemsDelivered = order.orderItems.every(
+      (item) => item.orderStatus === "Delivered"
+    );
+
+    if (allItemsDelivered) {
+      order.orderStatus = "Delivered";
+      order.deliveredAt = Date.now();
+    }
+
+    // Update stock for each product in the order
+    for (const orderItem of order.orderItems) {
+      await updateStock(orderItem.productId, orderItem.quantity);
+    }
+
+    await order.save({ validateBeforeSave: false });
+
+    res.status(200).json({
+      success: true,
+      order,
+    });
+  } catch (err) {
+    next(err); // Pass the error to the error handling middleware
   }
-
-  if (order.orderStatus === "Delivered") {
-    return next(new ErrorHandler("You have delivered this order", 400));
-  }
-
-  order.orderItems.forEach(async (order) => {
-    await updateStock(order.Product, order.quantity);
-  });
-
-  order.orderStatus = req.body.status;
-
-  if (req.body.status === "Delivered") {
-    order.delivered = Date.now();
-  }
-
-  await order.save({ validateBeforeSave: false });
-
-  res.status(200).json({
-    success: true,
-    order,
-  });
 });
+
+
+
 
 async function updateStock(id, quantity) {
   const product = await Product.findById(id);
-  product.Stock -= quantity;
+  if (!product) {
+    throw new Error("Product not found with the given ID: " + id); // Handle the case where the product is not found
+  }
+  product.Stock -= quantity; // Fixed property name
   await product.save({ validateBeforeSave: false });
 }
 
-// delete Order --admin
 
+// delete Order --admin
 export const deleteOrder = catchAsyncError(async (req, res, next) => {
   const order = await Order.findById(req.params.id);
 

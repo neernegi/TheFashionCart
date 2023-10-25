@@ -80,6 +80,21 @@ export const fetchAllOrders = createAsyncThunk<Order[], string>(
     }
   }
 );
+export const fetchSellerOrders = createAsyncThunk<Order[], string>(
+  "order/fetchSellerOrders",
+  async (sellerId) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/api/v1/order/seller-orders/${sellerId}`
+      );
+      console.log(response.data.orders)
+      return response.data.orders;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+);
 
 const orderSlice = createSlice({
   name: "order",
@@ -105,6 +120,17 @@ const orderSlice = createSlice({
         state.orders = action.payload;
       })
       .addCase(fetchAllOrders.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(fetchSellerOrders.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchSellerOrders.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.orders = action.payload;
+      })
+      .addCase(fetchSellerOrders.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

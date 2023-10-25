@@ -41,12 +41,14 @@ export interface Seller {
 
 interface SellerState {
   seller: Seller | null;
+  isAuthenticated: boolean;
   loading: "idle" | "pending" | "succeeded" | "failed";
   error: string | null;
 }
 
 const initialState: SellerState = {
   seller: null,
+  isAuthenticated: false,
   loading: "idle",
   error: null,
 };
@@ -149,6 +151,7 @@ const sellerSlice = createSlice({
       .addCase(registerSeller.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.seller = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(registerSeller.rejected, (state, action) => {
         state.loading = "failed";
@@ -172,6 +175,7 @@ const sellerSlice = createSlice({
       .addCase(loginSeller.fulfilled, (state, action) => {
         state.loading = "succeeded";
         state.seller = action.payload;
+        state.isAuthenticated = true;
       })
       .addCase(loginSeller.rejected, (state, action) => {
         state.loading = "failed";

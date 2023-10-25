@@ -92,7 +92,7 @@ const SellerNavbar: React.FC = () => {
         </LinkNav>
 
         <LinkNav
-          to={"/order"}
+          to={"/seller-order"}
           onMouseEnter={() => handleMouseEnter("order")}
           onMouseLeave={() => handleMouseLeave("order")}
         >
@@ -151,7 +151,7 @@ const SellerNavbar: React.FC = () => {
         >
           <ul>
             <li>
-              <LinkNav to={"/activeOrder"}>Active Order</LinkNav>
+              <LinkNav to={"/active-seller-orders"}>Active Order</LinkNav>
             </li>
             <li>
               <LinkNav to={"/delivered"}>Delivered</LinkNav>

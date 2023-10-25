@@ -1,52 +1,39 @@
-import React from "react";
-import { Route, Navigate } from "react-router-dom";
-import { useAppSelector } from "../../redux/hooks";
-import { RootState } from "../../redux/store";
+import React, { ReactNode } from "react";
+import { useAuth } from "../../pages/context/useAuth";
+import { Navigate, Route, RouteProps, useLocation } from "react-router-dom";
 
 interface ProtectedRouteProps {
   isAdmin?: boolean;
   isSeller?: boolean;
   component: React.ComponentType<any>;
-  path: string;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   isAdmin,
   isSeller,
   component: Component,
-  path,
   ...rest
 }) => {
-  const { loading: userLoading, isAuthenticated: userIsAuthenticated, user } =
-    useAppSelector((state: RootState) => state.user);
-  const { loading: sellerLoading, isAuthenticated: sellerIsAuthenticated, seller } =
-    useAppSelector((state: RootState) => state.seller);
+  const location = useLocation();
+  const { auth } = useAuth();
+  const isAuthenticated = auth?.user !== null;
 
-  // Combine the loading and isAuthenticated states
-  const loading = userLoading || sellerLoading;
-  const isAuthenticated = userIsAuthenticated || sellerIsAuthenticated;
+  if (isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+
+  if (isSeller === true && auth?.user?.role !== "seller") {
+    return <Navigate to="/login-seller" state={{ from: location }} replace />;
+  }
+
+  if (isAdmin === true && auth?.user?.role !== "admin") {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   return (
-    <Route
-      {...rest}
-     
-      render={(props) => {
-        if (loading === "idle") {
-          if (isAuthenticated) {
-            if (isAdmin && user?.role !== "admin") {
-              return <Navigate to="/login" />;
-            }
-            if (isSeller && seller?.role !== "seller") {
-              return <Navigate to="/login" />;
-            }
-            return <Component {...props} />;
-          } else {
-            return <Navigate to="/login" />;
-          }
-        }
-        return null; // Loading is not idle, don't render anything
-      }}
-    />
+    <React.Fragment>
+      <Route {...rest} path={rest} element={<Component />} />
+    </React.Fragment>
   );
 };
 

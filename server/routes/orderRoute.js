@@ -11,7 +11,7 @@ import {
   getSellerOrders,
   getSingleOrder,
   myOrders,
-  updateOrder,
+  updateOrderItemStatus,
 } from "../controller/orderController.js";
 const router = express.Router();
 
@@ -22,11 +22,12 @@ router.get("/user-order-detail/:userId", getSingleOrder);
 
 router.get("/user-orders/:userId", myOrders);
 
-router.get("/seller-orders/:id",getSellerOrders);
+router.get("/seller-orders/:sellerId",getSellerOrders);
+
+router.put("/seller-orders/:orderId/order-items/:orderItemId", updateOrderItemStatus);
 
 router
   .route("/seller-order/:id")
-  .put(isAuthenticatedSeller, updateOrder)
   .delete(isAuthenticatedSeller, deleteOrder)
   .delete(isAuthenticatedUser,deleteOrder)
 
