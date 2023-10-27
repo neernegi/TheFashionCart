@@ -33,6 +33,7 @@ import { useAuth } from "./pages/context/useAuth";
 // import UpdateActiveOrder from "./pages/order/seller/UpdateActiveOrder";
 import SellerFetchOrders from "./pages/order/seller/SellerFetchProducts";
 import UpdateActiveOrders from "./pages/order/seller/UpdateActiveOrder";
+import RegisterStepper from "./pages/authentication/seller/RegisterStepper";
 // import ProtectedRoute from "./components/route/ProtectedRoute";
 
 const App: React.FC = () => {
@@ -80,6 +81,7 @@ const App: React.FC = () => {
         <Route path="/my-orders" element={<FetchAllOrders />} />
         <Route path="/seller-orders" element={<SellerFetchOrders />} />
         <Route path="/active-seller-orders" element={<UpdateActiveOrders />} />
+        <Route path="/register-seller-stepper" element={<RegisterStepper />} />
    
         {/* <ProtectedRoute path="/active-seller-orders" isSeller={true}  component={UpdateActiveOrders}   /> */}
       </Routes>

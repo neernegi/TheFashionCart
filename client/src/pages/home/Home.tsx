@@ -6,16 +6,24 @@ import ShowBanner from "./banner/ShowBanner";
 import CategoryWithAvatar from "./category/CategoryWithAvatar";
 import SelectCategoryProduct from "./category/SelectCategoryProduct";
 import { ProductSwiper } from "../../components/swiper/ProductSwiper";
-
+import { useAuth } from "../context/useAuth";
 
 const Home: React.FC = () => {
+  const { auth } = useAuth();
+  const isAdmin = auth?.user?.role==="admin"
+  const isSeller = auth?.user?.role==="seller"
+
   return (
     <Box>
-      <FetchCategory />
-      <ShowBanner />
-      <CategoryWithAvatar />
-      <SelectCategoryProduct />
-      <ProductSwiper />
+      {!isAdmin && !isSeller && (
+        <Box>
+          <FetchCategory />
+          <ShowBanner />
+          <CategoryWithAvatar />
+          <SelectCategoryProduct />
+          <ProductSwiper />
+        </Box>
+      )}
     </Box>
   );
 };
