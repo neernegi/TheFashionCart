@@ -153,7 +153,7 @@ const SelectCategoryProduct: React.FC = () => {
         >
           {selectedCategory ? selectedCategory.label : ""} Products
         </Typography>
-        <li onClick={handleClickOption} ref={sortRef}>
+        {/* <li onClick={handleClickOption} ref={sortRef}>
           <Typography
             sx={{ cursor: "pointer", ":hover": { color: "gray" } }}
             fontSize={"2.5rem"}
@@ -162,16 +162,12 @@ const SelectCategoryProduct: React.FC = () => {
           >
             Sort
           </Typography>
-        </li>
+        </li> */}
       </Stack>
-      <Box m={"4rem 6rem"} display={"flex"} gap={"7rem"}>
+      <Box m={"4rem 6rem"} display={"flex"} gap={"22rem"}>
         <Stack>
-          <Box sx={{ width: 300 }} m={'0.5rem'}>
-            <Typography
-              fontSize={"2.5rem"}
-              fontWeight={500}
-              color="black"
-            >
+          <Box sx={{ width: 300 }} m={"0.5rem"}>
+            <Typography fontSize={"3.4rem"} fontWeight={600} color="black">
               Price
             </Typography>
             <Slider
@@ -187,39 +183,47 @@ const SelectCategoryProduct: React.FC = () => {
           <Button
             onClick={handleClickBrand}
             variant="text"
-            sx={{ fontSize: "3rem", color: "black", fontWeight: 600,marginLeft:"-5rem" }}
+            sx={{
+              fontSize: "3rem",
+              color: "black",
+              fontWeight: 600,
+              marginLeft: "-5rem",
+              mt: "1rem",
+            }}
             ref={brandRef}
           >
             Brands
           </Button>
           <ul>
-            {brandOptionsShow && (
-              <DropdownMenu
-                style={{
-                  top: menuPosition.top,
-                  left: menuPosition.left - 50,
-                  position: "static",
-                  marginLeft: "-2rem",
-                }}
-              >
-                {uniqueBrandNames.map((brandName) => (
-                  <Typography
-                    sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
-                    fontSize={"2rem"}
-                    key={brandName}
-                    onClick={() => handleBrandHandler(brandName)}
-                  >
-                    {brandName}
-                  </Typography>
-                ))}
-              </DropdownMenu>
-            )}
+            <DropdownMenu
+              style={{
+                top: menuPosition.top,
+                left: menuPosition.left - 50,
+                position: "static",
+                marginLeft: "-2rem",
+                backgroundColor: "white",
+              }}
+            >
+              {uniqueBrandNames.map((brandName) => (
+                <Typography
+                  color={"black"}
+                  sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
+                  fontSize={"2rem"}
+                  fontWeight={550}
+                  key={brandName}
+                  onClick={() => handleBrandHandler(brandName)}
+                >
+                  {brandName}
+                </Typography>
+              ))}
+            </DropdownMenu>
           </ul>
           <Typography
             sx={{ cursor: "pointer", ":hover": { color: "gray" } }}
             fontSize={"3.5rem"}
             fontWeight={600}
             color="black"
+            mt={"2rem"}
             onClick={handleClickRatingShow}
             ref={ratingRef}
           >
@@ -231,31 +235,32 @@ const SelectCategoryProduct: React.FC = () => {
                 top: menuPosition.top,
                 left: menuPosition.left - 50,
                 position: "static",
+                backgroundColor: "white",
               }}
             >
               <Typography
                 sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
-                fontSize={"2rem"}
-                fontWeight={600}
-                color="white"
+                fontSize={"2.4rem"}
+                fontWeight={550}
+                color="black"
                 onClick={() => sortProducts("4star")}
               >
                 4★ & above
               </Typography>
               <Typography
                 sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
-                fontSize={"2rem"}
-                fontWeight={600}
-                color="white"
+                fontSize={"2.4rem"}
+                fontWeight={550}
+                color="black"
                 onClick={() => sortProducts("3star")}
               >
                 3★ & above
               </Typography>
               <Typography
                 sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
-                fontSize={"2rem"}
+                fontSize={"2.4rem"}
                 fontWeight={600}
-                color="white"
+                color="black"
                 onClick={() => sortProducts("2star")}
               >
                 2★ & above
@@ -263,19 +268,20 @@ const SelectCategoryProduct: React.FC = () => {
             </DropdownMenu>
           )}
         </Stack>
-        <Box>
-          <ProductCardComponent
-            products={
-              selectedBrand
-                ? filteredProductsByBrand
-                : sortOrder
-                ? filterProductsByPrice(sortedProducts, priceRange)
-                : filterProductsByPrice(products, priceRange)
-            }
+        <ProductCardComponent products={products} />
+        {/* <Box>
+          <ProductCardComponent products={products}
+            // products={
+            //   selectedBrand
+            //     // ? filteredProductsByBrand
+            //     : sortOrder
+            //     ? filterProductsByPrice(sortedProducts, priceRange)
+            //     : filterProductsByPrice(products, priceRange)
+            // }
           />
-        </Box>
+        </Box> */}
       </Box>
-      {sortOptionsShow && (
+      {/* {sortOptionsShow && (
         <DropdownMenu
           style={{ top: menuPosition.top, left: menuPosition.left - 50 }}
           onClick={handleClickOption}
@@ -307,8 +313,8 @@ const SelectCategoryProduct: React.FC = () => {
           >
             Price - Low to High
           </Typography>
-        </DropdownMenu>
-      )}
+        </DropdownMenu> */}
+      {/* )} */}
     </Box>
   );
 };

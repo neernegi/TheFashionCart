@@ -37,6 +37,7 @@ import RegisterStepper from "./pages/authentication/seller/RegisterStepper";
 // import MiniDrawer from "./components/navbar/MiniDrawer";
 import SellerDashboard from "./components/navbar/SellerDashboard";
 import Dashboard from "./pages/dashboard/Dashboard";
+// import Footer from "./components/Footer";
 // import ProtectedRoute from "./components/route/ProtectedRoute";
 
 const App: React.FC = () => {
@@ -46,7 +47,6 @@ const App: React.FC = () => {
 
   return (
     <>
-    
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
@@ -60,7 +60,7 @@ const App: React.FC = () => {
         <Route path="/show-all-category" element={<ShowAllCategory />} />
         <Route path="/cart-products" element={<CartProducts />} />
         <Route path="/serach-products/:keyword" element={<SearchProduct />} />
-        <Route path="/add-listing" element={<CreateProductForm />} />
+        <Route path="/add-products" element={<CreateProductForm />} />
         <Route
           path="/fetch-all-get-category-products"
           element={<CategoryProducts />}
@@ -86,11 +86,10 @@ const App: React.FC = () => {
         <Route path="/active-seller-orders" element={<UpdateActiveOrders />} />
         <Route path="/register-seller-stepper" element={<RegisterStepper />} />
         <Route path="/seller-dashboard" element={<Dashboard />} />
-        
-   
-   
+
         {/* <ProtectedRoute path="/active-seller-orders" isSeller={true}  component={UpdateActiveOrders}   /> */}
       </Routes>
+      {/* <Footer /> */}
     </>
   );
 };

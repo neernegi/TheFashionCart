@@ -23,7 +23,7 @@ const Home: React.FC = () => {
           {/* <ShowBanner /> */}
           <CategoryWithAvatar />
           <SelectCategoryProduct />
-          <ProductSwiper />
+          {/* <ProductSwiper /> */}
         </Box>
       )}
     </Box>

@@ -168,8 +168,8 @@ const ProductDetails: React.FC = () => {
       <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
         <Box border={"2px gray solid"} p={"2rem"}>
           <Carousel sx={{ width: "50rem" }}>
-            {product?.images &&
-              product.images.map((image, i) => (
+            {product?.avatar &&
+              product.avatar.map((image, i) => (
                 <img
                   style={{ width: "100%", height: "40rem" }}
                   className="CarouselImage"

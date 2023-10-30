@@ -27,62 +27,39 @@ const CategoryWithAvatar: React.FC = () => {
   };
 
   return (
-    <Box mt={"2rem"}>
-      <Stack gap={"2rem"} direction={"row"}>
+    <Box mt={"8rem"} ml={"20%"}>
+      <Stack gap={"7rem"} direction={"row"}>
         {categories.map((item) => (
-          <Box key={item._id} style={{ position: "relative" }}>
+          <Box
+            // marginLeft={"6rem"}
+            key={item?._id}
+            style={{ position: "relative" }}
+          >
             <Box
-              sx={{ cursor: "pointer" }}
-              borderRadius={"50%"}
-              bgcolor={"gray"}
-              p={"1.5rem"}
               // onClick={() => handleCategoryClick(item.label)} // Pass the category label as a string
-              onClick={() => handleCategoryClick(item._id)}
+              onClick={() => handleCategoryClick(item?._id)}
             >
               <img
-                style={{ width: "10vh", height: "10vh",borderRadius:"10rem" }}
-                src={item.avatar?.url}
+                style={{
+                  width: "10vh",
+                  height: "10vh",
+                  borderRadius: "10rem",
+                  cursor: "pointer",
+                }}
+                src={item?.avatar?.url}
               />
             </Box>
 
             <Typography
               sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
-              variant="h2"
-              component="h4"
-              fontWeight={"bold"}
+              fontSize={"3rem"}
               color="black"
-              onClick={() => handleCategoryClick(item._id)}
+              onClick={() => handleCategoryClick(item?._id)}
             >
-              {item.label}
+              {item?.label}
             </Typography>
           </Box>
         ))}
-        <Box>
-          <Box
-            sx={{ cursor: "pointer" }}
-            borderRadius={"50%"}
-            bgcolor={"GrayText"}
-            p={"1.5rem"}
-            onClick={() => handleCategoryClick("All Category")} // Pass the category label as a string
-          >
-            <img
-              style={{ width: "10vh", height: "10vh" }}
-              src={categoryIcon}
-              alt="all category"
-            />
-          </Box>
-          <Link to={"/show-all-category"}>
-            <Typography
-              sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
-              variant="h2"
-              component="h4"
-              fontWeight={"bold"}
-              color="black"
-            >
-              All Category
-            </Typography>
-          </Link>
-        </Box>
       </Stack>
     </Box>
   );

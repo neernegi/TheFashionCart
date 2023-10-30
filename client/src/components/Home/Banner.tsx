@@ -14,7 +14,7 @@ const Banner: React.FC = () => {
 
         <Box width={"100%"} mt={'-6.2rem'}> 
           <img
-            style={{ width: "100%", height: "100vh", objectFit: "fill" }}
+            style={{ width: "100%", height: "110vh", objectFit: "fill" }}
             src={banner}
             alt="banner"
           />

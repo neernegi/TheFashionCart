@@ -24,7 +24,6 @@ import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../pages/context/useAuth";
 
-
 const drawerWidth = 600;
 
 interface Props {
@@ -72,21 +71,23 @@ export default function SellerDashboard(props: Props) {
         </ListItem>
 
         {/* Add Listing (Add Product) */}
-        <ListItem disablePadding>
-          <ListItemButton>
-            <Box>
-              <img
-                style={{ width: "7rem" }}
-                src={productIcon}
-                alt="product icon"
-              />
-            </Box>
-            <Typography style={{ fontSize: "3rem", fontWeight: 700 }}>
-              {" "}
-              Add Product
-            </Typography>
-          </ListItemButton>
-        </ListItem>
+        <Link to={"/add-products"}>
+          <ListItem disablePadding>
+            <ListItemButton>
+              <Box>
+                <img
+                  style={{ width: "7rem" }}
+                  src={productIcon}
+                  alt="product icon"
+                />
+              </Box>
+              <Typography style={{ fontSize: "3rem", fontWeight: 700 }}>
+                {" "}
+                Add Product
+              </Typography>
+            </ListItemButton>
+          </ListItem>
+        </Link>
 
         {/* QC Status */}
         <Link to={"/qc-product"}>

@@ -44,7 +44,6 @@ const Header: React.FC = () => {
   const items = useAppSelector(selectItems);
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
- 
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [linkOptionsPosition, setLinkOptionsPosition] = useState<{
@@ -89,8 +88,6 @@ const Header: React.FC = () => {
     alert("logout successfully");
   };
 
- 
-
   return (
     <StyledHeader color="inherit" position="sticky">
       <Toolbar>
@@ -109,20 +106,16 @@ const Header: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Box>
-                    <Search />
-                  </Box>
-
                   <LinkNav to={"/cart-products"}>
                     <ShoppingBagIcon style={{ fontSize: "3rem" }} />
                   </LinkNav>
                   {items.length > 0 && (
-                    <span className="inline-flex items-center rounded-md bg-red-50 mb-7 -ml-3 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">
-                      {items.length}
-                    </span>
+                    <span style={{ color: "black" }}>{items.length}</span>
                   )}
 
-                  <LinkNav to={"/seller-register"}>Become a Seller</LinkNav>
+                  <LinkNav to={"/register-seller-stepper"}>
+                    Become a Seller
+                  </LinkNav>
                   {auth?.user?.role === "user" ? (
                     <>
                       <LinkNav to={""}>

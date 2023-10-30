@@ -7,47 +7,52 @@ import { Rating, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 
 // Define the styled components
-const ProductContainer = styled(Box)({
-  display: "flex",
-  flexWrap: "wrap",
-  gap: 2, // Adjust the gap between products
-  justifyContent: "space-between", // Distribute space between products
-});
+// const ProductContainer = styled(Box)({});
 
-const ProductCard = styled(Card)({
-  flexBasis: "calc(25% - 16px)", // Adjust width to fit 4 products per row
-  // Set a minimum width to prevent very narrow cards
-  maxWidth: "100rem",
-});
+// const ProductCard = styled(Card)({
+//   flexBasis: "calc(25% - 16px)", // Adjust width to fit 4 products per row
+//   // Set a minimum width to prevent very narrow cards
+//   maxWidth: "100rem",
+// });
 
 export const ProductCardComponent = ({ products }: { products: Product[] }) => {
   return (
-    <Box>
+    <Box >
       {products.length > 0 ? (
-        <ProductContainer>
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: '4rem',
+            ml:"4rem",
+            mt:"5rem"
+          }}
+        >
           {products.map((product: Product) => (
-            <ProductCard key={product._id}>
+            <Box key={product?._id}>
               {/* Display the first image from the images array */}
-              {product?.images?.length > 0 && (
-                <Box key={product.images[0]?.public_id}>
-                  <Link to={`/single-product-detail/${product._id}`}>
+              {product?.avatar?.length > 0 && (
+                <Box key={product?.avatar[0]?.public_id}>
+                  <Link to={`/single-product-detail/${product?._id}`}>
                     <img
                       style={{
-                        width: "100%",
-                        height: "30%",
-                        objectFit: "contain",
+                        width: "55rem",
+                        height: "55rem",
+                        objectFit: "fill",
+                        borderRadius: "2rem",
                       }}
-                      src={product.images[0].url}
+                      src={product?.avatar[0]?.url}
                       alt={product?.name}
                     />
                   </Link>
                 </Box>
               )}
-              <CardContent>
+              <Box>
                 <Typography
-                  gutterBottom
-                  variant="h5"
-                  component="div"
+                  mt={"2rem"}
+                  variant="h2"
+                  fontSize={"3rem"}
+                  component="body"
                   color="black"
                 >
                   {product?.name}
@@ -55,14 +60,22 @@ export const ProductCardComponent = ({ products }: { products: Product[] }) => {
                 <Typography
                   gutterBottom
                   variant="h5"
-                  component="div"
+                  fontSize={"3rem"}
                   color="black"
+                  fontWeight={600}
                 >
-                  {product?.price}
+                  ₹{product?.price}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {product?.description}
+                <Typography
+                  gutterBottom
+                  variant="h5"
+                  fontSize={"3rem"}
+                  color="black"
+                  
+                >
+                  {product?.brand}
                 </Typography>
+
                 <Rating
                   name="simple-controlled"
                   value={product?.ratings}
@@ -70,10 +83,10 @@ export const ProductCardComponent = ({ products }: { products: Product[] }) => {
                   precision={0.5}
                   size="large"
                 />
-              </CardContent>
-            </ProductCard>
+              </Box>
+            </Box>
           ))}
-        </ProductContainer>
+        </Box>
       ) : (
         <Typography variant="h2" component="h4" fontWeight="bold" color="black">
           No products

@@ -38,8 +38,8 @@ const CategoryProducts = () => {
 
   return (
     <Box>
-      <Typography variant="h3" component={"h3"} color={"black"}>
-        category products
+      <Typography mt={'4rem'} ml={'5rem'} variant="h3" component={"h3"} color={"black"}>
+        Category products
       </Typography>
       <Box>
         <ProductCardComponent products={filteredProducts} />

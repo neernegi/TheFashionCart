@@ -8,7 +8,7 @@ export interface Product {
   description: string;
   price: number;
   ratings: number;
-  images: {
+  avatar: {
     length: number;
     public_id: string;
     url: string;
