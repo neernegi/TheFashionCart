@@ -5,13 +5,14 @@ import styled from "@emotion/styled";
 import { useNavigate } from "react-router-dom";
 
 const SearchContainer = styled(Box)({
-  width: "26rem",
-  height: "4rem",
+  width: "45%",
+  height: "8rem",
   display: "flex",
   alignItems: "center",
-  backgroundColor: "#f2f2f2",
+  backgroundColor: "white",
+
   padding: "4px 4px",
-  borderRadius: "4px",
+  borderRadius: "1.4rem",
 });
 
 const SearchInput = styled(InputBase)({
@@ -29,20 +30,32 @@ const Search = () => {
     }
   };
   return (
-    <Box>
-      <form onSubmit={onSearchHandler}>
-        <SearchContainer>
-          <IconButton>
-            <SearchIcon />
-          </IconButton>
-          <SearchInput
-            type="text"
-            placeholder="Search"
-            onChange={(e) => setKeyword(e.target.value)}
-          />
-        </SearchContainer>
-      </form>
-    </Box>
+    <>
+      <Box ml={"18%"} mt={"-18%"} position={"absolute"}>
+        <form onSubmit={onSearchHandler}>
+          <SearchContainer>
+            <SearchInput
+              type="text"
+              placeholder="Search your product here"
+              onChange={(e) => setKeyword(e.target.value)}
+              style={{ backgroundColor: "white", width: "100vh",fontSize:"3rem" }}
+            />
+            <IconButton
+              style={{
+                backgroundColor: "blueviolet",
+                borderTopRightRadius: "1.4rem",
+                borderBottomRightRadius: "1.4rem",
+                padding:"1rem 1rem 1rem 1rem",
+                marginRight:"-4px"
+                
+              }}
+            >
+              <SearchIcon style={{ fontSize: "6rem", color: "white" }} />
+            </IconButton>
+          </SearchContainer>
+        </form>
+      </Box>
+    </>
   );
 };
 

@@ -95,7 +95,7 @@ const OrderSellerTable: React.FC<StickyHeadTableProps> = ({ orders }) => {
   }, [orders]);
   
   return (
-    <Paper>
+    <Paper style={{ marginLeft: "13%", marginTop: "2rem" }}>
       <TableContainer style={{ marginTop: "2rem" }}>
         <Table>
           <TableHead>

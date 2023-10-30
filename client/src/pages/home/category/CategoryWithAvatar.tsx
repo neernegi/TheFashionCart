@@ -28,7 +28,7 @@ const CategoryWithAvatar: React.FC = () => {
 
   return (
     <Box mt={"2rem"}>
-      <Stack justifyContent={"center"} gap={"2rem"} direction={"row"}>
+      <Stack gap={"2rem"} direction={"row"}>
         {categories.map((item) => (
           <Box key={item._id} style={{ position: "relative" }}>
             <Box
@@ -40,7 +40,7 @@ const CategoryWithAvatar: React.FC = () => {
               onClick={() => handleCategoryClick(item._id)}
             >
               <img
-                style={{ width: "10vh", height: "10vh" }}
+                style={{ width: "10vh", height: "10vh",borderRadius:"10rem" }}
                 src={item.avatar?.url}
               />
             </Box>

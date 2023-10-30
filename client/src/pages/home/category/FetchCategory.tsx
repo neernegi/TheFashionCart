@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import {
   fetchCategories,
   setSelectedCategory,
-  setSelectedSubcategory
+  setSelectedSubcategory,
 } from "../../../redux/features/categorySlice";
 import { styled } from "@mui/system";
 import { Link } from "react-router-dom";
@@ -21,6 +21,7 @@ const DropdownMenu = styled(Box)({
 });
 
 const FetchCategory: React.FC = () => {
+  const [isHovered, setIsHovered] = useState(false);
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
   const category = useAppSelector((state) => state.category.categories);
   console.log(category);
@@ -37,7 +38,6 @@ const FetchCategory: React.FC = () => {
     dispatch(setSelectedSubcategory(categoryId));
   };
 
- 
   useEffect(() => {
     dispatch(fetchCategories());
   }, []); // Use an empty array as the dependency to run the effect only once
@@ -53,8 +53,8 @@ const FetchCategory: React.FC = () => {
   };
 
   return (
-    <Box mt={"5px"}>
-      <Stack justifyContent={"center"} gap={"2rem"} direction={"row"}>
+    <Box mt={"1.8rem"}>
+      <Stack gap={"4rem"} direction={"row"}>
         {category.map((item) => (
           <div
             key={item._id}
@@ -65,8 +65,9 @@ const FetchCategory: React.FC = () => {
           >
             <Link to={"/fetch-all-get-category-products"}>
               <Typography
-                sx={{ cursor: "pointer", ":hover": { color: "blue" } }}
+                sx={{ cursor: "pointer", ":hover": { color: "ActiveBorder" } }}
                 variant="h2"
+              
                 component="h4"
                 fontWeight={"bold"}
                 color="black"
@@ -84,19 +85,23 @@ const FetchCategory: React.FC = () => {
                 <ul>
                   {item.subCategories.map((subcat) => (
                     <li
-                    onClick={() => handleSubcategoryClick(subcat._id)}
+                      onClick={() => handleSubcategoryClick(subcat._id)}
                       key={subcat._id}
                     >
                       <Link
-                        to={"fetch-all-get-subcategory-products"}
-                        style={{
-                          fontSize: "2.5rem",
-                          cursor: "pointer",
-                          color: "white",
-                        }}
+                        to={"/fetch-all-get-subcategory-products"}
                         onClick={() => handleSubcategoryClick(subcat._id)}
                       >
-                        {subcat.name}
+                        <Typography
+                        fontSize={'2.5rem'}
+                        fontWeight={600}
+                        color={'white'}
+                          sx={{ ":hover": { color: "black" } }}
+                          key={subcat?._id}
+                        >
+                          {" "}
+                          {subcat.name}
+                        </Typography>
                       </Link>
                     </li>
                   ))}

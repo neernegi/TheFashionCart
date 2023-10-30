@@ -7,6 +7,7 @@ import CategoryWithAvatar from "./category/CategoryWithAvatar";
 import SelectCategoryProduct from "./category/SelectCategoryProduct";
 import { ProductSwiper } from "../../components/swiper/ProductSwiper";
 import { useAuth } from "../context/useAuth";
+import Banner from "../../components/Home/Banner";
 
 const Home: React.FC = () => {
   const { auth } = useAuth();
@@ -17,8 +18,9 @@ const Home: React.FC = () => {
     <Box>
       {!isAdmin && !isSeller && (
         <Box>
-          <FetchCategory />
-          <ShowBanner />
+          {/* <FetchCategory /> */}
+          <Banner />
+          {/* <ShowBanner /> */}
           <CategoryWithAvatar />
           <SelectCategoryProduct />
           <ProductSwiper />

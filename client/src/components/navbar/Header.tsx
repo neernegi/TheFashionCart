@@ -10,6 +10,7 @@ import { useAuth } from "../../pages/context/useAuth";
 import SellerNavbar from "./SellerNavbar";
 import { selectItems } from "../../redux/features/cartSlice";
 import { useAppSelector } from "../../redux/hooks";
+import SellerDashboard from "./SellerDashboard";
 
 const StyledHeader = styled(AppBar)({
   height: "7rem",
@@ -22,7 +23,7 @@ const StyledHeader = styled(AppBar)({
 const NavBox = styled(Box)({
   display: "flex",
   flexDirection: "row",
-  gap: "3rem",
+  gap: "5rem",
   justifyContent: "center",
   alignItems: "center",
   justifyItems: "center",
@@ -96,11 +97,12 @@ const Header: React.FC = () => {
         <NavBox>
           {auth.user?.role === "seller" ? (
             <>
-              <SellerNavbar />
+              {/* <SellerNavbar /> */}
+              <SellerDashboard />
             </>
           ) : (
             <>
-              <LinkNav to={"/"}>E-store</LinkNav>
+              <LinkNav to={"/"}>Shopey</LinkNav>
               {auth?.user?.role === "admin" ? (
                 <>
                   <AdminNavbar />

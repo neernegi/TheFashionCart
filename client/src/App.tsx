@@ -34,6 +34,9 @@ import { useAuth } from "./pages/context/useAuth";
 import SellerFetchOrders from "./pages/order/seller/SellerFetchProducts";
 import UpdateActiveOrders from "./pages/order/seller/UpdateActiveOrder";
 import RegisterStepper from "./pages/authentication/seller/RegisterStepper";
+// import MiniDrawer from "./components/navbar/MiniDrawer";
+import SellerDashboard from "./components/navbar/SellerDashboard";
+import Dashboard from "./pages/dashboard/Dashboard";
 // import ProtectedRoute from "./components/route/ProtectedRoute";
 
 const App: React.FC = () => {
@@ -68,7 +71,7 @@ const App: React.FC = () => {
           element={<SubcategoryProduct />}
         />
         <Route path="/seller-products" element={<SellerProduct />} />
-        <Route path="/requestQC" element={<RequestQC />} />
+        <Route path="/qc-product" element={<RequestQC />} />
         {/* <Route path="/qcstatus" element={<RequestQC />} /> */}
         <Route path="/user-register" element={<UserRegister />} />
         <Route path="/login-seller" element={<LoginSeller />} />
@@ -82,6 +85,9 @@ const App: React.FC = () => {
         <Route path="/seller-orders" element={<SellerFetchOrders />} />
         <Route path="/active-seller-orders" element={<UpdateActiveOrders />} />
         <Route path="/register-seller-stepper" element={<RegisterStepper />} />
+        <Route path="/seller-dashboard" element={<Dashboard />} />
+        
+   
    
         {/* <ProtectedRoute path="/active-seller-orders" isSeller={true}  component={UpdateActiveOrders}   /> */}
       </Routes>
