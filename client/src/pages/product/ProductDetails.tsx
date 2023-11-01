@@ -50,7 +50,8 @@ const ProductDetails: React.FC = () => {
         return;
       }
 
-      const { _id: productId, Stock } = product;
+      const { _id: productId, Stock} = product;
+      const shopName = seller?.name
 
       if (productId && quantity > 0 && quantity <= Stock) {
         // Check if the product is already in the cart
@@ -68,7 +69,7 @@ const ProductDetails: React.FC = () => {
           );
 
           // Add the new item to the cart items array
-          const newItem = { productId, quantity };
+          const newItem = { productId, quantity,shopName };
           cartItems.push(newItem);
 
           // Update the cart items in local storage
@@ -171,7 +172,7 @@ const ProductDetails: React.FC = () => {
 
   return (
     <>
-      <Box ml={"50rem"} display={"flex"} mt={"10rem"} gap={"4rem"}>
+      <Box ml={"34%"} display={"flex"} mt={"10rem"} gap={"4rem"}>
         <Box border={"2px gray solid"} p={"2rem"}>
           <Carousel sx={{ width: "55rem", height: "60rem" }}>
             {product?.avatar &&

@@ -36,6 +36,9 @@ const CartProducts: React.FC = () => {
   const products = useAppSelector((state) => state.product.products);
   const cartItems = useAppSelector((state) => state.cart.cartItems);
   const order = useAppSelector((state) => state.order.orders);
+  const seller = useAppSelector((state) => state.seller.seller);
+
+  console.log(seller);
 
   const userId = auth?.user?._id;
   const [loading, setLoading] = useState(true);
@@ -263,7 +266,7 @@ const CartProducts: React.FC = () => {
     if (cartItems.length > 0) {
       const orderDetails = cartItems.map((item) => {
         const cartProduct = products.find(
-          (product) => product._id === item.productId
+          (product) => product._id === item?.productId
         ) as Product;
         const currentQuantity = quantity[item.productId] || item.quantity;
         const cartId = item?._id;
@@ -279,6 +282,7 @@ const CartProducts: React.FC = () => {
           price: productPrice,
           quantity: currentQuantity,
           cartId: cartId,
+          brand: cartProduct?.brand,
         };
       });
 
@@ -320,149 +324,207 @@ const CartProducts: React.FC = () => {
   // }
 
   return (
-    <Box width={"100%"} margin={"5rem 5rem"}>
-      <Typography variant="h2" fontSize={"2xl"} color={"black"}>
+    <Box width={"100%"} mt={"8rem"} mb={"23%"}>
+      <Typography
+        textAlign={"center"}
+        variant="h2"
+        fontSize={"2xl"}
+        color={"black"}
+      >
         Cart Products
       </Typography>
-      {auth?.user == null ? (
-        <>
-          <Link to={'/'}>
-            <Button
-              style={{
-                marginLeft: "1.4rem",
-                width: "17rem",
-                height: "4rem",
-                fontSize: "1.3rem",
-                fontWeight: 600,
-              }}
-              variant="contained"
-            >
-              Please Login first
-            </Button>
-          </Link>
-        </>
-      ) : (
-        <>
-          {loading ? (
-            <Typography variant="body1" fontSize={"1.5rem"} color={"black"}>
-              Loading...
-            </Typography>
-          ) : (
-            Array.isArray(cartItems) &&
-            (cartItems.length === 0 ? (
-              <Typography variant="body1" fontSize={"1.5rem"} color={"black"}>
-                Your cart is empty.
-              </Typography>
-            ) : (
-              cartItems.map((item) => {
-                if (!item) {
-                  return null; // Handle the case when item is undefined
-                }
-
-                const cartProduct = products.find(
-                  (product) => product._id === item.productId
-                ) as Product;
-                const currentQuantity =
-                  quantity[item.productId] || item.quantity;
-
-                return (
-                  <React.Fragment key={item._id}>
-                    <Box display={"flex"} key={item._id}>
-                      <Box>
-                        <Box display={"flex"} gap={"4rem"} m={"3rem"}>
-                          <Box mb={"4rem"}>
-                            <img
-                              style={{ width: "10rem" }}
-                              src={cartProduct?.avatar[0]?.url}
-                              alt={cartProduct?.name}
-                            />
-                          </Box>
-
-                          <Typography variant="h5" color={"black"}>
-                            {cartProduct?.name}
-                          </Typography>
-                          <Typography variant="h5" color="black">
-                            <span style={{ textDecoration: "line-through" }}>
-                              {individualPrices[item.productId]?.toFixed(2) ||
-                                0}
-                            </span>
-                          </Typography>
-                          <Typography
-                            variant="h4"
-                            fontWeight={700}
-                            color={"black"}
-                          >
-                            {individualPricesAfterDiscount[
-                              item.productId
-                            ]?.toFixed(2) || 0}
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Box>
-                        <Box display={"flex"} ml={"2rem"} mt={"2rem"} gap={3}>
-                          <Button
-                            onClick={() => handleDecrement(item)}
-                            style={{ fontSize: "3rem" }}
-                            variant="outlined"
-                          >
-                            -
-                          </Button>
-
-                          <Input
-                            style={{
-                              backgroundColor: "gray",
-                              outline: "none",
-                              border: "none",
-                              fontSize: "2.4rem",
-                              width: "3rem",
-                            }}
-                            type="text"
-                            value={currentQuantity}
-                          />
-                          <Button
-                            onClick={() => handleIncrement(item)}
-                            style={{ fontSize: "3rem" }}
-                            variant="outlined"
-                          >
-                            +
-                          </Button>
-                        </Box>
-
-                        <Button
-                          variant="contained"
-                          onClick={() => handleRemove(item._id)}
-                        >
-                          Remove
-                        </Button>
-                      </Box>
-                    </Box>
-                  </React.Fragment>
-                );
-              })
-            ))
-          )}
-        </>
-      )}
-      {cartItems.length > 0 ? (
+      <Box mt={"6rem"} display={"flex"} justifyContent={"space-evenly"}>
         <Box>
-          <PriceDetails
-            cartItems={cartItems}
-            totalProductsPrice={totalProductsPrice}
-            discount={discount}
-            delivery={delivery}
-            totalPrice={totalPrice}
-          />
+          {auth?.user == null ? (
+            <>
+              <Link to={"/"}>
+                <Button
+                  style={{
+                    marginLeft: "1.4rem",
+                    width: "17rem",
+                    height: "4rem",
+                    fontSize: "1.3rem",
+                    fontWeight: 600,
+                  }}
+                  variant="contained"
+                >
+                  Please Login first
+                </Button>
+              </Link>
+            </>
+          ) : (
+            <>
+              {loading ? (
+                <Typography variant="body1" fontSize={"1.5rem"} color={"black"}>
+                  Loading...
+                </Typography>
+              ) : (
+                Array.isArray(cartItems) &&
+                (cartItems.length === 0 ? (
+                  <Typography
+                    variant="body1"
+                    fontSize={"1.5rem"}
+                    color={"black"}
+                  >
+                    Your cart is empty.
+                  </Typography>
+                ) : (
+                  cartItems.map((item) => {
+                    if (!item) {
+                      return null; // Handle the case when item is undefined
+                    }
+
+                    const cartProduct = products.find(
+                      (product) => product._id === item.productId
+                    ) as Product;
+                    const currentQuantity =
+                      quantity[item.productId] || item.quantity;
+
+                    return (
+                      <React.Fragment key={item._id}>
+                        <Box
+                          boxShadow={"0px 0px 10px 2px rgba(0,0,0,0.2)"}
+                          display={"flex"}
+                          flexDirection={"column"}
+                          gap={"0.7rem"}
+                          mb={"5rem"}
+                          p={"2rem"}
+                          key={item._id}
+                        >
+                          <Box>
+                            <Box display={"flex"} gap={"3rem"}>
+                              <Box>
+                                <img
+                                  style={{ width: "10rem" }}
+                                  src={cartProduct?.avatar[0]?.url}
+                                  alt={cartProduct?.name}
+                                />
+                              </Box>
+                              <Box>
+                                <Typography variant="h3" mb={2} color={"black"}>
+                                  {cartProduct?.name}
+                                </Typography>
+
+                                <Typography variant="h4" mb={2} color={"black"}>
+                                  {cartProduct?.brand}
+                                </Typography>
+                                <Typography
+                                  variant="h3"
+                                  color={"black"}
+                                ></Typography>
+                                <Box display={"flex"} gap={"2rem"}>
+                                  <Typography variant="h3" color="black">
+                                    {" "}
+                                    ₹
+                                    <span
+                                      style={{
+                                        textDecoration: "line-through",
+                                        fontSize: "2.4rem",
+                                      }}
+                                    >
+                                      {individualPrices[item.productId] || 0}
+                                    </span>
+                                  </Typography>
+                                  <Typography
+                                    variant="h3"
+                                    fontWeight={700}
+                                    color={"black"}
+                                  >
+                                    ₹
+                                    {individualPricesAfterDiscount[
+                                      item.productId
+                                    ] || 0}
+                                  </Typography>
+                                </Box>
+                              </Box>
+                            </Box>
+                          </Box>
+                          <Box
+                            display={"flex"}
+                            gap={"2rem"}
+                            alignItems={"center"}
+                          >
+                            <Box
+                              display={"flex"}
+                              // ml={"2rem"}
+                              // mt={"2rem"}
+                              gap={3}
+                            >
+                              <Button
+                                onClick={() => handleDecrement(item)}
+                                style={{ fontSize: "3rem" }}
+                                variant="outlined"
+                              >
+                                -
+                              </Button>
+
+                              <Input
+                                style={{
+                                  boxShadow: "0px 0px 10px 2px rgba(0,0,0,0.2)",
+                                  // outline: " 1rem 1rem 1rem black",
+
+                                  border: "none",
+                                  fontSize: "2.4rem",
+                                  width: "3rem",
+                                }}
+                                type="text"
+                                value={currentQuantity}
+                              />
+                              <Button
+                                onClick={() => handleIncrement(item)}
+                                style={{ fontSize: "3rem" }}
+                                variant="outlined"
+                              >
+                                +
+                              </Button>
+                            </Box>
+
+                            <Button
+                              sx={{
+                                width: "10rem",
+                                height: "4rem",
+                                fontSize: "1.8rem",
+                              }}
+                              variant="contained"
+                              onClick={() => handleRemove(item?._id)}
+                            >
+                              Remove
+                            </Button>
+                          </Box>
+                        </Box>
+                      </React.Fragment>
+                    );
+                  })
+                ))
+              )}
+            </>
+          )}
         </Box>
-      ) : null}
-      {auth?.user !== null && (
-        <Button
-          onClick={placeOrderHandler}
-          variant="contained"
-          style={{ marginTop: "3rem" }}
-        >
-          Place Order
-        </Button>
-      )}
+        <Box >
+          {cartItems.length > 0 ? (
+            <Box>
+              <PriceDetails
+                cartItems={cartItems}
+                totalProductsPrice={totalProductsPrice}
+                discount={discount}
+                delivery={delivery}
+                totalPrice={totalPrice}
+              />
+            </Box>
+          ) : null}
+          {auth?.user !== null && (
+            <Button
+            fullWidth
+            size="large"
+              onClick={placeOrderHandler}
+              variant="contained"
+              style={{ marginTop: "3rem",fontSize:"2.3rem" }}
+            >
+              Place Order
+            </Button>
+          )}
+        </Box>
+      </Box>
     </Box>
   );
 };

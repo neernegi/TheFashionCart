@@ -11,12 +11,14 @@ import { Link } from "react-router-dom";
 
 const DropdownMenu = styled(Box)({
   position: "absolute",
+
   top: 75,
+  marginLeft:"-4rem",
   zIndex: 2,
   borderRadius: "1rem",
-  backgroundColor: "#443f40a2",
+  backgroundColor: "white",
   boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-  padding: "10px",
+  padding: "1rem 3rem 2rem 3rem",
   minWidth: "200px",
 });
 
@@ -67,7 +69,6 @@ const FetchCategory: React.FC = () => {
               <Typography
                 sx={{ cursor: "pointer", ":hover": { color: "ActiveBorder" } }}
                 variant="h2"
-              
                 component="h4"
                 fontWeight={"bold"}
                 color="black"
@@ -93,10 +94,10 @@ const FetchCategory: React.FC = () => {
                         onClick={() => handleSubcategoryClick(subcat._id)}
                       >
                         <Typography
-                        fontSize={'2.5rem'}
-                        fontWeight={600}
-                        color={'white'}
-                          sx={{ ":hover": { color: "black" } }}
+                          fontSize={"2.5rem"}
+                          fontWeight={600}
+                          color={"black"}
+                          sx={{ ":hover": { color: "blue" } }}
                           key={subcat?._id}
                         >
                           {" "}

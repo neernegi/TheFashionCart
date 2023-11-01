@@ -82,7 +82,7 @@ const OrderStepper = () => {
           <Grid item xs={12}>
             <Stepper
               activeStep={activeStep}
-              style={{ width: "80%" ,margin:"auto"}} // Adjust the width as needed
+              style={{ width: "60%" ,margin:"auto"}} // Adjust the width as needed
             >
               {steps.map((label, index) => (
                 <Step key={label}>
@@ -122,7 +122,7 @@ const OrderStepper = () => {
                 }}
               >
                 <Button
-                  color="inherit"
+                  color="primary"
                   disabled={activeStep === 0}
                   onClick={handleBack}
                   sx={{fontSize:"2rem",fontWeight:550}}

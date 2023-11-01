@@ -44,20 +44,20 @@ const ConfirmOrder = () => {
   const selectedShippingInfo = () => {
     if (addressData) {
       return (
-        <Box marginLeft={"20rem"} marginTop={"5rem"}>
-          <Typography fontSize={"2rem"} color={"black"}>
+        <Box marginLeft={"5rem"}>
+          <Typography fontSize={"2.3rem"} color={"black"}>
             {addressData.address}
           </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
+          <Typography fontSize={"2.3rem"} color={"black"}>
             {addressData.city}
           </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
-            {addressData.country}
-          </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
+          <Typography fontSize={"2.3rem"} color={"black"}>
             {addressData.pinCode}
           </Typography>
-          <Typography fontSize={"2rem"} color={"black"}>
+          <Typography fontSize={"2.3rem"} color={"black"}>
+            {addressData.country}
+          </Typography>
+          <Typography fontSize={"2.3rem"} color={"black"}>
             {addressData.phoneNo}
           </Typography>
         </Box>
@@ -73,60 +73,102 @@ const ConfirmOrder = () => {
 
   return (
     <>
-      <Box>{selectedShippingInfo()}</Box>
       <Box>
-        <Box width={"100%"} margin={"5rem 5rem"}>
-          <Typography variant="h2" fontSize={"2xl"} color={"black"}>
-            Cart Products
-          </Typography>
-          {loading ? (
-            <Typography variant="body1" fontSize={"1.5rem"} color={"black"}>
-              Loading...
-            </Typography>
-          ) : (
-            <div>
-              {orderInfoData.orderDetails.map((item: OrderItem) => (
-                <Box key={item.productId} display={"flex"} gap={"3rem"}>
-                  <Box mb={"4rem"}>
-                    <img
-                      style={{ width: "10rem" }}
-                      src={item?.image}
-                      alt={item?.name}
-                    />
-                  </Box>
-                  <Typography variant="h5" color="black">
-                    {item?.name}
-                  </Typography>
-                  <Typography
-                    style={{ textDecoration: "line-through" }}
-                    variant="h5"
-                    color="black"
-                  >
-                    {item?.price}
-                  </Typography>
-                  <Typography variant="h4" color="black">
-                    {item?.priceAfterDiscount}
-                  </Typography>
+        <Box>
+          <Box
+            display={"flex"}
+            // gap={"20rem"}
+            marginTop={"8rem"}
+            justifyContent={"space-evenly"}
+          >
+            <Box>
+              <Box>{selectedShippingInfo()}</Box>
+              <Box width={"100%"} margin={"5rem 5rem"}>
+                <Typography
+                  variant="h2"
+                  fontSize={"2xl"}
+                  mb={"3rem"}
+                  color={"black"}
+                >
+                  Cart Products
+                </Typography>
+                {loading ? (
                   <Typography
                     variant="body1"
-                    fontSize={"1.5rem"}
+                    fontSize={"2.3rem"}
                     color={"black"}
                   >
-                    Quantity: {item?.quantity}
+                    Loading...
                   </Typography>
-                </Box>
-              ))}
-              <Box>
-                <PriceDetails
-                  cartItems={cartItems}
-                  totalProductsPrice={orderInfoData?.totalProductsPrice}
-                  discount={orderInfoData?.discount}
-                  delivery={orderInfoData?.delivery}
-                  totalPrice={orderInfoData?.totalPrice}
-                />
+                ) : (
+                  <Box>
+                    {orderInfoData.orderDetails.map((item: OrderItem) => (
+                      <Box
+                        p={"1rem"}
+                        boxShadow={"0px 0px 10px 2px rgba(0,0,0,0.2)"}
+                        key={item.productId}
+                        display={"flex"}
+                        gap={"3rem"}
+                        mb={"3rem"}
+                        
+                      >
+                        <Box >
+                          <img
+                            style={{ width: "10rem" }}
+                            src={item?.image}
+                            alt={item?.name}
+                          />
+                        </Box>
+                        <Box>
+                          <Typography
+                            variant="h4"
+                            mb={2}
+                            fontSize={"2.3rem"}
+                            color="black"
+                          >
+                            {item?.name}
+                          </Typography>
+                          <Box display={"flex"} gap={"2rem"}>
+                            <Typography
+                              style={{ textDecoration: "line-through" }}
+                              fontSize={"2.3rem"}
+                              color="black"
+                            >
+                              ₹{item?.price}
+                            </Typography>
+                            <Typography
+                              variant="h3"
+                              // fontSize={"2.3rem"}
+                              color="black"
+                            >
+                              ₹{item?.priceAfterDiscount}
+                            </Typography>
+                          </Box>
+                          <Typography
+                            variant="body1"
+                            fontSize={"2.3rem"}
+                            color={"black"}
+                          
+                          >
+                            Quantity: {item?.quantity}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    ))}
+                  </Box>
+                )}
               </Box>
-            </div>
-          )}
+            </Box>
+            <Box>
+              <PriceDetails
+                cartItems={cartItems}
+                totalProductsPrice={orderInfoData?.totalProductsPrice}
+                discount={orderInfoData?.discount}
+                delivery={orderInfoData?.delivery}
+                totalPrice={orderInfoData?.totalPrice}
+              />
+            </Box>
+          </Box>
         </Box>
       </Box>
     </>

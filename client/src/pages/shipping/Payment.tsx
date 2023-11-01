@@ -125,7 +125,7 @@ const Payment = () => {
           navigate("/success");
 
           localStorage.removeItem("cartItems");
-          sessionStorage.removeItem("orderInfo")
+          sessionStorage.removeItem("orderInfo");
         } else {
           alert("There's some issue while processing payment ");
         }
@@ -150,24 +150,51 @@ const Payment = () => {
           </Typography>
           <Box>
             <CreditCardIcon />
-            <CardNumberElement className="paymentInput" />
+            <CardNumberElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "40px",
+                  },
+                },
+              }}
+              className="paymentInput"
+            />
           </Box>
           <Box>
             <CalendarMonthIcon />
-            <CardExpiryElement className="paymentInput" />
+            <CardExpiryElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "40px",
+                  },
+                },
+              }}
+              className="paymentInput"
+            />
           </Box>
           <Box>
             <VpnKeyIcon />
-            <CardCvcElement className="paymentInput" />
+            <CardCvcElement
+              options={{
+                style: {
+                  base: {
+                    fontSize: "40px",
+                  },
+                },
+              }}
+              className="paymentInput"
+            />
           </Box>
 
           <Button
             className="paymentFormBtn"
+            fullWidth
             style={{
-              marginTop: "3rem",
-              width: "18rem",
+              // width: "18rem",
               height: "4rem",
-              fontSize: "2rem",
+              fontSize: "2.3rem",
             }}
             variant="contained"
             onClick={submitHandler}

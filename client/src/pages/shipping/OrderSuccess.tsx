@@ -6,6 +6,7 @@ import { styled } from "@mui/system";
 
 const OrderSuccessContainer = styled("div")({
   margin: "auto",
+  marginBottom:"12%",
   textAlign: "center",
   padding: "10vmax",
   height: "50vh",
@@ -53,7 +54,7 @@ const LinkButton = styled(Link)({
 
 const OrderSuccess = () => {
   return (
-    <OrderSuccessContainer>
+    <OrderSuccessContainer >
       <CheckIcon />
       <Message>Your Order has been Placed successfully</Message>
       <LinkButton to="/orders">View Orders</LinkButton>
