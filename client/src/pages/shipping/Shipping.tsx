@@ -8,6 +8,7 @@ import TransferWithinAStationIcon from "@mui/icons-material/TransferWithinAStati
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import "./style.css";
 
 import {
   Box,
@@ -62,9 +63,8 @@ const Shipping = () => {
       setSavedShipping(JSON.parse(savedShippingData));
     }
   }, []);
-  const [selectedAddress, setSelectedAddress] = useState<ShippingInfoProps | null>(
-    null
-  );
+  const [selectedAddress, setSelectedAddress] =
+    useState<ShippingInfoProps | null>(null);
 
   const [numShippingInfo, setNumShippingInfo] = useState(1);
 
@@ -110,12 +110,19 @@ const Shipping = () => {
     setShipping(selectedAddress);
 
     // Save the selected address in local storage
-    sessionStorage.setItem("selectedShippingInfo", JSON.stringify(selectedAddress));
-  }
+    sessionStorage.setItem(
+      "selectedShippingInfo",
+      JSON.stringify(selectedAddress)
+    );
+    setShowShippingForm(false)
+  };
 
   const renderShippingInfoForms = () => {
     return (
-      <RadioGroup value={savedShipping.indexOf(shipping).toString()} onChange={(e) => handleRadioChange(Number(e.target.value))}>
+      <RadioGroup
+        value={savedShipping.indexOf(shipping).toString()}
+        onChange={(e) => handleRadioChange(Number(e.target.value))}
+      >
         {savedShipping.map((entry, index) => (
           <FormControlLabel
             key={index}
@@ -147,158 +154,237 @@ const Shipping = () => {
   };
   return (
     <Fragment>
-      <Box margin={"5rem"}>{renderShippingInfoForms()}</Box>
-      {ShowShippingForm ? (
-        <>
-          <Box display={"flex"} justifyContent={"center"} mt={"20rem"}>
-            <Box className="shippingBox">
-              <h2 className="shippingHeading">Shipping Details</h2>
-
-              <form
-                className="shippingForm"
-                encType="multipart/form-data"
-                onSubmit={shippingSubmit}
+      <Box width={"100%"} mb={"35rem"}>
+        <Box marginLeft={"35%"}>
+          <Box margin={"5rem"}>{renderShippingInfoForms()}</Box>
+          {ShowShippingForm ? (
+            <>
+              <Box
+                display={"flex"}
+                justifyContent={"center"}
+                mt={"10rem"}
+                mr={"55%"}
               >
-                <Box display={"flex"} flexDirection={"column"} gap={"2rem"}>
-                  {/* Render input fields for the current shipping info */}
-                  <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <HomeIcon sx={{ color: "action.active", mr: 1, my: 0.5 }} />
-                    <TextField
-                      type="text"
-                      id="home-address"
-                      label="Address"
-                      variant="standard"
-                      value={shipping.address}
-                      onChange={(e) =>
-                        setShipping({ ...shipping, address: e.target.value })
-                      }
-                    />
-                  </Box>
+                <Box className="shippingBox">
+                  <h2 className="shippingHeading">Shipping Details</h2>
 
-                  <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <LocationCityIcon
-                      sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                    />
-                    <TextField
-                      type="text"
-                      placeholder="City"
-                      label="City"
-                      required
-                      value={shipping.city}
-                      onChange={(e) =>
-                        setShipping({ ...shipping, city: e.target.value })
-                      }
-                    />
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <PinDropIcon
-                      sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                    />
-                    <TextField
-                      type="text" // Use type "number" for pinCode
-                      placeholder="Pin Code"
-                      label={"Pin Code"}
-                      required
-                      value={shipping.pinCode || ""}
-                      onChange={(e) =>
-                        setShipping({
-                          ...shipping,
-                          pinCode: Number(e.target.value),
-                        })
-                      }
-                    />
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <PhoneIcon
-                      sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                    />
-                    <TextField
-                      type="text"
-                      placeholder="Phone Number"
-                      required
-                      label={"Phone Number"}
-                      value={shipping.phoneNo}
-                      onChange={(e) =>
-                        setShipping({ ...shipping, phoneNo: e.target.value })
-                      }
-                    />
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <PublicIcon
-                      sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                    />
-                    <TextField
-                      type="text"
-                      placeholder="country"
-                      required
-                      label={"Country"}
-                      value={shipping.country}
-                      onChange={(e) =>
-                        setShipping({ ...shipping, country: e.target.value })
-                      }
-                    />
-                  </Box>
-
-                  <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-                    <TransferWithinAStationIcon
-                      sx={{ color: "action.active", mr: 1, my: 0.5 }}
-                    />
-                    <TextField
-                      type="text"
-                      placeholder="country"
-                      required
-                      label={"State"}
-                      value={shipping.state}
-                      onChange={(e) =>
-                        setShipping({ ...shipping, state: e.target.value })
-                      }
-                    />
-                  </Box>
-                </Box>
-
-                {numShippingInfo < 4 && (
-                  <Button
-                    style={{ margin: "2rem" }}
-                    variant="contained"
-                    type="submit"
-                    value="Continue"
-                    className="shippingBtn"
-                    disabled={!shipping.state}
+                  <form
+                    className="shippingForm"
+                    encType="multipart/form-data"
+                    onSubmit={shippingSubmit}
                   >
-                    Deliver Here
-                  </Button>
-                )}
+                    <Box display={"flex"} flexDirection={"column"} gap={"2rem"}>
+                      {/* Render input fields for the current shipping info */}
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <HomeIcon
+                          sx={{
+                            color: "action.active",
+                            mr: 1,
+                            my: 0.5,
+                            fontSize: "3rem",
+                          }}
+                        />
+                        <TextField
+                          className="textFieldCommonStyles"
+                          type="text"
+                          id="home-address"
+                          label="Address"
+                          variant="standard"
+                          value={shipping.address}
+                          onChange={(e) =>
+                            setShipping({
+                              ...shipping,
+                              address: e.target.value,
+                            })
+                          }
+                        />
+                      </Box>
+
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <LocationCityIcon
+                          sx={{
+                            color: "action.active",
+                            mr: 1,
+                            my: 0.5,
+                            fontSize: "3rem",
+                          }}
+                        />
+                        <TextField
+                          className="textFieldCommonStyles"
+                          type="text"
+                          placeholder="City"
+                          label="City"
+                          required
+                          value={shipping.city}
+                          onChange={(e) =>
+                            setShipping({ ...shipping, city: e.target.value })
+                          }
+                        />
+                      </Box>
+
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <PinDropIcon
+                          sx={{
+                            color: "action.active",
+                            mr: 1,
+                            my: 0.5,
+                            fontSize: "3rem",
+                          }}
+                        />
+                        <TextField
+                          className="textFieldCommonStyles"
+                          type="text" // Use type "number" for pinCode
+                          placeholder="Pin Code"
+                          label={"Pin Code"}
+                          required
+                          value={shipping.pinCode || ""}
+                          onChange={(e) =>
+                            setShipping({
+                              ...shipping,
+                              pinCode: Number(e.target.value),
+                            })
+                          }
+                        />
+                      </Box>
+
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <PhoneIcon
+                          sx={{
+                            color: "action.active",
+                            mr: 1,
+                            my: 0.5,
+                            fontSize: "3rem",
+                          }}
+                        />
+                        <TextField
+                          className="textFieldCommonStyles"
+                          type="text"
+                          placeholder="Phone Number"
+                          required
+                          label={"Phone Number"}
+                          value={shipping.phoneNo}
+                          onChange={(e) =>
+                            setShipping({
+                              ...shipping,
+                              phoneNo: e.target.value,
+                            })
+                          }
+                        />
+                      </Box>
+
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <PublicIcon
+                          sx={{
+                            color: "action.active",
+                            mr: 1,
+                            my: 0.5,
+                            fontSize: "3rem",
+                          }}
+                        />
+                        <TextField
+                          className="textFieldCommonStyles"
+                          type="text"
+                          placeholder="country"
+                          required
+                          label={"Country"}
+                          value={shipping.country}
+                          onChange={(e) =>
+                            setShipping({
+                              ...shipping,
+                              country: e.target.value,
+                            })
+                          }
+                        />
+                      </Box>
+
+                      <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                        <TransferWithinAStationIcon
+                          sx={{
+                            color: "action.active",
+                            mr: 1,
+                            my: 0.5,
+                            fontSize: "3rem",
+                          }}
+                        />
+                        <TextField
+                          className="textFieldCommonStyles"
+                          type="text"
+                          placeholder="country"
+                          required
+                          label={"State"}
+                          value={shipping.state}
+                          onChange={(e) =>
+                            setShipping({ ...shipping, state: e.target.value })
+                          }
+                        />
+                      </Box>
+                    </Box>
+
+                    {numShippingInfo < 4 && (
+                      <Button
+                        sx={{
+                          mt: 3,
+                          ml: 4,
+                          mb: 2,
+                          // width: "24rem",
+                          height: "4rem",
+                          fontSize: "2rem",
+                        }}
+                        variant="contained"
+                        type="submit"
+                        value="Continue"
+                        className="shippingBtn"
+                        disabled={!shipping.state}
+                      >
+                        Deliver Here
+                      </Button>
+                    )}
+                    <Button
+                      sx={{
+                        mt: 3,
+                        ml: 2,
+                        mb: 2,
+                        // width: "2rem",
+                        height: "4rem",
+                        fontSize: "2rem",
+                      }}
+                      variant="contained"
+                      type="submit"
+                      value="Continue"
+                      className="shippingBtn"
+                      onClick={() => setShowShippingForm(false)}
+                    >
+                      Cancel
+                    </Button>
+                  </form>
+                </Box>
+              </Box>
+            </>
+          ) : (
+            <>
+              {numShippingInfo < 4 && (
                 <Button
-                  style={{ margin: "2rem" }}
+                  sx={{
+                    mt: 3,
+                    ml: 50,
+                    mb: 2,
+                    width: "24rem",
+                    height: "4rem",
+                    fontSize: "2rem",
+                  }}
                   variant="contained"
                   type="submit"
                   value="Continue"
+                  onClick={() => setShowShippingForm(true)}
                   className="shippingBtn"
-                  onClick={() => setShowShippingForm(false)}
                 >
-                  Cancel
+                  Add Shipping Info
                 </Button>
-              </form>
-            </Box>
-          </Box>
-        </>
-      ) : (
-        <>
-          {numShippingInfo < 4 && (
-            <Button
-              type="submit"
-              value="Continue"
-              onClick={() => setShowShippingForm(true)}
-              className="shippingBtn"
-            >
-              Add Shipping Info
-            </Button>
+              )}
+            </>
           )}
-        </>
-      )}
+        </Box>
+      </Box>
     </Fragment>
   );
 };

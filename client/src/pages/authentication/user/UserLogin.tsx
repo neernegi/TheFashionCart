@@ -5,6 +5,7 @@ import {
   Button,
   Container,
   Grid,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -16,6 +17,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { loginUser, userSelector } from "../../../redux/features/userSlice";
 import { useAuth } from "../../context/useAuth";
+import "../styles.css";
 
 type FormData = {
   email: string;
@@ -59,40 +61,50 @@ const UserLogin: React.FC = () => {
       console.log(error);
     }
   };
-  
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Box  textAlign={'center'}>
       <Box
         sx={{
+       
           marginTop: "20rem",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+        <Avatar
+          sx={{
+            m: 1,
+            bgcolor: "secondary.main",
+            width: "7rem",
+            height: "7rem",
+          }}
+        >
+          <LockOutlinedIcon style={{ fontSize: "3rem" }} />
         </Avatar>
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
         <form onSubmit={handleSubmit(submitData)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
+          <Stack spacing={4}>
+            <Box >
               <TextField
+                className="textFieldCommonStyles"
                 required
-                fullWidth
+                style={{width:"30rem"}}
                 id="email"
                 label="Email Address"
                 autoComplete="email"
                 {...register("email")}
               />
               {errors.email && <span>{errors.email.message}</span>}
-            </Grid>
-            <Grid item xs={12}>
+            </Box>
+            <Box >
               <TextField
+                className="textFieldCommonStyles"
                 required
-                fullWidth
+                style={{width:"30rem"}}
                 label="Password"
                 type="password"
                 id="password"
@@ -100,24 +112,25 @@ const UserLogin: React.FC = () => {
                 {...register("password")}
               />
               {errors.password && <span>{errors.password.message}</span>}
-            </Grid>
-          </Grid>
+            </Box>
+          </Stack>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{
+              mt: 5,
+              mb: 2,
+              width: "22rem",
+              height: "4rem",
+              fontSize: "2rem",
+            }}
           >
             Log in
           </Button>
-          <Grid container justifyContent="flex-end">
-            <Grid item>
-              <Link to="/user-register">New customer? Sign up</Link>
-            </Grid>
-          </Grid>
         </form>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

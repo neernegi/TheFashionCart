@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks";
 import { registerSeller } from "../../../redux/features/sellerSlice";
 // import RegisterStepper from "./RegisterStepper";
+import "../styles.css";
 
 export interface RegisterSellerPayload {
   name: string;
@@ -83,30 +84,35 @@ const SellerRegister: React.FC = () => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Box textAlign={"center"}>
       {/* <RegisterStepper activeStep={0} /> */}
       <Box
         sx={{
-          marginTop: "20rem",
+          marginTop: "4rem",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           marginBottom: "5rem",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+        <Avatar
+          sx={{
+            m: 3,
+            bgcolor: "secondary.main",
+            width: "7rem",
+            height: "7rem",
+          }}
+        >
+          <LockOutlinedIcon style={{ fontSize: "3rem" }} />
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
+
         <form style={{ marginTop: 3 }} onSubmit={submitData}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
                 value={seller.name}
-                fullWidth
                 id="name"
                 label="Name"
                 autoComplete="name"
@@ -115,9 +121,9 @@ const SellerRegister: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 value={seller.email}
                 required
-                fullWidth
                 id="email"
                 onChange={handleEmailChange}
                 label="Email Address"
@@ -126,8 +132,8 @@ const SellerRegister: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
-                fullWidth
                 value={seller.password}
                 label="Password"
                 onChange={handlePasswordChange}
@@ -139,7 +145,6 @@ const SellerRegister: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 required
-                fullWidth
                 value={seller.confirmPassword}
                 label="Confirm Password"
                 type="password"
@@ -168,18 +173,30 @@ const SellerRegister: React.FC = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              width: "24rem",
+              height: "4rem",
+              fontSize: "2rem",
+            }}
           >
             Sign Up
           </Button>
         </form>
         <Grid container justifyContent="flex-end">
           <Grid item>
-            <Link to="/login-seller">Already have an account? Sign in</Link>
+            <Link to="/login-seller">
+              <Typography
+                sx={{ fontSize: "2rem", ":hover": { color: "black" } }}
+              >
+                Already have an account? Sign in
+              </Typography>
+            </Link>
           </Grid>
         </Grid>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

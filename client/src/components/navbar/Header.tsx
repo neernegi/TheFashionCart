@@ -89,7 +89,7 @@ const Header: React.FC = () => {
   };
 
   return (
-    <StyledHeader color="inherit" position="sticky">
+    <StyledHeader color="inherit" position="sticky" >
       <Toolbar>
         <NavBox>
           {auth.user?.role === "seller" ? (
@@ -99,7 +99,7 @@ const Header: React.FC = () => {
             </>
           ) : (
             <>
-              <LinkNav to={"/"}>Shopey</LinkNav>
+              <LinkNav to={"/"}>The Fashion Cart</LinkNav>
               {auth?.user?.role === "admin" ? (
                 <>
                   <AdminNavbar />

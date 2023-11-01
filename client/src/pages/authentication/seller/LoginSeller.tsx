@@ -17,7 +17,7 @@ import { useAppDispatch } from "../../../redux/hooks";
 import { Seller, loginSeller } from "../../../redux/features/sellerSlice";
 import {AuthProps, useAuth } from "../../context/useAuth";
 import { User } from "../../../redux/features/userSlice";
-
+import "../styles.css";
 
 
 type FormData = {
@@ -84,8 +84,9 @@ const UserLogin: React.FC = () => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+               className="textFieldCommonStyles"
                 required
-                fullWidth
+              
                 id="email"
                 label="Email Address"
                 autoComplete="email"
@@ -95,8 +96,9 @@ const UserLogin: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+               className="textFieldCommonStyles"
                 required
-                fullWidth
+                
                 label="Password"
                 type="password"
                 id="password"

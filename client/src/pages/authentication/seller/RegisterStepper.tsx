@@ -1,25 +1,25 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
-import StepContent from '@mui/material/StepContent';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import SellerRegister from './SellerRegister';
-import AddSellerInfo from './AddSellerDetails';
+import * as React from "react";
+import Box from "@mui/material/Box";
+import Stepper from "@mui/material/Stepper";
+import Step from "@mui/material/Step";
+import StepLabel from "@mui/material/StepLabel";
+import StepContent from "@mui/material/StepContent";
+import Button from "@mui/material/Button";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
+import SellerRegister from "./SellerRegister";
+import AddSellerInfo from "./AddSellerDetails";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
 
 const steps = [
   {
-    label: 'Select campaign settings',
-    stepper:<SellerRegister /> 
+    label: "Create Seller Account",
+    stepper: <SellerRegister />,
   },
   {
-    label: 'Create an ad group',
-    stepper:<AddSellerInfo />
+    label: "Add Some Details",
+    stepper: <AddSellerInfo />,
   },
- 
 ];
 
 export default function VerticalLinearStepper() {
@@ -37,52 +37,65 @@ export default function VerticalLinearStepper() {
     setActiveStep(0);
   };
 
+  const customTheme = createTheme({
+    components: {
+      MuiStepLabel: {
+        styleOverrides: {
+          label: {
+            fontSize: "2rem",
+           
+          },
+        },
+      },
+    },
+  });
   return (
-    <Box sx={{ maxWidth: 400 }}>
-      <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel
-              optional={
-                index === 2 ? (
-                  <Typography variant="caption">Last step</Typography>
-                ) : null
-              }
-            >
-              {step.label}
-            </StepLabel>
-            <StepContent>
-              <Typography>{step.stepper}</Typography>
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-                  <Button
-                    disabled={index === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
-              </Box>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
-          </Button>
-        </Paper>
-      )}
-    </Box>
+    <ThemeProvider theme={customTheme}>
+      <Box sx={{ maxWidth: 600, ml: "40%",mt:"6%",mb:"5%" }}>
+        <Stepper activeStep={activeStep} orientation="vertical">
+          {steps.map((step, index) => (
+            <Step key={step.label}>
+              <StepLabel
+                StepIconProps={{
+                  style: {
+                    fontSize: "3rem",
+                  },
+                }}
+                optional={
+                  index === 2 ? (
+                    <Typography variant="caption">Last step</Typography>
+                  ) : null
+                }
+              >
+                {step.label}
+              </StepLabel>
+              <StepContent >
+                {step.stepper}
+                <Box sx={{ mb: 2 }}>
+                  <div>
+                    <Button
+                     disabled={index === 1}
+                      variant="contained"
+                      onClick={handleNext}
+                      sx={{ mt: 1, mr: 1,fontSize:"1.5rem" }}
+                    >
+                     Continue
+                    </Button>
+                    <Button
+                      disabled={index === 0}
+                      onClick={handleBack}
+                      sx={{ mt: 1, mr: 1,fontSize:"1.5rem" }}
+                    >
+                      Back
+                    </Button>
+                  </div>
+                </Box>
+              </StepContent>
+            </Step>
+          ))}
+        </Stepper>
+        
+      </Box>
+    </ThemeProvider>
   );
 }

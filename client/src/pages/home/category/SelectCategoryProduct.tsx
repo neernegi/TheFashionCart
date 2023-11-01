@@ -153,7 +153,7 @@ const SelectCategoryProduct: React.FC = () => {
         >
           {selectedCategory ? selectedCategory.label : ""} Products
         </Typography>
-        {/* <li onClick={handleClickOption} ref={sortRef}>
+        <li onClick={handleClickOption} ref={sortRef}>
           <Typography
             sx={{ cursor: "pointer", ":hover": { color: "gray" } }}
             fontSize={"2.5rem"}
@@ -162,10 +162,10 @@ const SelectCategoryProduct: React.FC = () => {
           >
             Sort
           </Typography>
-        </li> */}
+        </li>
       </Stack>
       <Box m={"4rem 6rem"} display={"flex"} gap={"22rem"}>
-        <Stack>
+        <Stack mt={"4rem"}>
           <Box sx={{ width: 300 }} m={"0.5rem"}>
             <Typography fontSize={"3.4rem"} fontWeight={600} color="black">
               Price
@@ -229,7 +229,7 @@ const SelectCategoryProduct: React.FC = () => {
           >
             Ratings
           </Typography>
-          {ratingOptionsShow && (
+          {/* {ratingOptionsShow && (
             <DropdownMenu
               style={{
                 top: menuPosition.top,
@@ -266,9 +266,18 @@ const SelectCategoryProduct: React.FC = () => {
                 2★ & above
               </Typography>
             </DropdownMenu>
-          )}
+          )} */}
         </Stack>
-        <ProductCardComponent products={products} />
+        <ProductCardComponent
+          products={
+            selectedBrand
+              ? filteredProductsByBrand
+              : sortOrder
+              ? sortedProducts
+              : products
+          }
+        />
+
         {/* <Box>
           <ProductCardComponent products={products}
             // products={
@@ -281,7 +290,7 @@ const SelectCategoryProduct: React.FC = () => {
           />
         </Box> */}
       </Box>
-      {/* {sortOptionsShow && (
+      {sortOptionsShow && (
         <DropdownMenu
           style={{ top: menuPosition.top, left: menuPosition.left - 50 }}
           onClick={handleClickOption}
@@ -313,8 +322,8 @@ const SelectCategoryProduct: React.FC = () => {
           >
             Price - Low to High
           </Typography>
-        </DropdownMenu> */}
-      {/* )} */}
+        </DropdownMenu>
+      )}
     </Box>
   );
 };

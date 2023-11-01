@@ -5,7 +5,8 @@ import {
   fetchSubcategoryFilterProducts,
   fetchProducts,
 } from "../../redux/features/productSlice";
-import ProductCardComponent from "../../components/productComponent/ProductCard";
+import { ProductCardComponent } from "../../components/productComponent/ProductCard";
+
 
 const SubcategoryProduct:React.FC = () => {
   const dispatch = useAppDispatch();

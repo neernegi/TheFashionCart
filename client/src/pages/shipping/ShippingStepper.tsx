@@ -1,5 +1,5 @@
 import * as React from "react";
-import {useState,useEffect} from "react"
+import { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
@@ -12,7 +12,7 @@ import Payment from "./Payment";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-
+import { Grid, ThemeProvider, createTheme } from "@mui/material";
 
 const steps = ["Shipping Info", "Confirm Order", "Payment"];
 
@@ -36,7 +36,11 @@ const getStepContent = (step: number) => {
     case 1:
       return <ConfirmOrder />;
     case 2:
-      return <Elements stripe={loadStripe(stripeApiKey)}><Payment /></Elements>;
+      return (
+        <Elements stripe={loadStripe(stripeApiKey)}>
+          <Payment />
+        </Elements>
+      );
     default:
       return "Unknown step";
   }
@@ -57,45 +61,85 @@ const OrderStepper = () => {
     setActiveStep(0);
   };
 
+  const customTheme = createTheme({
+    components: {
+      MuiStepLabel: {
+        styleOverrides: {
+          label: {
+            fontSize: "2rem",
+          },
+        },
+      },
+    },
+  });
+
   return (
-    <Box sx={{ width: "100%",mt:"4rem" }} >
-      <Stepper activeStep={activeStep}>
-        {steps.map((label, index) => (
-          <Step key={label}>
-            <StepLabel>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length ? (
-        <React.Fragment>
-          <Typography sx={{ mt: 2, mb: 1 }}>
-            All steps completed - you&apos;re finished
-          </Typography>
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleReset}>Reset</Button>
-          </Box>
-        </React.Fragment>
-      ) : (
-        <React.Fragment>
-          {getStepContent(activeStep)}
-          <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            <Button
-              color="inherit"
-              disabled={activeStep === 0}
-              onClick={handleBack}
-              sx={{ mr: 1 }}
+    <ThemeProvider theme={customTheme}>
+      <Box sx={{ width: "100%", mt: "12rem", marginBottom: "12rem" }}>
+        <Box>
+        
+        <Grid container justifyContent="center"> {/* Center the Grid inside the Container */}
+          <Grid item xs={12}>
+            <Stepper
+              activeStep={activeStep}
+              style={{ width: "80%" ,margin:"auto"}} // Adjust the width as needed
             >
-              Back
-            </Button>
-            <Box sx={{ flex: "1 1 auto" }} />
-            <Button onClick={handleNext}>
-              {activeStep === steps.length - 1 ? "Finish" : "Next"}
-            </Button>
-          </Box>
-        </React.Fragment>
-      )}
-    </Box>
+              {steps.map((label, index) => (
+                <Step key={label}>
+                  <StepLabel
+                    StepIconProps={{
+                      style: {
+                        fontSize: "3rem",
+                      },
+                    }}
+                  >
+                    {label}
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </Grid>
+        </Grid>
+          {activeStep === steps.length ? (
+            <React.Fragment>
+              <Typography sx={{ mt: 2, mb: 1 }}>
+                All steps completed - you&apos;re finished
+              </Typography>
+              <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
+                <Box sx={{ flex: "1 1 auto" }} />
+                <Button onClick={handleReset}>Reset</Button>
+              </Box>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              {getStepContent(activeStep)}
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  pt: 2,
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <Button
+                  color="inherit"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{fontSize:"2rem",fontWeight:550}}
+               
+                >
+                  Back
+                </Button>
+                {/* <Box sx={{ flex: "1 1 auto" }} /> */}
+                <Button onClick={handleNext} sx={{fontSize:"2rem",fontWeight:550}}>
+                  {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                </Button>
+              </Box>
+            </React.Fragment>
+          )}
+        </Box>
+      </Box>
+    </ThemeProvider>
   );
 };
 

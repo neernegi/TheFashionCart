@@ -37,6 +37,8 @@ import RegisterStepper from "./pages/authentication/seller/RegisterStepper";
 // import MiniDrawer from "./components/navbar/MiniDrawer";
 import SellerDashboard from "./components/navbar/SellerDashboard";
 import Dashboard from "./pages/dashboard/Dashboard";
+import SignInUpTab from "./pages/authentication/user/SignInUpTab";
+import Footer from "./components/Footer";
 // import Footer from "./components/Footer";
 // import ProtectedRoute from "./components/route/ProtectedRoute";
 
@@ -51,6 +53,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/user-login" element={<UserLogin />} />
+        <Route path="/user-signInUp-tab" element={<SignInUpTab />} />
         <Route path="/create-Category" element={<CreateCategory />} />
         <Route path="/create-subategory" element={<CreateSubCategory />} />
         <Route path="/create-banner" element={<CreateBanner />} />
@@ -89,7 +92,7 @@ const App: React.FC = () => {
 
         {/* <ProtectedRoute path="/active-seller-orders" isSeller={true}  component={UpdateActiveOrders}   /> */}
       </Routes>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 };

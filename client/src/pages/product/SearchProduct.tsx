@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { fetchSearchProducts } from "../../redux/features/productSlice";
-import ProductCardComponent from "../../components/productComponent/ProductCard";
 import { useParams } from "react-router-dom";
 import { Box, Typography } from "@mui/material"; // Import Box and Typography from MUI
+import { ProductCardComponent } from "../../components/productComponent/ProductCard";
 
 const SearchProduct: React.FC = () => {
   const dispatch = useAppDispatch();

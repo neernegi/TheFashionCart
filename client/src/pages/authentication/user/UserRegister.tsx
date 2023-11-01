@@ -6,13 +6,16 @@ import {
   Container,
   Grid,
   Input,
+  Stack,
   TextField,
   Typography,
+  createTheme,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { Link } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/hooks";
 import { registerUser } from "../../../redux/features/userSlice";
+import "../styles.css";
 
 type FormDataProps = {
   name: string;
@@ -21,8 +24,6 @@ type FormDataProps = {
   confirmPassword: string;
 };
 
-
-
 const UserRegister: React.FC = () => {
   const [user, setUser] = useState<FormDataProps>({
     name: "",
@@ -30,6 +31,7 @@ const UserRegister: React.FC = () => {
     password: "",
     confirmPassword: "",
   });
+
   const [avatar, setAvatar] = useState<File | undefined>();
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>();
 
@@ -75,8 +77,27 @@ const UserRegister: React.FC = () => {
     dispatch(registerUser(formData));
   };
 
+  // const theme = createTheme({
+  //   components: {
+  //     MuiTextField: {
+  //       styleOverrides: {
+  //         root: {
+  //           // Common styles for all TextField components
+  //           fontSize: "1.8rem",
+  //         },
+  //         input: {
+  //           // Common input styles for all TextField components
+  //           fontSize: "2rem",
+  //           height: "5rem",
+  //           padding: "1rem",
+  //         },
+  //       },
+  //     },
+  //   },
+  // });
+
   return (
-    <Container component="main" maxWidth="xs">
+    <Box textAlign={"center"}>
       <Box
         sx={{
           marginTop: "20rem",
@@ -85,16 +106,24 @@ const UserRegister: React.FC = () => {
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-          <LockOutlinedIcon />
+        <Avatar
+          sx={{
+            m: 1,
+            bgcolor: "secondary.main",
+            width: "7rem",
+            height: "7rem",
+          }}
+        >
+          <LockOutlinedIcon style={{ fontSize: "3rem" }} />
         </Avatar>
         <Typography component="h1" variant="h5">
           Sign Up
         </Typography>
         <form style={{ marginTop: 3 }} onSubmit={submitData}>
-          <Grid container spacing={2}>
+          <Stack spacing={2}>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
                 fullWidth
                 id="name"
@@ -107,6 +136,7 @@ const UserRegister: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
                 fullWidth
                 id="email"
@@ -119,6 +149,7 @@ const UserRegister: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
                 fullWidth
                 label="Password"
@@ -132,6 +163,7 @@ const UserRegister: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
                 fullWidth
                 label="Confirm Password"
@@ -150,27 +182,27 @@ const UserRegister: React.FC = () => {
                 id="avatar"
                 inputProps={{ accept: "image/*" }}
                 onChange={handleAvatarChange}
-                style={{ fontSize: "2rem" }}
+                style={{ fontSize: "2rem", width: "30rem" }}
               />
               {avatarPreview && <Avatar alt={user.name} src={avatarPreview} />}
             </Grid>
-          </Grid>
+          </Stack>
           <Button
             type="submit"
-            fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{
+              mt: 3,
+              mb: 2,
+              width: "22rem",
+              height: "4rem",
+              fontSize: "2rem",
+            }}
           >
             Sign Up
           </Button>
         </form>
-        <Grid container justifyContent="flex-end">
-          <Grid item>
-            <Link to="/user-login">Already have an account? Sign in</Link>
-          </Grid>
-        </Grid>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

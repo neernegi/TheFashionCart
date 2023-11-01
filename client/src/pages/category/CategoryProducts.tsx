@@ -5,7 +5,8 @@ import {
   fetchCategoryFilterProducts,
   fetchProducts,
 } from "../../redux/features/productSlice";
-import ProductCardComponent from "../../components/productComponent/ProductCard";
+import { ProductCardComponent } from "../../components/productComponent/ProductCard";
+
 
 const CategoryProducts = () => {
   const dispatch = useAppDispatch();
