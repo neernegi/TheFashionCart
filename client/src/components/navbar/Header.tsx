@@ -151,7 +151,7 @@ const Header: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <LinkNav
+                        <LinkNav style={{marginLeft:"9rem"}}
                           to={
                             auth.user?.role === "user"
                               ? "/my-profile"
@@ -162,9 +162,9 @@ const Header: React.FC = () => {
                         >
                           Login
                         </LinkNav>
-                        <LinkNav to={"/register-seller-stepper"}>
+                        {/* <LinkNav to={"/register-seller-stepper"}>
                           Become a Seller
-                        </LinkNav>
+                        </LinkNav> */}
                       </>
                     )}
                     <LinkNav

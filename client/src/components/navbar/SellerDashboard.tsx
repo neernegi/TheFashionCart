@@ -59,7 +59,7 @@ export default function SellerDashboard(props: Props) {
       <Divider />
       <Stack direction={"column"} gap={"3rem"} mt={"4rem"}>
         {/* Dashboard */}
-        <ListItem disablePadding>
+        {/* <ListItem disablePadding>
           <Link to={"/seller-dashboard"}>
             <ListItemButton>
               <ListItemIcon>
@@ -68,7 +68,7 @@ export default function SellerDashboard(props: Props) {
               <Typography fontSize={"4rem"}>Dashboard</Typography>
             </ListItemButton>
           </Link>
-        </ListItem>
+        </ListItem> */}
 
         {/* Add Listing (Add Product) */}
         <Link to={"/add-products"}>

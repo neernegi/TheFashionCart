@@ -168,8 +168,8 @@ const SelectCategoryProduct: React.FC = () => {
         </li>
       </Stack>
       <Box m={"4rem 6rem"} display={"flex"} gap={"22rem"}>
-        <Stack mt={"4rem"}>
-          <Box sx={{ width: 300 }} m={"0.5rem"}>
+        <Stack mt={"1rem"}>
+          {/* <Box sx={{ width: 300 }} m={"0.5rem"}>
             <Typography fontSize={"3.4rem"} fontWeight={600} color="black">
               Price
             </Typography>
@@ -182,7 +182,7 @@ const SelectCategoryProduct: React.FC = () => {
               valueLabelDisplay="auto"
               onChange={(_, newValue) => setPriceRange(newValue as number[])}
             />
-          </Box>
+          </Box> */}
           <Button
             onClick={handleClickBrand}
             variant="text"
@@ -191,7 +191,7 @@ const SelectCategoryProduct: React.FC = () => {
               color: "black",
               fontWeight: 600,
               marginLeft: "-5rem",
-              mt: "1rem",
+              
             }}
             ref={brandRef}
           >
