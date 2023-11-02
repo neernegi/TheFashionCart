@@ -19,6 +19,7 @@ const DropdownMenu = styled(Box)({
 });
 
 const SelectCategoryProduct: React.FC = () => {
+  
   const [sortOptionsShow, setSortOptionsShow] = useState<boolean>(false);
   const [brandOptionsShow, setBrandOptionsShow] = useState<boolean>(false);
   const [ratingOptionsShow, setRatingOptionsShow] = useState<boolean>(false);
@@ -59,6 +60,8 @@ const SelectCategoryProduct: React.FC = () => {
   const uniqueBrandNames = [
     ...new Set(filteredProducts.map((item) => item.brand)),
   ];
+
+  
 
   const handleClickOption = () => {
     if (sortRef.current) {
@@ -229,7 +232,7 @@ const SelectCategoryProduct: React.FC = () => {
           >
             Ratings
           </Typography>
-          {/* {ratingOptionsShow && (
+          {ratingOptionsShow && (
             <DropdownMenu
               style={{
                 top: menuPosition.top,
@@ -266,7 +269,7 @@ const SelectCategoryProduct: React.FC = () => {
                 2★ & above
               </Typography>
             </DropdownMenu>
-          )} */}
+          )}
         </Stack>
         <ProductCardComponent
           products={
@@ -296,28 +299,28 @@ const SelectCategoryProduct: React.FC = () => {
           onClick={handleClickOption}
         >
           <Typography
-            sx={{ cursor: "pointer", ":hover": { color: "white" } }}
+            sx={{ cursor: "pointer", ":hover": { color: "black" } }}
             fontSize={"2.5rem"}
             fontWeight={500}
-            color="black"
+            color="white"
             onClick={() => sortProducts("popularity")}
           >
             Popularity
           </Typography>
           <Typography
-            sx={{ cursor: "pointer", ":hover": { color: "white" } }}
+            sx={{ cursor: "pointer", ":hover": { color: "black" } }}
             fontSize={"2.5rem"}
             fontWeight={500}
-            color="black"
+            color="white"
             onClick={() => sortProducts("highToLow")}
           >
             Price - High to Low
           </Typography>
           <Typography
-            sx={{ cursor: "pointer", ":hover": { color: "white" } }}
+            sx={{ cursor: "pointer", ":hover": { color: "black" } }}
             fontSize={"2.5rem"}
             fontWeight={500}
-            color="black"
+            color="white"
             onClick={() => sortProducts("lowToHigh")}
           >
             Price - Low to High

@@ -325,14 +325,17 @@ const CartProducts: React.FC = () => {
 
   return (
     <Box width={"100%"} mt={"8rem"} mb={"23%"}>
-      <Typography
-        textAlign={"center"}
-        variant="h2"
-        fontSize={"2xl"}
-        color={"black"}
-      >
-        Cart Products
-      </Typography>
+      {cartItems.length > 0 && (
+        <Typography
+          textAlign={"center"}
+          variant="h2"
+          fontSize={"2xl"}
+          color={"black"}
+        >
+          Cart Products
+        </Typography>
+      )}
+
       <Box mt={"6rem"} display={"flex"} justifyContent={"space-evenly"}>
         <Box>
           {auth?.user == null ? (
@@ -362,9 +365,13 @@ const CartProducts: React.FC = () => {
                 Array.isArray(cartItems) &&
                 (cartItems.length === 0 ? (
                   <Typography
-                    variant="body1"
-                    fontSize={"1.5rem"}
+                    // variant="body1"
+                    fontSize={"3rem"}
+                    textAlign={"center"}
+                    mt={"10rem"}
                     color={"black"}
+                    ml={"23.2vmax"}
+                    mb={"2rem"}
                   >
                     Your cart is empty.
                   </Typography>
@@ -391,16 +398,16 @@ const CartProducts: React.FC = () => {
                           p={"2rem"}
                           key={item._id}
                         >
-                          <Box>
-                            <Box display={"flex"} gap={"3rem"}>
+                          <Box width={"20vmax"}>
+                            <Box display={"flex"}  gap={"5rem"}>
                               <Box>
                                 <img
-                                  style={{ width: "10rem" }}
+                                  style={{ width: "13.2rem" }}
                                   src={cartProduct?.avatar[0]?.url}
                                   alt={cartProduct?.name}
                                 />
                               </Box>
-                              <Box>
+                              <Box mt={"2rem"}>
                                 <Typography variant="h3" mb={2} color={"black"}>
                                   {cartProduct?.name}
                                 </Typography>
@@ -480,8 +487,9 @@ const CartProducts: React.FC = () => {
                             </Box>
 
                             <Button
+                            fullWidth
                               sx={{
-                                width: "10rem",
+                                // width: "10rem",
                                 height: "4rem",
                                 fontSize: "1.8rem",
                               }}
@@ -500,8 +508,8 @@ const CartProducts: React.FC = () => {
             </>
           )}
         </Box>
-        <Box >
-          {cartItems.length > 0 ? (
+        <Box>
+          {cartItems.length > 0 && (
             <Box>
               <PriceDetails
                 cartItems={cartItems}
@@ -511,14 +519,14 @@ const CartProducts: React.FC = () => {
                 totalPrice={totalPrice}
               />
             </Box>
-          ) : null}
-          {auth?.user !== null && (
+          )}
+          {auth?.user !== null && cartItems.length > 0 && (
             <Button
-            fullWidth
-            size="large"
+              fullWidth
+              size="large"
               onClick={placeOrderHandler}
               variant="contained"
-              style={{ marginTop: "3rem",fontSize:"2.3rem" }}
+              style={{ marginTop: "3rem", fontSize: "2.3rem" }}
             >
               Place Order
             </Button>

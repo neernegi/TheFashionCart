@@ -1,10 +1,23 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchAllOrders, Order, OrderItem } from "../../redux/features/orderSlice";
+import {
+  fetchAllOrders,
+  Order,
+  OrderItem,
+} from "../../redux/features/orderSlice";
 import Box from "@mui/material/Box";
 import { useAuth } from "../context/useAuth";
 import { fetchProducts } from "../../redux/features/productSlice";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Rating, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Rating,
+  TextField,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 
 const FetchAllOrders = () => {
@@ -16,7 +29,6 @@ const FetchAllOrders = () => {
   const { auth } = useAuth();
   const orders = useAppSelector((state) => state.order.orders);
   const products = useAppSelector((state) => state.product.products);
- 
 
   console.log(orders);
   const userId = auth?.user?._id;
@@ -51,30 +63,42 @@ const FetchAllOrders = () => {
 
   return (
     <Fragment>
-      <Box margin={'10rem'}>
+      <Box display={'flex'} width={"100%"} my={"10rem"} alignContent={"center"} alignSelf={'center'} alignItems={'center'} justifyContent={'center'} justifyItems={'center'} justifySelf={"center"}>
         <Box>
           {Array.isArray(orders) && orders.length > 0 ? (
             orders.map((order) => (
               <Box key={order._id} border={1} p={2} m={2}>
                 {order?.orderItems.map((item: OrderItem) => (
-                  <Box key={item._id} display={'flex'} gap={'4rem'} mb={'3rem'} > 
+                  <Box
+                    boxShadow={"0px 0px 10px 2px rgba(0,0,0,0.2)"}
+                    key={item._id}
+                    display={"flex"}
+                    p={'2rem'}
+                    gap={"4rem"}
+                    mb={"3rem"}
+                    width={"100%"}
+                  >
                     <Box>
-                      <img style={{ width: "10rem" }} src={item?.image} alt={item?.name} />
+                      <img
+                        style={{ width: "10rem" }}
+                        src={item?.image}
+                        alt={item?.name}
+                      />
                     </Box>
-                    <Typography fontSize="2rem" color="black">
+                    <Typography fontSize="2.6rem" color="black">
                       {item?.name}
                     </Typography>
-                    <Typography fontSize="2rem" color="black">
-                      {item?.priceAfterDiscount}
+                    <Typography fontSize="2.6rem" color="black">
+                      ₹ {item?.priceAfterDiscount}
                     </Typography>
-                    <Typography fontSize="2rem" color="green">
+                    <Typography  fontSize="2.6rem" color="green">
                       {item?.orderStatus}
                     </Typography>
                   </Box>
                 ))}
-                <Typography fontSize="2rem" color="black">Rate and Review</Typography>
-                <h3 className="reviewsHeading">REVIEWS</h3>
-{/* 
+                {/* <Typography fontSize="2rem" color="black">Rate and Review</Typography>
+                <h3 className="reviewsHeading">REVIEWS</h3> */}
+                {/* 
           <Dialog
             aria-labelledby="simple-dialog-title"
             open={open}

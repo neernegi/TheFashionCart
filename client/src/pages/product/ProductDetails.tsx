@@ -7,6 +7,9 @@ import {
   TextField,
   Input,
   Snackbar,
+  Divider,
+  Stack,
+  Alert,
 } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { getSingleProductDetails } from "../../redux/features/productSlice";
@@ -50,8 +53,8 @@ const ProductDetails: React.FC = () => {
         return;
       }
 
-      const { _id: productId, Stock} = product;
-      const shopName = seller?.name
+      const { _id: productId, Stock } = product;
+      const shopName = seller?.name;
 
       if (productId && quantity > 0 && quantity <= Stock) {
         // Check if the product is already in the cart
@@ -69,13 +72,14 @@ const ProductDetails: React.FC = () => {
           );
 
           // Add the new item to the cart items array
-          const newItem = { productId, quantity,shopName };
+          const newItem = { productId, quantity, shopName };
           cartItems.push(newItem);
 
           // Update the cart items in local storage
           localStorage.setItem("cartItems", JSON.stringify(cartItems));
+          alert("Item added to cart");
+          navigate("/cart-products");
           setErrorMessage(null);
-          setSnackbarOpen(true);
         } catch (error) {
           console.error("Error adding item to cart:", error);
           setErrorMessage("Failed to add item to cart. Please try again.");
@@ -261,19 +265,14 @@ const ProductDetails: React.FC = () => {
                 {errorMessage}
               </Typography>
             )}
-            <Snackbar
-              open={snackbarOpen}
-              autoHideDuration={3000}
-              onClose={handleCloseSnackbar}
-              message="Item added to cart"
-            />
           </Box>
         </Box>
       </Box>
+      <Divider style={{ marginTop: "3rem" }} />
       <Box marginBottom={"10%"}>
         <Box>
           {product?.reviews && product.reviews[0] ? (
-            <Box>
+            <Box display={"flex"} justifyContent={"center"}>
               {product.reviews &&
                 product.reviews.map((review) => (
                   <Box
@@ -290,7 +289,12 @@ const ProductDetails: React.FC = () => {
                 ))}
             </Box>
           ) : (
-            <Typography fontSize={"2rem"} color={"black"}>
+            <Typography
+              textAlign={"center"}
+              mt={"12rem"}
+              fontSize={"3rem"}
+              color={"black"}
+            >
               No reviews yet
             </Typography>
           )}

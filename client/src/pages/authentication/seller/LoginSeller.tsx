@@ -69,6 +69,7 @@ const UserLogin: React.FC = () => {
       <Box
         sx={{
           marginTop: "20rem",
+          mb:"16vmax",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

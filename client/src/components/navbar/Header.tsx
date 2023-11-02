@@ -19,6 +19,8 @@ import { selectItems } from "../../redux/features/cartSlice";
 import { useAppSelector } from "../../redux/hooks";
 import SellerDashboard from "./SellerDashboard";
 import { GrCart } from "react-icons/gr";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 
 const StyledHeader = styled(AppBar)({
   height: "7rem",
@@ -45,6 +47,7 @@ const LinkNav = styled(Link)({
   color: "black",
   fontWeight: "500",
   fontSize: "3rem",
+
   textDecoration: "none",
   ":hover": {
     color: "blue",
@@ -103,6 +106,16 @@ const Header: React.FC = () => {
   // };
 
   // bgcolor={'rgba(167, 143, 191, 1)'}
+
+  const linkArrowIcon = showDropdown ? (
+    <KeyboardArrowUpIcon
+      style={{ fontSize: "3rem", marginBottom: -10, marginLeft: -17 }}
+    />
+  ) : (
+    <KeyboardArrowDownIcon
+      style={{ fontSize: "3rem", marginBottom: -10, marginLeft: -17 }}
+    />
+  );
   return (
     <Box>
       <StyledHeader color="inherit" position="sticky">
@@ -115,26 +128,16 @@ const Header: React.FC = () => {
               </>
             ) : (
               <>
-                <LinkNav to={"/"}>The Fashion Cart</LinkNav>
+                <LinkNav style={{marginRight:"22rem",marginLeft:"-8rem"}} to={"/"}>The Fashion Cart</LinkNav>
                 {auth?.user?.role === "admin" ? (
                   <>
                     <AdminNavbar />
                   </>
                 ) : (
                   <>
-                    {/* <LinkNav to={"/cart-products"}>
-                      <ShoppingBagIcon style={{ fontSize: "3rem" }} />
-                    </LinkNav>
-                    {items.length > 0 && (
-                      <span style={{ color: "black" }}>{items.length}</span>
-                    )} */}
-
-                    <LinkNav to={"/register-seller-stepper"}>
-                      Become a Seller
-                    </LinkNav>
                     {auth?.user?.role === "user" ? (
                       <>
-                        <LinkNav
+                        <LinkNav style={{marginLeft:"10rem"}}
                           to={
                             auth?.user?.role === "user"
                               ? "/my-profile"
@@ -143,7 +146,7 @@ const Header: React.FC = () => {
                           onMouseEnter={handleLoginLinkHover}
                           onMouseLeave={handleLoginLinkLeave}
                         >
-                          {auth?.user?.name}
+                          {auth?.user?.name} <span>{linkArrowIcon}</span>
                         </LinkNav>
                       </>
                     ) : (
@@ -159,6 +162,9 @@ const Header: React.FC = () => {
                         >
                           Login
                         </LinkNav>
+                        <LinkNav to={"/register-seller-stepper"}>
+                          Become a Seller
+                        </LinkNav>
                       </>
                     )}
                     <LinkNav
@@ -173,13 +179,19 @@ const Header: React.FC = () => {
                       {items.length > 0 && (
                         <span
                           style={{
-                            color: "black",
-                            marginLeft:6,
-                            fontSize: "2.4rem",
+                            color: "white",
+                            marginLeft: -25,
+                            marginTop: "-2.8rem",
+                            borderRadius: "70%",
                             fontWeight: 600,
+                            padding: "0 10px 0 10px",
+                            backgroundColor: "rgba(25, 118, 210, 1)",
                           }}
                         >
-                          {items.length}
+                          <text style={{ fontSize: "1.8rem" }}>
+                            {" "}
+                            {items.length}
+                          </text>
                         </span>
                       )}
                     </LinkNav>

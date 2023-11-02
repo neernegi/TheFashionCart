@@ -5,9 +5,9 @@ import {
   setSelectedCategory,
 } from "../../../redux/features/categorySlice";
 import { Box, Stack, Typography } from "@mui/material";
-import catProduct from "../../../assets/productcat.jpg";
-import categoryIcon from "../../../assets/category.png";
-import { Link } from "react-router-dom";
+// import catProduct from "../../../assets/productcat.jpg";
+// import categoryIcon from "../../../assets/category.png";
+// import { Link } from "react-router-dom";
 
 const CategoryWithAvatar: React.FC = () => {
   const [showCategory, setShowCategory] = useState<boolean>(false);
@@ -32,6 +32,7 @@ const CategoryWithAvatar: React.FC = () => {
         {categories.map((item) => (
           <Box
             // marginLeft={"6rem"}
+            textAlign={"center"}
             key={item?._id}
             style={{ position: "relative" }}
           >

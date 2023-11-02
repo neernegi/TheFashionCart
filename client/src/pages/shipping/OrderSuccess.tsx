@@ -43,6 +43,7 @@ const LinkButton = styled(Link)({
   padding: "1vmax 3vmax",
   cursor: "pointer",
   fontFamily: "Roboto",
+  fontSize:"2.5rem",
   textDecoration: "none",
   margin: "2vmax",
   "@media (max-width: 600px)": {
@@ -57,7 +58,7 @@ const OrderSuccess = () => {
     <OrderSuccessContainer >
       <CheckIcon />
       <Message>Your Order has been Placed successfully</Message>
-      <LinkButton to="/orders">View Orders</LinkButton>
+      <LinkButton to="/my-orders">View Orders</LinkButton>
     </OrderSuccessContainer>
   );
 };

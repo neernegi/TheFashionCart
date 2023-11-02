@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 export const Footer = () => {
   return (
-    <Box marginTop="7rem" position={'static'} padding="40px 0" bgcolor={"gray"}>
+    <Box marginTop="7rem" position={"static"} padding="8rem 0" bgcolor={"grey"}>
       <Box
         width="80%"
         margin="auto"
@@ -13,53 +13,51 @@ export const Footer = () => {
         columnGap="clamp(20px, 30px, 40px)"
       >
         <Box width="clamp(20%, 30%, 40%)">
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            mb="30px"
-          
-          >
-            ECOMMER
+          <Typography variant="h3" fontWeight="bold" mb="30px">
+            The Fashion Cart
           </Typography>
-          <div>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat
-          </div>
+          <Box></Box>
         </Box>
 
         <Box>
-          <Typography variant="h4" fontWeight="bold" mb="30px">
+          <Typography variant="h3" fontWeight="bold" mb="30px">
             About Us
           </Typography>
-          <Typography mb="30px">Careers</Typography>
-          <Typography mb="30px">Our Stores</Typography>
-          <Typography mb="30px">Terms & Conditions</Typography>
-          <Typography mb="30px">Privacy Policy</Typography>
+          <Typography variant="h4" mb="30px">
+            Careers
+          </Typography>
+          <Typography variant="h4" mb="30px">
+            Our Stores
+          </Typography>
+          <Typography variant="h4" mb="30px">
+            Terms & Conditions
+          </Typography>
+          <Typography variant="h4" mb="30px">
+            Privacy Policy
+          </Typography>
         </Box>
 
         <Box>
-          <Typography variant="h4" fontWeight="bold" mb="30px">
+          <Typography variant="h3" fontWeight="bold" mb="30px">
             Customer Care
           </Typography>
-          <Typography mb="30px">Help Center</Typography>
-          <Typography mb="30px">Track Your Order</Typography>
-          <Typography mb="30px">Corporate & Bulk Purchasing</Typography>
-          <Typography mb="30px">Returns & Refunds</Typography>
+          <Typography variant="h4"  mb="30px">Help Center</Typography>
+          <Typography variant="h4"  mb="30px">Track Your Order</Typography>
+          <Typography variant="h4"  mb="30px">Corporate & Bulk Purchasing</Typography>
+          <Typography variant="h4"  mb="30px">Returns & Refunds</Typography>
         </Box>
 
         <Box width="clamp(20%, 25%, 30%)">
-          <Typography variant="h4" fontWeight="bold" mb="30px">
+          <Typography variant="h3" fontWeight="bold" mb="30px">
             Contact Us
           </Typography>
-          <Typography mb="30px">
+          <Typography variant="h4"  mb="30px">
             50 north Whatever Blvd, Washington, DC 10501
           </Typography>
-          <Typography mb="30px" sx={{ wordWrap: "break-word" }}>
+          <Typography variant="h4"  mb="30px" sx={{ wordWrap: "break-word" }}>
             Email: mredwardroh@gmail.com
           </Typography>
-          <Typography mb="30px">(222)333-4444</Typography>
+          <Typography variant="h4"  mb="30px">(222)333-4444</Typography>
         </Box>
       </Box>
     </Box>
