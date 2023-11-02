@@ -128,7 +128,7 @@ const Header: React.FC = () => {
               </>
             ) : (
               <>
-                <LinkNav style={{marginRight:"22rem",marginLeft:"-8rem"}} to={"/"}>The Fashion Cart</LinkNav>
+                <LinkNav style={{marginRight:"22rem",marginLeft:"-8rem"}} to={"/"}>TheFashionCart</LinkNav>
                 {auth?.user?.role === "admin" ? (
                   <>
                     <AdminNavbar />

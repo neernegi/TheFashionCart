@@ -14,7 +14,7 @@ export const Footer = () => {
       >
         <Box width="clamp(20%, 30%, 40%)">
           <Typography variant="h3" fontWeight="bold" mb="30px">
-            The Fashion Cart
+            TheFashionCsart
           </Typography>
           <Box></Box>
         </Box>
