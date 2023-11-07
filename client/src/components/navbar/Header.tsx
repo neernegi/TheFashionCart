@@ -52,7 +52,6 @@ const LinkNav = styled(Link)({
   ":hover": {
     color: "blue",
   },
-  "@media"
 });
 
 const Header: React.FC = () => {
