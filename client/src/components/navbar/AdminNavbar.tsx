@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, styled } from "@mui/material";
+import { Box, Button, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../pages/context/useAuth";
 
@@ -27,7 +27,7 @@ const LinkNav = styled(Link)({
 const DropdownMenu = styled(Box)({
   position: "absolute",
   top: 98,
-  zIndex:1,
+  zIndex: 1,
   borderRadius: "1rem",
   backgroundColor: "#443f40a2",
   boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
@@ -35,10 +35,8 @@ const DropdownMenu = styled(Box)({
   minWidth: "200px",
 });
 
-
-
 const AdminNavbar: React.FC = () => {
-  const {auth,setAuth} = useAuth()
+  const { auth, setAuth } = useAuth();
   const [showDropdown, setShowDropdown] = useState<{ [key: string]: boolean }>({
     qcstatus: false,
     banner: false,
@@ -73,13 +71,7 @@ const AdminNavbar: React.FC = () => {
   return (
     <>
       <NavBox>
-        <LinkNav
-          to={"/qcstatus"}
-          onMouseEnter={() => handleMouseEnter("qcstatus")}
-          onMouseLeave={() => handleMouseLeave("qcstatus")}
-        >
-          QC Status
-        </LinkNav>
+        <LinkNav to={"/qc-product"}>QC Status</LinkNav>
 
         <LinkNav
           to={"/banner"}
@@ -106,11 +98,11 @@ const AdminNavbar: React.FC = () => {
         </LinkNav>
 
         <LinkNav to={"/profile"}>Profile</LinkNav>
-        <LinkNav to={"/logout"} onClick={handleLogout}>Logout</LinkNav>
+        <Button onClick={handleLogout}>Logout</Button>
       </NavBox>
       {showDropdown.qcstatus && (
         <DropdownMenu
-        left={'11.5rem'}
+          left={"11.5rem"}
           onMouseEnter={() => handleMouseEnter("qcstatus")}
           onMouseLeave={() => handleMouseLeave("qcstatus")}
         >
@@ -129,7 +121,7 @@ const AdminNavbar: React.FC = () => {
       )}
       {showDropdown.banner && (
         <DropdownMenu
-        ml={'-5rem'}
+          ml={"-5rem"}
           onMouseEnter={() => handleMouseEnter("banner")}
           onMouseLeave={() => handleMouseLeave("banner")}
         >
@@ -145,7 +137,7 @@ const AdminNavbar: React.FC = () => {
       )}
       {showDropdown.category && (
         <DropdownMenu
-        mr={'-17rem'}
+          mr={"-17rem"}
           onMouseEnter={() => handleMouseEnter("category")}
           onMouseLeave={() => handleMouseLeave("category")}
         >

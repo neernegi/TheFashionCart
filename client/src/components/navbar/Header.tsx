@@ -35,7 +35,7 @@ const StyledHeader = styled(AppBar)({
 const NavBox = styled(Box)({
   display: "flex",
   flexDirection: "row",
-  gap: "8rem",
+  gap: "3rem",
   justifyContent: "center",
   alignItems: "center",
   justifyItems: "center",
@@ -52,6 +52,7 @@ const LinkNav = styled(Link)({
   ":hover": {
     color: "blue",
   },
+  "@media"
 });
 
 const Header: React.FC = () => {
@@ -123,21 +124,30 @@ const Header: React.FC = () => {
           <NavBox>
             {auth.user?.role === "seller" ? (
               <>
-                {/* <SellerNavbar /> */}
-                <SellerDashboard />
+                <SellerNavbar />
+                {/* <SellerDashboard /> */}
               </>
             ) : (
               <>
-                <LinkNav style={{marginRight:"22rem",marginLeft:"-8rem"}} to={"/"}>TheFashionCart</LinkNav>
+                <LinkNav
+                  style={{ marginRight: "22rem",marginLeft: "-8rem" }}
+                  to={"/"}
+                >
+                  TheFashionCart
+                </LinkNav>
                 {auth?.user?.role === "admin" ? (
                   <>
                     <AdminNavbar />
                   </>
                 ) : (
                   <>
+                    <LinkNav to={"/register-seller-stepper"}>
+                      Become a Seller
+                    </LinkNav>
                     {auth?.user?.role === "user" ? (
                       <>
-                        <LinkNav style={{marginLeft:"10rem"}}
+                        <LinkNav
+                          style={{ marginLeft: "10rem" }}
                           to={
                             auth?.user?.role === "user"
                               ? "/my-profile"
@@ -151,7 +161,8 @@ const Header: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <LinkNav style={{marginLeft:"9rem"}}
+                        <LinkNav
+                          style={{marginRight:"4rem" }}
                           to={
                             auth.user?.role === "user"
                               ? "/my-profile"
@@ -162,9 +173,6 @@ const Header: React.FC = () => {
                         >
                           Login
                         </LinkNav>
-                        {/* <LinkNav to={"/register-seller-stepper"}>
-                          Become a Seller
-                        </LinkNav> */}
                       </>
                     )}
                     <LinkNav
@@ -208,7 +216,6 @@ const Header: React.FC = () => {
             style={{
               // left
               right: "32rem",
-
               top: linkOptionsPosition.top,
               position: "absolute",
               borderRadius: "1rem",

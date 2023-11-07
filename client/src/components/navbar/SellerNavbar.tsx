@@ -76,17 +76,15 @@ const SellerNavbar: React.FC = () => {
         {/* <LinkNav to={"/seller-add-info"}>Add Detail</LinkNav> */}
 
         <LinkNav
-          to={"/listing"}
-          onMouseEnter={() => handleMouseEnter("listing")}
-          onMouseLeave={() => handleMouseLeave("listing")}
+          to={"/add-products"}
+        
         >
           Listing
         </LinkNav>
 
         <LinkNav
           to={"/seller-products"}
-          onMouseEnter={() => handleMouseEnter("qcstatus")}
-          onMouseLeave={() => handleMouseLeave("qcstatus")}
+     
         >
           QC Status
         </LinkNav>
@@ -104,67 +102,9 @@ const SellerNavbar: React.FC = () => {
           Logout
         </LinkNav>
       </NavBox>
-      {showDropdown.listing && (
-        <DropdownMenu
-          mr={"30rem"}
-          onMouseEnter={() => handleMouseEnter("listing")}
-          onMouseLeave={() => handleMouseLeave("listing")}
-        >
-          <ul>
-            <li>
-              <LinkNav to={"/add-listing"}>Add Listing</LinkNav>
-            </li>
-            <li>
-              <LinkNav to={"/show-listing"}>Show Listing</LinkNav>
-            </li>
-            <li>
-              <LinkNav to={"/cancel-listing"}>Cancel Lisitng</LinkNav>
-            </li>
-          </ul>
-        </DropdownMenu>
-      )}
-      {showDropdown.qcstatus && (
-        <DropdownMenu
-          ml={"2rem"}
-          onMouseEnter={() => handleMouseEnter("qcstatus")}
-          onMouseLeave={() => handleMouseLeave("qcstatus")}
-        >
-          <ul>
-            <li>
-              <LinkNav to={"/requestQC"}>Request QC</LinkNav>
-            </li> 
-            <li>
-              <LinkNav to={"/passedqc"}>Passed QC</LinkNav>
-            </li>
-            <li>
-              <LinkNav to={"/failedqc"}>Failed QC</LinkNav>
-            </li>
-          </ul>
-        </DropdownMenu>
-      )}
+     
+      
 
-      {showDropdown.order && (
-        <DropdownMenu
-          onMouseEnter={() => handleMouseEnter("order")}
-          onMouseLeave={() => handleMouseLeave("order")}
-          right={70}
-        >
-          <ul>
-            <li>
-              <LinkNav to={"/active-seller-orders"}>Active Order</LinkNav>
-            </li>
-            <li>
-              <LinkNav to={"/delivered"}>Delivered</LinkNav>
-            </li>
-            <li>
-              <LinkNav to={"/cancelled"}>Cancelled</LinkNav>
-            </li>
-            <li>
-              <LinkNav to={"/refund"}>Refund</LinkNav>
-            </li>
-          </ul>
-        </DropdownMenu>
-      )}
     </>
   );
 };

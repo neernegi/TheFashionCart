@@ -99,7 +99,6 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
         [productId]: selectedQcStatus,
       });
 
-      window.location.reload();
     } catch (error) {
       console.error(
         `Failed to update QC status for product with ID: ${productId}`,
@@ -130,7 +129,7 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
             {auth?.user?.role === "admin" ? (
               <>
                 {adminGetProduct
-                  .filter((product) => product.qcStatus === "Progress")
+                 
                   .map((product) => (
                     <TableRow key={product._id}>
                       <TableCell style={{ fontSize: "2rem" }}>

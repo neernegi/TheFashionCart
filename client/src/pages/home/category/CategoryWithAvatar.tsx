@@ -23,12 +23,15 @@ const CategoryWithAvatar: React.FC = () => {
     // Removed '<CategoryProp>' from the argument type
     setShowCategory(true);
     dispatch(setSelectedCategory(categoryId));
-    setShowCategory(false);
+   
   };
 
+
+ 
   return (
     <Box mt={"8rem"} ml={"20%"}>
       <Stack gap={"7rem"} direction={"row"}>
+       
         {categories.map((item) => (
           <Box
             // marginLeft={"6rem"}
@@ -67,3 +70,4 @@ const CategoryWithAvatar: React.FC = () => {
 };
 
 export default CategoryWithAvatar;
+

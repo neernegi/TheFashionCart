@@ -35,7 +35,7 @@ import SellerFetchOrders from "./pages/order/seller/SellerFetchProducts";
 import UpdateActiveOrders from "./pages/order/seller/UpdateActiveOrder";
 import RegisterStepper from "./pages/authentication/seller/RegisterStepper";
 // import MiniDrawer from "./components/navbar/MiniDrawer";
-import SellerDashboard from "./components/navbar/SellerDashboard";
+// import SellerDashboard from "./components/navbar/SellerDashboard";
 import Dashboard from "./pages/dashboard/Dashboard";
 import SignInUpTab from "./pages/authentication/user/SignInUpTab";
 import Footer from "./components/Footer";

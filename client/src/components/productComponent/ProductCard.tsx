@@ -10,10 +10,9 @@ import React, { useState } from "react";
 const ProductContainer = styled(Box)({
   display: "flex",
   flexWrap: "wrap",
-  gap: "4rem",
-  ml: "4rem",
-  mt: "5rem",
-  mb: "5rem",
+  gap: "8rem",
+ marginLeft:"18rem",
+ marginRight:"18rem",
   justifyContent: "center", // Center the products
 });
 

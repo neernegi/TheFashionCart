@@ -3,11 +3,12 @@ import React from "react";
 import FetchCategory from "./category/FetchCategory";
 
 import ShowBanner from "./banner/ShowBanner";
-import CategoryWithAvatar from "./category/CategoryWithAvatar";
+// import CategoryWithAvatar from "./category/CategoryWithAvatar";
 import SelectCategoryProduct from "./category/SelectCategoryProduct";
 import { ProductSwiper } from "../../components/swiper/ProductSwiper";
 import { useAuth } from "../context/useAuth";
 import Banner from "../../components/Home/Banner";
+import CategoryWithAvatar from "./category/CategoryWithAvatar";
 
 const Home: React.FC = () => {
   const { auth } = useAuth();

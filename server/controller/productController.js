@@ -146,7 +146,7 @@ export const getFailedProducts = catchAsyncError(async (req, res) => {
 
 // Get All Products
 export const getAllProducts = catchAsyncError(async (req, res) => {
-  const resultPerPage = 5;
+  const resultPerPage = 6;
   const productCount = await Product.countDocuments();
   const apiFeature = new ApiFeatures(Product.find(), req.query)
     .search()
@@ -177,6 +177,24 @@ export const getCategoryFilterProducts = catchAsyncError(async (req, res) => {
     return res.status(500).json({ error: "Internal server error" });
   }
 });
+
+// export const filterProducts = catchAsyncError(async (req, res) => {
+//   try {
+//     const { selectedCategories, selectedBrands, priceRange } = req.body;
+//     let args = {};
+//     if (selectedCategories.length > 0) args.category = selectedCategories;
+//     if (selectedBrands.length > 0) args.brand = selectedBrands;
+//     if (priceRange.length)
+//       args.price = { $gte: priceRange[0], $lte: priceRange[1] };
+//     const products = await Product.find(args);
+//     res.status(200).send({
+//       success: true,
+//       products,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 export const getSubcatetegoryFilterProducts = catchAsyncError(
   async (req, res) => {
     const resultPerPage = 10;
