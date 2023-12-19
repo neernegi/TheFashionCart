@@ -5,11 +5,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
 import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
@@ -17,9 +15,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import productIcon from "../../assets/add-product.png";
 import orderIcon from "../../assets/shopping-bag.png";
 import qcIcon from "../../assets/quality-control_10655670.png";
-import MailIcon from "@mui/icons-material/Mail";
 import Person2Icon from "@mui/icons-material/Person2";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../pages/context/useAuth";
@@ -27,10 +23,6 @@ import { useAuth } from "../../pages/context/useAuth";
 const drawerWidth = 600;
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * You won't need it on your project.
-   */
   window?: () => Window;
 }
 
@@ -58,18 +50,6 @@ export default function SellerDashboard(props: Props) {
       <Toolbar />
       <Divider />
       <Stack direction={"column"} gap={"3rem"} mt={"4rem"}>
-        {/* Dashboard */}
-        {/* <ListItem disablePadding>
-          <Link to={"/seller-dashboard"}>
-            <ListItemButton>
-              <ListItemIcon>
-                <DashboardIcon style={{ fontSize: "6rem" }} />
-              </ListItemIcon>
-              <Typography fontSize={"4rem"}>Dashboard</Typography>
-            </ListItemButton>
-          </Link>
-        </ListItem> */}
-
         {/* Add Listing (Add Product) */}
         <Link to={"/add-products"}>
           <ListItem disablePadding>

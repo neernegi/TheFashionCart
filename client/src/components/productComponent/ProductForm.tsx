@@ -12,11 +12,11 @@ import {
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Category, fetchCategories } from "../../redux/features/categorySlice";
 import {
-  SubCategory,
-  fetchSubCategories,
+  SubCategory
 } from "../../redux/features/subCategorySlice";
 import { createProduct } from "../../redux/features/productSlice";
 import { useAuth } from "../../pages/context/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const CreateProductForm: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
@@ -33,9 +33,10 @@ const CreateProductForm: React.FC = () => {
   const [description, setDescription] = useState<string>("");
   const [brand, setBrand] = useState<string>("");
   const [Stock, setStock] = useState<number | undefined>(); // Changed Stock to stock
-  const [avatar, setAvatar] = useState<File | null>();
+  const [avatars, setAvatars] = useState<FileList | null>();
   const dispatch = useAppDispatch();
   const { auth } = useAuth();
+  const navigate = useNavigate();
   const categories = useAppSelector((state) => state.category.categories);
 
   useEffect(() => {
@@ -59,21 +60,23 @@ const CreateProductForm: React.FC = () => {
     e.preventDefault();
     const formData = new FormData();
     formData.set("name", name);
-    formData.set("price", price || 0); // Send as integer
+    formData.set("price", price || 0);
     formData.set("description", description);
     formData.set("brand", brand);
-    formData.set("Stock", Stock || 0); // Send as integer
+    formData.set("Stock", Stock || 0);
     if (selectedCategory) {
       formData.set("category", selectedCategory._id || "");
     }
     if (selectedSubCategory) {
       formData.set("subcategory", selectedSubCategory._id || "");
     }
-    if (avatar) {
-      formData.set("avatar", avatar);
+    if (avatars) {
+      for (let i = 0; i < avatars.length; i++) {
+        formData.append("avatars", avatars[i]); 
+      }
     }
-
     dispatch(createProduct({ sellerId, formData }));
+    navigate("/qcstatus");
   };
 
   return (
@@ -84,15 +87,15 @@ const CreateProductForm: React.FC = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          marginBottom: "5rem",
+          marginBottom: "15rem",
         }}
       >
         <form onSubmit={handleCreateProduct} style={{ marginTop: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
-                fullWidth
                 id="name"
                 name="name"
                 label="Product Name"
@@ -103,8 +106,8 @@ const CreateProductForm: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                className="textFieldCommonStyles"
                 required
-                fullWidth
                 id="price"
                 label="Price"
                 name="price"
@@ -118,7 +121,7 @@ const CreateProductForm: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 required
-                fullWidth
+                className="textFieldCommonStyles"
                 label="Description"
                 name="description"
                 type="description"
@@ -130,10 +133,16 @@ const CreateProductForm: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Autocomplete
+                className="textFieldCommonStyles"
                 options={categories}
                 getOptionLabel={(option) => option?.label}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select a category" />
+                  <TextField
+                    className="textFieldCommonStyles"
+                    {...params}
+                    label="Select a category"
+                    style={{ fontSize: "2rem" }}
+                  />
                 )}
                 value={selectedCategory}
                 onChange={(_, newValue) => {
@@ -143,10 +152,15 @@ const CreateProductForm: React.FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Autocomplete
+                className="textFieldCommonStyles"
                 options={filteredSubcategories}
                 getOptionLabel={(option) => option?.name}
                 renderInput={(params) => (
-                  <TextField {...params} label="Select a Sub-Category" />
+                  <TextField
+                    className="textFieldCommonStyles"
+                    {...params}
+                    label="Select a Sub-Category"
+                  />
                 )}
                 value={selectedSubCategory}
                 onChange={(_, newValue) => setSelectedSubCategory(newValue)}
@@ -155,12 +169,10 @@ const CreateProductForm: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 required
-                fullWidth
+                className="textFieldCommonStyles"
                 label="Brand"
                 id="brand"
                 name="brand"
-                multiline
-                rows={4}
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
               />
@@ -168,12 +180,10 @@ const CreateProductForm: React.FC = () => {
             <Grid item xs={12}>
               <TextField
                 required
-                fullWidth
+                className="textFieldCommonStyles"
                 label="Stock"
                 id="stock"
                 name="stock"
-                multiline
-                rows={4}
                 value={Stock}
                 onChange={(e) =>
                   setStock(parseInt(e.target.value) || undefined)
@@ -186,7 +196,7 @@ const CreateProductForm: React.FC = () => {
                 name="avatar"
                 inputProps={{ accept: "image/*" }}
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  setAvatar(e.target.files![0])
+                  setAvatars(e.target.files)
                 }
                 style={{ fontSize: "2rem" }}
               />
@@ -196,7 +206,7 @@ const CreateProductForm: React.FC = () => {
             type="submit"
             fullWidth
             variant="contained"
-            sx={{ mt: 3, mb: 2 }}
+            sx={{ mt: 3, mb: 2, height: "4rem", fontSize: "1.8rem" }}
           >
             Create Product
           </Button>

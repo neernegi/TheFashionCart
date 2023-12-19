@@ -1,33 +1,48 @@
-import React, { useEffect } from "react";
-import { fetchSellerProducts } from "../../redux/features/productSlice";
+import React, { useEffect, useState } from "react";
+import { Product, fetchSellerProducts } from "../../redux/features/productSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
 import { Box } from "@mui/material";
 import { useAuth } from "../context/useAuth";
 import StickyHeadTable from "../../components/QCstatusComponent";
-
-
+// RequestQC component
 const RequestQC: React.FC = () => {
+  const products = useAppSelector(state=>state.product.products)
   const { auth } = useAuth();
   const dispatch = useAppDispatch();
-
-  // Use useSelector to access the products from the Redux store
-  const products = useAppSelector((state) => state.product.products);
-
   const sellerId = auth?.user?._id;
 
-  // Fetch seller products when the component mounts
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     if (sellerId) {
-      dispatch(fetchSellerProducts(sellerId));
+      dispatch(fetchSellerProducts(sellerId))
+        .then(() => {
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Failed to fetch seller products:", error);
+          setLoading(false);
+        });
     }
-  }, [dispatch, sellerId]);
-  const filteredProducts = products.filter((product) => product.qcStatus === "Progress");
+  }, [sellerId, dispatch]);
+
+  useEffect(() => {
+    if (!loading) {
+      const filtered = products.filter((product) => product?.qcStatus === "Progress");
+      setFilteredProducts(filtered);
+    }
+  }, [loading, products]);
 
   return (
-    <Box>
-      <StickyHeadTable products={filteredProducts} />
+    <Box marginBottom={"30%"}>
+      {loading ? (
+        // Display a loading indicator here
+        <div>Loading...</div>
+      ) : (
+        <StickyHeadTable products={filteredProducts} />
+      )}
     </Box>
   );
 };
-
-export default RequestQC;
+export default RequestQC

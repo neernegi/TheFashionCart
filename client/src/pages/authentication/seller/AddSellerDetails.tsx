@@ -1,20 +1,20 @@
 import React, { useState } from "react";
 import {
-  Container,
+
   Box,
   Avatar,
-  Typography,
+ 
   Grid,
   TextField,
   Button,
-  Input,
+  
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { Link } from "react-router-dom";
+
 import { useAppDispatch } from "../../../redux/hooks";
 import "../styles.css";
 
-import axios from "axios";
+
 import { useAuth } from "../../context/useAuth";
 import { addSellerDetails } from "../../../redux/features/sellerSlice";
 

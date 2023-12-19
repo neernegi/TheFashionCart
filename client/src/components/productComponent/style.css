@@ -1,0 +1,14 @@
+/* styles.css */
+.textFieldCommonStyles {
+    font-size: 1.8rem;
+}
+
+.textFieldCommonStyles label {
+    font-size: 2rem; /* Increase label font size */
+  }
+  
+.textFieldCommonStyles input {
+  font-size: 2rem;
+  height: 3rem;
+  padding: 1rem;
+}

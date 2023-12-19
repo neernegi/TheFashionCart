@@ -29,7 +29,6 @@ const columns = [
   { id: "marketPlace", label: "MarketPlace" },
   { id: "createdOn", label: "Created On" },
   { id: "status", label: "Status" },
-  { id: "actions", label: "Actions" },
 ];
 
 interface StickyHeadTableProps {
@@ -41,13 +40,11 @@ interface ProductQCStatus {
 }
 const qcStatusList = ["Progress", "Passed", "Cancel"];
 
-const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
+const StickyHeadTable: React.FC<StickyHeadTableProps> = () => {
   const { auth } = useAuth();
   const dispatch = useAppDispatch();
   const [selectedProductIds, setSelectedProductIds] = useState<string[]>([]);
-  const [qcStatusUpdateMessage, setQcStatusUpdateMessage] =
-    useState<string>("");
-
+ 
   const adminGetProduct = useAppSelector((state) => state.product.products);
 
   useEffect(() => {
@@ -75,9 +72,9 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
   const qcUpdateHandler = async (productId: string) => {
     // Get the selected QC status from the qcStatusList
     const selectedQcStatus = productQcStatus[productId] || "Progress";
-  
+
     console.log("Selected QC Status:", selectedQcStatus);
-  
+
     try {
       const response = await axios.put(
         `http://localhost:8080/api/v1/product/updateProduct/${productId}`,
@@ -92,13 +89,13 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
         `QC status updated successfully for product with ID: ${productId}`
       );
       console.log(response.data);
-  
+
       // Update the product QC status in the state with the selected QC status
       setProductQcStatus({
         ...productQcStatus,
         [productId]: selectedQcStatus,
       });
-
+      
     } catch (error) {
       console.error(
         `Failed to update QC status for product with ID: ${productId}`,
@@ -107,7 +104,6 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
       // Handle errors here
     }
   };
-  
 
   return (
     <Paper>
@@ -128,58 +124,56 @@ const StickyHeadTable: React.FC<StickyHeadTableProps> = ({ products }) => {
           <TableBody>
             {auth?.user?.role === "admin" ? (
               <>
-                {adminGetProduct
-                 
-                  .map((product) => (
-                    <TableRow key={product._id}>
-                      <TableCell style={{ fontSize: "2rem" }}>
-                        {product?.name}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "2rem" }}>
-                        {product?.brand}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "2rem" }}>
-                        {product?.marketplace}
-                      </TableCell>
-                      <TableCell style={{ fontSize: "2rem" }}>
-                        {product?.createdAt}
-                      </TableCell>
-                      <TableCell>
-                        <form
-                          onSubmit={(event) => {
-                            event.preventDefault();
-                            qcUpdateHandler(product?._id);
+                {adminGetProduct.map((product) => (
+                  <TableRow key={product._id}>
+                    <TableCell style={{ fontSize: "2rem" }}>
+                      {product?.name}
+                    </TableCell>
+                    <TableCell style={{ fontSize: "2rem" }}>
+                      {product?.brand}
+                    </TableCell>
+                    <TableCell style={{ fontSize: "2rem" }}>
+                      {product?.marketplace}
+                    </TableCell>
+                    <TableCell style={{ fontSize: "2rem" }}>
+                      {product?.createdAt}
+                    </TableCell>
+                    <TableCell>
+                      <form
+                        onSubmit={(event) => {
+                          event.preventDefault();
+                          qcUpdateHandler(product?._id);
+                        }}
+                      >
+                        <Autocomplete
+                          options={qcStatusList}
+                          getOptionLabel={(option) => option}
+                          value={productQcStatus[product._id] || "Progress"}
+                          onChange={(_, newValue) => {
+                            setProductQcStatus({
+                              ...productQcStatus,
+                              [product._id]: newValue || "Progress",
+                            });
                           }}
-                        >
-                          <Autocomplete
-                            options={qcStatusList}
-                            getOptionLabel={(option) => option}
-                            value={productQcStatus[product._id] || "Progress"}
-                            onChange={(_, newValue) => {
-                              setProductQcStatus({
-                                ...productQcStatus,
-                                [product._id]: newValue || "Progress",
-                              });
-                            }}
-                            renderInput={(params) => (
-                              <TextField
-                                {...params}
-                                label="QC Status"
-                                variant="outlined"
-                              />
-                            )}
-                          />
-                          <Button type="submit" style={{ margin: "0.7rem" }}>
-                            Update QC Status
-                          </Button>
-                        </form>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="QC Status"
+                              variant="outlined"
+                            />
+                          )}
+                        />
+                        <Button type="submit" style={{ margin: "0.7rem" }}>
+                          Update QC Status
+                        </Button>
+                      </form>
+                    </TableCell>
+                  </TableRow>
+                ))}
               </>
             ) : (
               <>
-                {products.map((product) => (
+                {adminGetProduct.map((product) => (
                   <TableRow key={product._id}>
                     <TableCell style={{ fontSize: "2rem" }}>
                       {product?.name}

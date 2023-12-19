@@ -10,7 +10,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import axios from "axios";
-import { useAuth } from "../pages/context/useAuth";
+
 import { Order } from "../redux/features/orderSlice";
 import { Box, Typography } from "@mui/material";
 
@@ -21,13 +21,6 @@ export interface Product {
   createdAt: string;
   qcStatus: string;
   marketplace: string;
-}
-
-interface OrderItem {
-  _id: string;
-  name: string;
-  image: string;
-  productId: string;
 }
 
 const columns = [

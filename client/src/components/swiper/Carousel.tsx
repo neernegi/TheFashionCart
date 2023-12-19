@@ -19,9 +19,9 @@ type BannerProps = {
 };
 
 const ImageSwiper: React.FC<BannerProps> = ({ banner }) => {
-  // Check if banner is undefined or null before using it
+  
   if (!banner || banner.length === 0) {
-    return null; // or return some other fallback content if necessary
+    return null;
   }
 
   return (

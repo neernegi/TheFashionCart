@@ -9,16 +9,16 @@ interface CartComponentCardProps {
 const CartComponentCard: React.FC<CartComponentCardProps> = ({
   cartProduct,
 }) => {
-  if (!cartProduct) return null; // Handle the case where cartProduct is undefined
+  if (!cartProduct) return null; 
 
   return (
     <Box>
       <Box display={"flex"} gap={"4rem"} m={"3rem"} key={cartProduct._id}>
-        {cartProduct.images.length > 0 && (
+        {cartProduct.avatar.length > 0 && (
           <Box mb={"4rem"}>
             <img
               style={{ width: "10rem" }}
-              src={cartProduct.images[0]?.url}
+              src={cartProduct.avatar[0]?.url}
               alt={cartProduct.name}
             />
           </Box>

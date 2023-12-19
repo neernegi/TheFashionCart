@@ -2,22 +2,17 @@ import {
   AppBar,
   Box,
   Toolbar,
-  Typography,
-  makeStyles,
   styled,
 } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import Search from "../Search";
-import { Link, useNavigate } from "react-router-dom";
-import ShoppingBagIcon from "@mui/icons-material/ShoppingBag";
-import ChatIcon from "@mui/icons-material/Chat";
-import CircleNotificationsIcon from "@mui/icons-material/CircleNotifications";
+
+import { Link } from "react-router-dom";
 import AdminNavbar from "./AdminNavbar";
 import { useAuth } from "../../pages/context/useAuth";
 import SellerNavbar from "./SellerNavbar";
 import { selectItems } from "../../redux/features/cartSlice";
 import { useAppSelector } from "../../redux/hooks";
-import SellerDashboard from "./SellerDashboard";
+
 import { GrCart } from "react-icons/gr";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -57,7 +52,7 @@ const LinkNav = styled(Link)({
 const Header: React.FC = () => {
   const items = useAppSelector(selectItems);
   const { auth, setAuth } = useAuth();
-  const navigate = useNavigate();
+
 
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [linkOptionsPosition, setLinkOptionsPosition] = useState<{
@@ -67,6 +62,7 @@ const Header: React.FC = () => {
     left: 0,
     top: 0,
   });
+
 
   const handleLoginLinkHover = (
     event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
@@ -101,11 +97,7 @@ const Header: React.FC = () => {
     localStorage.removeItem("auth");
     alert("logout successfully");
   };
-  // const gradientStyles = {
-  //   background: `linear-gradient(to right, rgba(167, 143, 191, 1) 0%, rgba(178, 160, 203, 1))`,
-  // };
 
-  // bgcolor={'rgba(167, 143, 191, 1)'}
 
   const linkArrowIcon = showDropdown ? (
     <KeyboardArrowUpIcon
@@ -124,7 +116,7 @@ const Header: React.FC = () => {
             {auth.user?.role === "seller" ? (
               <>
                 <SellerNavbar />
-                {/* <SellerDashboard /> */}
+               
               </>
             ) : (
               <>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Avatar, Box, Rating, Typography } from "@mui/material";
 import defaultAvatar from "../../assets/default-avatar-profile-icon-of-social-media-user-vector.jpg";
-import "./style.css"; // Import the custom CSS
+import "./style.css"; 
 
 interface Review {
   name: string;

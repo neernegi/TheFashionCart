@@ -1,4 +1,4 @@
-import Card from "@mui/material/Card";
+
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -16,10 +16,7 @@ const ProductContainer = styled(Box)({
   justifyContent: "center", // Center the products
 });
 
-const ProductCard = styled(Card)({
-  flexBasis: "calc(32.33% - 16px)", // Display 3 products per row
-  maxWidth: "100rem",
-});
+
 
 export const ProductCardComponent = ({ products }: { products: Product[] }) => {
   const [page, setPage] = useState(1);

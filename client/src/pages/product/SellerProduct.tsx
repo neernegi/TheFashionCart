@@ -23,7 +23,7 @@ const SellerProducts: React.FC = () => {
   }, [dispatch, sellerId]);
 
   return (
-    <Box>
+    <Box marginBottom={"18%"}>
       <StickyHeadTable products={products} />
     </Box>
   );

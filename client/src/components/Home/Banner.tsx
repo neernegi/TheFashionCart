@@ -1,6 +1,5 @@
 import React from "react";
 import { Box } from "@mui/material";
-// import banner from "../../assets/bgbgg.jpg";
 import banner from "../../assets/tfscbanner.jpg";
 import FetchCategory from "../../pages/home/category/FetchCategory";
 import Search from "../Search";

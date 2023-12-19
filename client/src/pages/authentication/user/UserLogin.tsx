@@ -55,7 +55,7 @@ const UserLogin: React.FC = () => {
           token: user.token, // Assuming your response includes a 'token' field
         });
         localStorage.setItem("auth", JSON.stringify(user));
-        navigate(location.state || "/");
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -63,10 +63,9 @@ const UserLogin: React.FC = () => {
   };
 
   return (
-    <Box  textAlign={'center'}>
+    <Box textAlign={"center"} mb={"14vmax"}>
       <Box
         sx={{
-       
           marginTop: "20rem",
           display: "flex",
           flexDirection: "column",
@@ -88,11 +87,11 @@ const UserLogin: React.FC = () => {
         </Typography>
         <form onSubmit={handleSubmit(submitData)}>
           <Stack spacing={4}>
-            <Box >
+            <Box>
               <TextField
                 className="textFieldCommonStyles"
                 required
-                style={{width:"30rem"}}
+                style={{ width: "30rem" }}
                 id="email"
                 label="Email Address"
                 autoComplete="email"
@@ -100,11 +99,11 @@ const UserLogin: React.FC = () => {
               />
               {errors.email && <span>{errors.email.message}</span>}
             </Box>
-            <Box >
+            <Box>
               <TextField
                 className="textFieldCommonStyles"
                 required
-                style={{width:"30rem"}}
+                style={{ width: "30rem" }}
                 label="Password"
                 type="password"
                 id="password"

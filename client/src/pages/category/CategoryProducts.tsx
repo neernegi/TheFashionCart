@@ -39,7 +39,7 @@ const CategoryProducts = () => {
 
   return (
     <Box>
-      <Typography mt={'4rem'} ml={'5rem'} variant="h3" component={"h3"} color={"black"}>
+      <Typography mt={'6rem'} ml={'4rem'} variant="h3" component={"h3"} color={"black"}>
         Category products
       </Typography>
       <Box>

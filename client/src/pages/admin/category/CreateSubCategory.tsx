@@ -3,8 +3,7 @@ import { Autocomplete, Box, TextField, Button } from "@mui/material";
 import { useAppDispatch, useAppSelector } from "../../../redux/hooks";
 import { createSubCategory } from "../../../redux/features/subCategorySlice";
 import { Category, fetchCategories } from "../../../redux/features/categorySlice";
-// ... (import statements)
-// ... (import statements)
+
 
 const CreateSubCategory: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(

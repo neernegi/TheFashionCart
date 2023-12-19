@@ -4,11 +4,10 @@ import connectDB from "./config/db.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import errorMiddleware from "./middleware/error.js";
-// import cloudinary from "cloudinary";
+
 import bodyParser from "body-parser";
 import cors from "cors";
-// import multer from "multer";
-// import { Server } from "socket.io";
+
 
 // routes
 import productRoutes from "./routes/productRoute.js";
@@ -41,11 +40,7 @@ app.use(cors());
 // connecting to database
 connectDB();
 
-// cloudinary.config({
-//   cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
-//   api_key:process.env.CLOUDINARY_API_KEY,
-//   api_secret:process.env.CLOUDINARY_API_SECRET,
-// })
+
 
 // middleware
 app.use(morgan("dev"));
@@ -91,32 +86,3 @@ process.on("unhandledRejection", (err) => {
     process.exit(1);
   });
 });
-
-// const io = new Server(server, {
-//   pingTimeout: 60000,
-//   cors: {
-//     origin: "http://localhost:8080",
-//   },
-// });
-
-// io.on("connection", (socket) => {
-//   console.log("connected to socket.io");
-
-//   socket.on("setup", (userData) => {
-//     socket.join(userData._id);
-//     console.log(userData._id)
-//     socket.emit("connected");
-//   });
-
-//   socket.on('join chat',(room) =>{
-//     socket.join(room);
-//     console.log("User Joined Room: " + room)
-//   });
-
-//   socket.on('new message',(newMessageRecieved) => {
-//     var chat = newMessageRecieved.chat;
-
-//     if(!chat.users) return console.log("chat.users not defined")
-
-//   })
-// });

@@ -24,16 +24,7 @@ const LinkNav = styled(Link)({
   },
 });
 
-const DropdownMenu = styled(Box)({
-  position: "absolute",
-  top: 98,
-  zIndex: 1,
-  borderRadius: "1rem",
-  backgroundColor: "#443f40a2",
-  boxShadow: "0 0 5px rgba(0, 0, 0, 0.3)",
-  padding: "10px",
-  minWidth: "200px",
-});
+
 
 const SellerNavbar: React.FC = () => {
   const { auth, setAuth } = useAuth();
@@ -42,7 +33,6 @@ const SellerNavbar: React.FC = () => {
     listing: false,
     order: false,
   });
-  
 
   const handleMouseEnter = (link: string) => {
     setShowDropdown((prevState) => ({
@@ -71,23 +61,9 @@ const SellerNavbar: React.FC = () => {
   return (
     <>
       <NavBox>
-        <LinkNav to={"/seller-store"}>E-Seller</LinkNav>
-        <LinkNav to={"/seller-store"}>Home</LinkNav>
-        {/* <LinkNav to={"/seller-add-info"}>Add Detail</LinkNav> */}
+        <LinkNav to={"/add-products"}>Listing</LinkNav>
 
-        <LinkNav
-          to={"/add-products"}
-        
-        >
-          Listing
-        </LinkNav>
-
-        <LinkNav
-          to={"/seller-products"}
-     
-        >
-          QC Status
-        </LinkNav>
+        <LinkNav to={"/seller-products"}>QC Status</LinkNav>
 
         <LinkNav
           to={"/seller-order"}
@@ -98,13 +74,10 @@ const SellerNavbar: React.FC = () => {
         </LinkNav>
 
         <LinkNav to={"/profile"}>Profile</LinkNav>
-        <LinkNav to={"/logout"} onClick={handleLogout}>
+        <LinkNav to={"/"} onClick={handleLogout}>
           Logout
         </LinkNav>
       </NavBox>
-     
-      
-
     </>
   );
 };

@@ -57,7 +57,7 @@ const UserLogin: React.FC = () => {
           token: user.token, // Assuming your response includes a 'token' field
         });
         localStorage.setItem("auth", JSON.stringify(user));
-        navigate(location.state || "/");
+        navigate("/seller-products");
       }
     } catch (error) {
       console.log(error);
