@@ -10,8 +10,7 @@ export const createShippingInfo = async (req, res) => {
   }
 
   try {
-    // Check if the user with the provided ID exists in your database
-    // You may need to import the User model and use the appropriate query
+    
 
     // Create a new shipping address with the shipping information and user ID
     const shippingAddress = new Shipping({
